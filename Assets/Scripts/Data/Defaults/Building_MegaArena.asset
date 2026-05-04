@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd5b90eae27f1b4795694c4d913c801, type: 3}
+  m_Name: Building_MegaArena
+  m_EditorClassIdentifier: Assembly-CSharp::IncomeBuildingData
+  entityName: Mega Arena
+  upgradeCost:
+    mode: 0
+    baseValueString: 
+    baseValue: 4000000000
+    multiplierPerLevel: 1.15
+  incomePerCycle:
+    mode: 0
+    baseValueString: 
+    baseValue: 420000000
+    multiplierPerLevel: 1.32
+  baseDuration: 28
+  durationSteps:
+  - requiredLevel: 1
+    durationSeconds: 28
+  - requiredLevel: 5
+    durationSeconds: 23.800001
+  - requiredLevel: 10
+    durationSeconds: 20.16
+  - requiredLevel: 25
+    durationSeconds: 16.800001
+  requireManualCollection: 0
+  buildingPrefab: {fileID: 0}
+  spawnOffset: {x: 0, y: 0, z: 0}
+  buildingVisualObject: {fileID: 0}
+  cardIconSprite: {fileID: 0}
+  cardBackgroundColor: {r: 0.9254902, g: 0.8509804, b: 0.76862746, a: 1}
+  iconTintColor: {r: 0.52156866, g: 0.34509805, b: 0.21960784, a: 1}
+  buttonColor: {r: 0.09411765, g: 0.4117647, b: 0.7490196, a: 1}
+  incomeColor: {r: 0.3882353, g: 0.70980394, b: 0.29411766, a: 1}

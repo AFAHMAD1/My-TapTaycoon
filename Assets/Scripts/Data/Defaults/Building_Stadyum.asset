@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd5b90eae27f1b4795694c4d913c801, type: 3}
+  m_Name: Building_Stadyum
+  m_EditorClassIdentifier: Assembly-CSharp::IncomeBuildingData
+  entityName: Stadyum
+  upgradeCost:
+    mode: 0
+    baseValueString: 
+    baseValue: 1000000
+    multiplierPerLevel: 1.15
+  incomePerCycle:
+    mode: 0
+    baseValueString: 
+    baseValue: 80000
+    multiplierPerLevel: 1.38
+  baseDuration: 15
+  durationSteps:
+  - requiredLevel: 1
+    durationSeconds: 15
+  - requiredLevel: 5
+    durationSeconds: 12.75
+  - requiredLevel: 10
+    durationSeconds: 10.8
+  - requiredLevel: 25
+    durationSeconds: 9
+  requireManualCollection: 0
+  buildingPrefab: {fileID: 0}
+  spawnOffset: {x: 0, y: 0, z: 0}
+  buildingVisualObject: {fileID: 0}
+  cardIconSprite: {fileID: 0}
+  cardBackgroundColor: {r: 0.81960785, g: 0.8509804, b: 0.75686276, a: 1}
+  iconTintColor: {r: 0.19607843, g: 0.5019608, b: 0.4117647, a: 1}
+  buttonColor: {r: 0.12941177, g: 0.47843137, b: 0.77254903, a: 1}
+  incomeColor: {r: 0.25490198, g: 0.58431375, b: 0.29803923, a: 1}

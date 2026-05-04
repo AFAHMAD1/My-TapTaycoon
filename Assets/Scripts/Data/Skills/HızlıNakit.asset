@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ef2de5c27638c647b566925b78d9ce7, type: 3}
+  m_Name: "H\u0131zl\u0131Nakit"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  entityName: "H\u0131zl\u0131 Nakit"
+  upgradeCost:
+    mode: 0
+    baseValueString: 1
+    baseValue: 1
+    multiplierPerLevel: 1.15
+  maxLevel: 0
+  effectType: 1
+  descriptionTemplate: "\"{0} dakikal\u0131k i\u015Fletme k\xE2r\u0131 al\""
+  icon: {fileID: 0}
+  effectDuration:
+    mode: 1
+    baseValueString: 30
+    baseValue: 30
+    multiplierPerLevel: 1.15
+  effectPower:
+    mode: 1
+    baseValueString: 10
+    baseValue: 10
+    multiplierPerLevel: 2
+  cooldownTime:
+    mode: 0
+    baseValueString: 900
+    baseValue: 900
+    multiplierPerLevel: 1.15
+  cardBackgroundColor: {r: 0.9607843, g: 0.9411765, b: 0.88235295, a: 1}

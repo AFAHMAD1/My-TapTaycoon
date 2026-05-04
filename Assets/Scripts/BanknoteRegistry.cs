@@ -1,0 +1,81 @@
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+
+public class BanknoteRegistry : MonoBehaviour
+{
+    private static readonly List<Banknote> banknotes = new List<Banknote>();
+
+    public static void Register(Banknote banknote)
+    {
+        if (banknote == null) return;
+        if (!banknotes.Contains(banknote))
+        {
+            banknotes.Add(banknote);
+        }
+    }
+
+    public static void Cleanup()
+    {
+        banknotes.RemoveAll(b => b == null || b.isCollected);
+    }
+
+    public static void Unregister(Banknote banknote)
+    {
+        if (banknote == null) return;
+        banknotes.Remove(banknote);
+    }
+
+    // Artık hem maksimum mesafeyi (searchRadius) hem de maksimum taşıma kapasitesini (maxCount) alıyor
+    public static List<Banknote> GetBestGroup(float maxRadius, int maxCount)
+    {
+        Cleanup();
+
+        var validNotes = banknotes.Where(b => !b.isCollected && !b.isReserved).ToList();
+
+        if (validNotes.Count == 0)
+            return null;
+
+        List<Banknote> bestGroup = new List<Banknote>();
+
+        foreach (var seed in validNotes)
+        {
+            Vector2 seedPos = seed.transform.position;
+            List<Banknote> currentGroup = new List<Banknote>();
+
+            foreach (var b in validNotes)
+            {
+                // Yakınlık kontrolü VE kapasite sınırını aşmama (maxCount)
+                if (Vector2.Distance(seedPos, b.transform.position) <= maxRadius && currentGroup.Count < maxCount)
+                {
+                    currentGroup.Add(b);
+                }
+            }
+
+            if (currentGroup.Count > bestGroup.Count)
+            {
+                bestGroup = currentGroup;
+            }
+        }
+
+        foreach (var note in bestGroup)
+        {
+            note.isReserved = true;
+        }
+
+        return bestGroup;
+    }
+
+    public static void ReleaseGroup(List<Banknote> group)
+    {
+        if (group == null) return;
+
+        for (int i = 0; i < group.Count; i++)
+        {
+            if (group[i] != null && !group[i].isCollected)
+            {
+                group[i].isReserved = false;
+            }
+        }
+    }
+}

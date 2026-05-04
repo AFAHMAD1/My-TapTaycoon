@@ -1,0 +1,329 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6906643775117112948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7059749630649168202}
+  - component: {fileID: 2259309388385623906}
+  m_Layer: 0
+  m_Name: PassiveIncomeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7059749630649168202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6906643775117112948}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.1076, y: -0.81553, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2259309388385623906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6906643775117112948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23a74c14108eefb4abe06f62f712dad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PassiveIncomeManager
+  buildings:
+  - entityName: 'Kafeterya '
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: 50
+      baseValue: 50
+      multiplierPerLevel: 1.08
+    incomePerCycle:
+      mode: 1
+      baseValueString: 10
+      baseValue: 10
+      multiplierPerLevel: 10
+    baseDuration: 10
+    durationSteps: []
+    requireManualCollection: 1
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: "Bilet Gi\u015Fesi"
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: 
+      baseValue: 700
+      multiplierPerLevel: 1.1
+    incomePerCycle:
+      mode: 1
+      baseValueString: 
+      baseValue: 60
+      multiplierPerLevel: 60
+    baseDuration: 20
+    durationSteps: []
+    requireManualCollection: 0
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: "kl\xFCp Ma\u011Fazas\u0131"
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: K
+      baseValue: 10500
+      multiplierPerLevel: 1.12
+    incomePerCycle:
+      mode: 1
+      baseValueString: K
+      baseValue: 1000
+      multiplierPerLevel: 1000
+    baseDuration: 50
+    durationSteps: []
+    requireManualCollection: 1
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: Antrenman Tesisi
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: K
+      baseValue: 189000
+      multiplierPerLevel: 1.14
+    incomePerCycle:
+      mode: 1
+      baseValueString: K
+      baseValue: 10000
+      multiplierPerLevel: 10000
+    baseDuration: 100
+    durationSteps: []
+    requireManualCollection: 1
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: "Taraftar Ma\u011Fazas\u0131 "
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: M
+      baseValue: 3700000
+      multiplierPerLevel: 1.16
+    incomePerCycle:
+      mode: 1
+      baseValueString: K
+      baseValue: 175000
+      multiplierPerLevel: 175000
+    baseDuration: 250
+    durationSteps: []
+    requireManualCollection: 1
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: Otopark
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: M
+      baseValue: 83200000
+      multiplierPerLevel: 1.18
+    incomePerCycle:
+      mode: 1
+      baseValueString: M
+      baseValue: 1100000
+      multiplierPerLevel: 1100000
+    baseDuration: 500
+    durationSteps: []
+    requireManualCollection: 1
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: Stadyum
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: B
+      baseValue: 2080000000
+      multiplierPerLevel: 1.2
+    incomePerCycle:
+      mode: 1
+      baseValueString: M
+      baseValue: 9300000
+      multiplierPerLevel: 9300000
+    baseDuration: 650
+    durationSteps: []
+    requireManualCollection: 0
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: Medya Merkezi
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: 62
+      baseValue: 62.4
+      multiplierPerLevel: 1.15
+    incomePerCycle:
+      mode: 1
+      baseValueString: M
+      baseValue: 70000000
+      multiplierPerLevel: 70000000
+    baseDuration: 2500
+    durationSteps: []
+    requireManualCollection: 0
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: "Al\u0131\u015Fveri\u015F Ma\u011Fazas\u0131"
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: T
+      baseValue: 249000000000
+      multiplierPerLevel: 1.22
+    incomePerCycle:
+      mode: 1
+      baseValueString: M
+      baseValue: 581000000
+      multiplierPerLevel: 581000000
+    baseDuration: 6250
+    durationSteps: []
+    requireManualCollection: 0
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  - entityName: Mega arena
+    currentLevel: 0
+    upgradeCost:
+      mode: 0
+      baseValueString: T
+      baseValue: 125000000000
+      multiplierPerLevel: 1.15
+    incomePerCycle:
+      mode: 1
+      baseValueString: B
+      baseValue: 4240000000
+      multiplierPerLevel: 1.24
+    baseDuration: 12500
+    durationSteps: []
+    requireManualCollection: 0
+    buildingPrefab: {fileID: 4044914181191496045, guid: 3825f1008006ead4c9c07bc67c39a8bd, type: 3}
+    spawnPoint: {fileID: 0}
+    visualParent: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    buildingVisualObject: {fileID: 0}
+    cardIconSprite: {fileID: 0}
+    cardBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    iconTintColor: {r: 0, g: 0, b: 0, a: 0}
+    buttonColor: {r: 0, g: 0, b: 0, a: 0}
+    incomeColor: {r: 0, g: 0, b: 0, a: 0}
+    timer: 0
+    isReadyToCollect: 0
+    spawnedVisualInstance: {fileID: 0}
+  enablePassiveIncome: 1
+  autoSetupDefaultBuildings: 1

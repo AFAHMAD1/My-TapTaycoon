@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ca167004492a6e4d9a12a6facd1f521, type: 3}
+  m_Name: StoreItem_SosyalMedya
+  m_EditorClassIdentifier: Assembly-CSharp::StoreItemData
+  itemName: Sosyal Medya
+  description: Bizi takip et, elmas kazan!
+  icon: {fileID: 0}
+  costType: 2
+  costAmount: 0
+  customButtonText: Bizi Takip Et
+  rewardType: 2
+  rewardAmount: 0
+  cardBackgroundColor: {r: 0.9411765, g: 0.9411765, b: 0.9411765, a: 1}
+  buttonColor: {r: 0.1254902, g: 0.5921569, b: 0.8627451, a: 1}

@@ -3,15 +3,18 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Ground
+  - Background
+  - Money
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Banknot
   - Water
   - UI
-  - 
+  - Collector
   - 
   - 
   - 
@@ -58,6 +61,12 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 2546790171
+    locked: 0
+  - name: Graund
+    uniqueID: 1410268737
+    locked: 0
+  - name: Money
+    uniqueID: 3508736989
     locked: 0
   m_RenderingLayers:
   - Default

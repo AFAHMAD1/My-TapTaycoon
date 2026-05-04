@@ -1,0 +1,37 @@
+using UnityEngine;
+
+public enum ScaleMode
+{
+    Exponential,
+    Linear
+}
+
+[System.Serializable]
+public class ScaledValue
+{
+    [Tooltip("Hesaplama Yontemi. Linear dogrusal artar, Exponential bilesik artar.")]
+    public ScaleMode mode = ScaleMode.Exponential;
+
+    // Sadece Editor tarafinda CustomPropertyDrawer tarafindan kullanilacak
+    public string baseValueString = "";
+
+    public double baseValue = 1d;
+
+    [Tooltip("Artis orani. Exponential icin carpandir (1.08 = %8 artis). Linear icin ise her seviyede uzerine eklenecek sabit degerdir (orn: 10).")]
+    [Min(0f)]
+    public float multiplierPerLevel = 1.15f;
+
+    public double Evaluate(int level)
+    {
+        int safeLevel = Mathf.Max(0, level);
+        
+        switch (mode)
+        {
+            case ScaleMode.Linear:
+                return baseValue + (multiplierPerLevel * safeLevel);
+            case ScaleMode.Exponential:
+            default:
+                return baseValue * System.Math.Pow(multiplierPerLevel, safeLevel);
+        }
+    }
+}
