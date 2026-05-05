@@ -179,7 +179,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c24c05cf16546894aa42ec43c7ac9fb1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CollectorMover
+  m_EditorClassIdentifier: Assembly-CSharp::CollectorMovement
   moveSpeed: 6
   jumpDuration: 0.25
   jumpHeight: 1.5
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df23ec271a9edbf48bcd97a477dc0879, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CollectorAI
+  m_EditorClassIdentifier: Assembly-CSharp::BanknoteCollectorAI
   mover: {fileID: 6840537036556393068}
   collectDistance: 0.2
   groundLevelThreshold: 0.15

@@ -4,7 +4,6 @@ public class BanknotePool : ComponentPool<Banknote>
 {
     public static BanknotePool Instance { get; private set; }
     [SerializeField] private Transform activeRoot;     
-    
 
     protected override void Awake()
     {
@@ -13,12 +12,14 @@ public class BanknotePool : ComponentPool<Banknote>
         EnsureActiveRoot();
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     public void ConfigureActiveRoot(Transform root)
     {
         activeRoot = root;
         EnsureActiveRoot();
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public Banknote Spawn(Vector3 position, Quaternion rotation)
     {
         Banknote banknote = GetOrCreate();
@@ -35,6 +36,7 @@ public class BanknotePool : ComponentPool<Banknote>
         return banknote;
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Release(Banknote banknote)
     {
         if (banknote == null)
@@ -46,6 +48,7 @@ public class BanknotePool : ComponentPool<Banknote>
         ReleaseToPool(banknote);
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void EnsureActiveRoot()
     {
         if (activeRoot != null)

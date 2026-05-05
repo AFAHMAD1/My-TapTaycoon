@@ -14,6 +14,7 @@ public class SettingsPanel : MonoBehaviour
     public Toggle soundToggle; // Ses aç/kapat
     public TextMeshProUGUI versionText; // Oyun versiyonu yazısı
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         // Butonlara tıklama dinleyicilerini ekle
@@ -24,6 +25,7 @@ public class SettingsPanel : MonoBehaviour
         if (soundToggle != null) soundToggle.onValueChanged.AddListener(SetSound);
     }
 
+    // Obje aktif olunca calisir; event dinleyicileri veya gecici durumlar burada hazirlanir.
     private void OnEnable()
     {
         // Panel açıldığında güncel versiyonu ve ayarları yükle
@@ -33,17 +35,20 @@ public class SettingsPanel : MonoBehaviour
         if (soundToggle != null) soundToggle.isOn = PlayerPrefs.GetInt("SoundEnabled", 1) == 1;
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Close()
     {
         gameObject.SetActive(false);
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void SetMusic(bool isOn)
     {
         PlayerPrefs.SetInt("MusicEnabled", isOn ? 1 : 0);
         // İleride buraya ses yöneticisi (AudioManager) bağlanabilir.
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void SetSound(bool isOn)
     {
         PlayerPrefs.SetInt("SoundEnabled", isOn ? 1 : 0);

@@ -16,11 +16,13 @@ public class UIBounce : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     private Vector3 originalScale; // Nesnenin orijinal boyutu
     private Coroutine currentCoroutine;
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         originalScale = transform.localScale;
     }
 
+    // Obje aktif olunca calisir; event dinleyicileri veya gecici durumlar burada hazirlanir.
     private void OnEnable()
     {
         if (bounceOnEnable)
@@ -57,6 +59,7 @@ public class UIBounce : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         currentCoroutine = StartCoroutine(ScaleTo(originalScale));
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     private void StopCurrent()
     {
         if (currentCoroutine != null) StopCoroutine(currentCoroutine);
@@ -70,6 +73,7 @@ public class UIBounce : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         Vector3 startScale = transform.localScale;
         float elapsed = 0f;
 
+        // Bu dongu kosul dogru kaldigi surece calisir; kosul bozulunca durur.
         while (elapsed < duration)
         {
             elapsed += Time.unscaledDeltaTime; // Oyun durdurulsa bile (Pause) animasyon çalışsın

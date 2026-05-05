@@ -84,6 +84,7 @@ public static class NumberFormatter
         
         // Sayı ve harf kısımlarını ayır
         int letterIndex = -1;
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < input.Length; i++)
         {
             if (char.IsLetter(input[i]))
@@ -109,6 +110,7 @@ public static class NumberFormatter
         }
 
         int multiplierIndex = -1;
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < StandardSuffixes.Length; i++)
         {
             if (StandardSuffixes[i] == suffixPart)

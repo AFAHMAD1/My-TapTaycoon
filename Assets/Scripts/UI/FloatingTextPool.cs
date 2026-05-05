@@ -12,12 +12,14 @@ public class FloatingTextPool : ComponentPool<FloatingText>
         EnsureActiveRoot();
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     public void ConfigureActiveRoot(Transform root)
     {
         activeRoot = root;
         EnsureActiveRoot();
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public FloatingText Spawn(Vector3 position, Quaternion rotation)
     {
         FloatingText floatingText = GetOrCreate();
@@ -34,6 +36,7 @@ public class FloatingTextPool : ComponentPool<FloatingText>
         return floatingText;
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Release(FloatingText floatingText)
     {
         if (floatingText == null)
@@ -45,6 +48,7 @@ public class FloatingTextPool : ComponentPool<FloatingText>
         ReleaseToPool(floatingText);
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void EnsureActiveRoot()
     {
         if (activeRoot != null)

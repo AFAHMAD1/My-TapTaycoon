@@ -9,7 +9,7 @@ using UnityEngine;
 public class CurrencyManager : MonoBehaviour
 {
     // Singleton Pattern: Diğer tüm scriptlerden 'CurrencyManager.Instance' ile ulaşılabilir.
-    public static CurrencyManager Instance;
+    public static CurrencyManager Instance { get; private set; }
 
     [Header("Para Verileri")]
     public double currentMoney = 0; // Mevcut para miktarı (double kullanarak çok yüksek sayılara destek veriyoruz)
@@ -25,12 +25,19 @@ public class CurrencyManager : MonoBehaviour
         public float time;
     }
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
-        // Instance ataması yaparak merkezi erişim sağlarız.
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
     }
 
+    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     private void Start()
     {
         UpdateUI();
@@ -50,6 +57,11 @@ public class CurrencyManager : MonoBehaviour
     /// </summary>
     public void AddMoney(double amount, bool countTowardActiveProfit)
     {
+        if (amount <= 0d || double.IsNaN(amount) || double.IsInfinity(amount))
+        {
+            return;
+        }
+
         currentMoney += amount;
 
         // Kazanç istatistiklerini güncelle (UI'daki saniyelik kazanç göstergesi için)
@@ -70,6 +82,11 @@ public class CurrencyManager : MonoBehaviour
     /// </summary>
     public bool SpendMoney(double amount)
     {
+        if (amount <= 0d || double.IsNaN(amount) || double.IsInfinity(amount))
+        {
+            return false;
+        }
+
         if (currentMoney >= amount)
         {
             currentMoney -= amount;
@@ -80,6 +97,14 @@ public class CurrencyManager : MonoBehaviour
         return false; // Bakiye yetersiz
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
+    public void SetMoney(double amount)
+    {
+        currentMoney = System.Math.Max(0d, amount);
+        recentActiveIncomeSamples.Clear();
+        UpdateUI();
+    }
+
     /// <summary>
     /// Son 1 saniye içindeki ortalama kazancı (Active Profit) hesaplar.
     /// </summary>
@@ -88,6 +113,7 @@ public class CurrencyManager : MonoBehaviour
         TrimExpiredIncomeSamples(); // Eski örnekleri temizle
 
         double totalIncome = 0d;
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (IncomeSample sample in recentActiveIncomeSamples)
         {
             totalIncome += sample.amount;
@@ -101,6 +127,7 @@ public class CurrencyManager : MonoBehaviour
     {
         float cutoffTime = Time.unscaledTime - ActiveIncomeWindowSeconds;
 
+        // Bu dongu kosul dogru kaldigi surece calisir; kosul bozulunca durur.
         while (recentActiveIncomeSamples.Count > 0 && recentActiveIncomeSamples.Peek().time < cutoffTime)
         {
             recentActiveIncomeSamples.Dequeue();

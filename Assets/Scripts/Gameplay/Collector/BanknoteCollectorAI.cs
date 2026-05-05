@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,13 +5,11 @@ using UnityEngine;
 /// Sahnedeki paraları otomatik olarak toplayan yapay zeka sınıfıdır.
 /// En karlı para grubunu belirler, oraya gider ve toplar.
 /// </summary>
-[RequireComponent(typeof(CollectorMover))]
-public class CollectorAI : MonoBehaviour
+[RequireComponent(typeof(CollectorMovement))]
+public class BanknoteCollectorAI : MonoBehaviour
 {
-    private enum CollectMode { None, Single, Multi }
-
     [Header("Referanslar")]
-    [SerializeField] private CollectorMover mover;
+    [SerializeField] private CollectorMovement mover;
 
     [Header("Algılama Ayarları")]
     [SerializeField] private float groundLevelThreshold = 0.15f; // Yerde olup olmadığını anlamak için eşik değer
@@ -28,12 +25,14 @@ public class CollectorAI : MonoBehaviour
     private float lastSearchTime = 0f; // Son arama zamanı
     private const float searchCooldown = 0.25f; // Aramalar arası bekleme süresi (Saniyede 4 kez)
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
-        if (mover == null) mover = GetComponent<CollectorMover>();
+        if (mover == null) mover = GetComponent<CollectorMovement>();
         basePosition = transform.position;
     }
 
+    // Unity bu fonksiyonu her frame calistirir; surekli kontrol veya animasyon gereken isler burada olur.
     private void Update()
     {
         if (mover == null) return;
@@ -69,6 +68,7 @@ public class CollectorAI : MonoBehaviour
         // 1. Hedef noktayı bul: Grubun tam merkez noktası
         Vector3 centerPos = Vector3.zero;
         int validCount = 0;
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var b in group)
         {
             if (b != null)

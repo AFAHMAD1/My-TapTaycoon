@@ -17,6 +17,7 @@ public class FloatingText : MonoBehaviour
     private Vector3 initialLocalScale;
     private FloatingTextPool ownerPool;
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         textMesh = GetComponentInChildren<TextMeshPro>(true);
@@ -34,6 +35,7 @@ public class FloatingText : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     public void InitializeForSpawn(FloatingTextPool pool)
     {
         ownerPool = pool;
@@ -52,6 +54,7 @@ public class FloatingText : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     public void Setup(string textContent)
     {
         timer = 0f;
@@ -70,6 +73,7 @@ public class FloatingText : MonoBehaviour
         transform.position += new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(0f, 0.2f), 0f);
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void ResetForPool()
     {
         timer = 0f;
@@ -87,6 +91,7 @@ public class FloatingText : MonoBehaviour
         }
     }
 
+    // Unity bu fonksiyonu her frame calistirir; surekli kontrol veya animasyon gereken isler burada olur.
     private void Update()
     {
         transform.position += Vector3.up * moveSpeed * Time.deltaTime;

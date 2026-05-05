@@ -17,6 +17,7 @@ public class ClickUpgradeEntity : UpgradableEntity
         return data != null ? data.rewardPerLevel.Evaluate(currentLevel) : 1d;
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     protected override void OnUpgraded()
     {
         // Seviye atlayınca görsel efekt oynat (Karakterin bulunduğu yer veya ekranın ortası)

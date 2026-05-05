@@ -138,18 +138,21 @@ public class PassiveIncomeManager : MonoBehaviour
     [Header("Gelir Kontrolu")]
     public bool enablePassiveIncome = true;
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
     }
 
+    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     private void Start()
     {
         // Başlangıçta tüm binaları görsel olarak hazırla
         foreach (var building in buildings) building.InitializeVisualState();
     }
 
+    // Unity bu fonksiyonu her frame calistirir; surekli kontrol veya animasyon gereken isler burada olur.
     private void Update()
     {
         if (!enablePassiveIncome || CurrencyManager.Instance == null) return;
@@ -188,6 +191,7 @@ public class PassiveIncomeManager : MonoBehaviour
     public double GetTotalPassiveIncomePerSecond()
     {
         double total = 0d;
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var b in buildings) if (b.currentLevel > 0) total += b.CurrentIncomePerSecond();
         return total;
     }
@@ -195,6 +199,7 @@ public class PassiveIncomeManager : MonoBehaviour
     // Bina satın alma/seviye atlatma köprüsü
     public void BuyUpgrade(int index) => BuyUpgrade(index, 1);
     
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void BuyUpgrade(int index, int amount)
     {
         if (index >= 0 && index < buildings.Count)

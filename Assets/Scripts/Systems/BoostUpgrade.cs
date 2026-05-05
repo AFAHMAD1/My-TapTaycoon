@@ -8,6 +8,7 @@ public class BoostUpgrade : UpgradableEntity
 
     public bool IsUnlocked => true; 
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     protected override void OnUpgraded()
     {
     }

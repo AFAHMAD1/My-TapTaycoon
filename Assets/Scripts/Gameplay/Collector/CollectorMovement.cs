@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Toplayıcı karakterin (robot) sahnedeki fiziksel hareketlerini (koşma, zıplama) yöneten sınıftır.
 /// </summary>
-public class CollectorMover : MonoBehaviour
+public class CollectorMovement : MonoBehaviour
 {
     [Header("Yatay Hareket Ayarları")]
     [SerializeField] private float moveSpeed = 6f; // Temel hareket hızı
@@ -26,6 +26,7 @@ public class CollectorMover : MonoBehaviour
     /// </summary>
     public IEnumerator MoveToX(float targetX)
     {
+        // Bu dongu kosul dogru kaldigi surece calisir; kosul bozulunca durur.
         while (Mathf.Abs(transform.position.x - targetX) > 0.05f)
         {
             Vector3 pos = transform.position;
@@ -55,6 +56,7 @@ public class CollectorMover : MonoBehaviour
         float duration = Mathf.Max(0.01f, jumpDuration);
         float elapsed = 0f;
 
+        // Bu dongu kosul dogru kaldigi surece calisir; kosul bozulunca durur.
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;

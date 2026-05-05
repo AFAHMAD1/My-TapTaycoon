@@ -36,6 +36,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     protected TextMeshProUGUI buyModeButtonContext_Label;
     protected GameObject buyModeButtonContext_DropdownRoot;
 
+    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     protected virtual void Start()
     {
         if (cardPrefab == null)
@@ -72,8 +73,10 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         CreateCards();
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     protected abstract List<ICardDataProvider> GetDataProviders();
 
+    // Panel acildiginda eski kartlari temizler, veri listesini alir ve her veri icin yeni kart olusturur.
     protected virtual void CreateCards()
     {
         ClearContainer();
@@ -81,21 +84,21 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         List<ICardDataProvider> providers = GetDataProviders();
         if (providers == null) return;
 
+        // Bu dongu listedeki her bina/skill/kit verisi icin ekrana bir kart basar.
         foreach (var provider in providers)
         {
             CreateSingleCard(provider);
         }
     }
     
+    // Card Prefab alanindaki prefab'i Content altina clone'lar ve karta hangi veriyi gosterecegini soyler.
     protected UpgradeCard CreateSingleCard(ICardDataProvider provider)
     {
+        // Instantiate burada prefab'i sahnede cogaltir; parent olarak Scroll View'in Content objesi verilir.
         GameObject cardObj = Instantiate(cardPrefab, contentContainer);
         ConfigureCardLayout(cardObj);
         
-        // Eğer hedefte UpgradeCard yoksa ve BuildingUIItem varsa uyar / dönüştür
-        // Şimdilik prefab'ın içinde UpgradeCard olduğunu varsayıyoruz.
-        // Ama geriye dönük uyumluluk için, eğer prefabda sadece BuildingUIItem varsa ve UpgradeCard yoksa hata vermemeliyiz.
-        // Aslında BuildingUIItem'i tamamen sileceğimiz için prefab'da UpgradeCard olmalı.
+        // Prefab'in icinde UpgradeCard yoksa kart davranisini runtime'da ekler.
         UpgradeCard uiCard = cardObj.GetComponent<UpgradeCard>();
         if (uiCard == null)
         {
@@ -108,6 +111,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         return uiCard;
     }
     
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     protected GameObject CreateSectionHeader(string title)
     {
         GameObject headerObj = new GameObject($"Header_{title}", typeof(RectTransform), typeof(LayoutElement));
@@ -137,15 +141,18 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         return headerObj;
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     protected void ClearContainer()
     {
         uiCards.Clear();
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = contentContainer.childCount - 1; i >= 0; i--)
         {
             Destroy(contentContainer.GetChild(i).gameObject);
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     protected void ConfigureContentLayout()
     {
         VerticalLayoutGroup layoutGroup = contentContainer.GetComponent<VerticalLayoutGroup>();
@@ -166,6 +173,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void ConfigureCardLayout(GameObject cardObj)
     {
         RectTransform rectTransform = cardObj.GetComponent<RectTransform>();
@@ -191,6 +199,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     protected virtual void SetupBuyModeButton()
     {
         Transform panelSummaryBar = UIHelper.FindChildRecursive(transform, "SummaryBar");
@@ -264,6 +273,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void EnsureBuyModeDropdown()
     {
         if (buyModeButtonContext_DropdownRoot != null || buyModeButtonContext_SummaryBar == null) return;
@@ -288,6 +298,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         LayoutElement layoutElement = dropdownObject.GetComponent<LayoutElement>();
         layoutElement.ignoreLayout = true;
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (int amount in BuyAmountOptions)
         {
             CreateBuyModeOption(dropdownObject.transform, amount);
@@ -298,6 +309,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         PositionDropdown();
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void CreateBuyModeOption(Transform parent, int amount)
     {
         GameObject optionObject = new GameObject($"Option_{GetBuyAmountLabel(amount)}", typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
@@ -340,6 +352,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     private void ToggleBuyModeDropdown()
     {
         if (buyModeButtonContext_DropdownRoot == null) return;
@@ -354,6 +367,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void SetSelectedBuyAmount(int amount)
     {
         SelectedBuyAmount = Mathf.Max(1, amount);
@@ -365,6 +379,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void RefreshBuyModeButtonLabel()
     {
         if (buyModeButtonContext_Label != null)
@@ -373,11 +388,13 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     private string GetBuyAmountLabel(int amount)
     {
         return amount >= int.MaxValue ? "MAX" : $"x{amount}";
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     private void PositionDropdown()
     {
         if (buyModeButtonContext_Button == null || buyModeButtonContext_DropdownRoot == null) return;

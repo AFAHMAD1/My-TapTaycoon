@@ -25,6 +25,7 @@ public class ThemeManager : MonoBehaviour
     /// <summary>
     /// Klasik (Mor-Yeşil) temayı uygular.
     /// </summary>
+    // Klasik tema butonundan cagrilir; arka plan ve zemin renklerini klasik palete cevirir.
     public void ApplyClassicTheme()
     {
         SetTheme(bgClassic, groundClassic);
@@ -33,6 +34,7 @@ public class ThemeManager : MonoBehaviour
     /// <summary>
     /// Gece (Karanlık) temasını uygular.
     /// </summary>
+    // Gece tema butonundan cagrilir; sahneyi koyu renklere cevirir.
     public void ApplyNightTheme()
     {
         SetTheme(bgNight, groundNight);
@@ -41,12 +43,14 @@ public class ThemeManager : MonoBehaviour
     /// <summary>
     /// Gündüz (Aydınlık) temasını uygular.
     /// </summary>
+    // Gunduz tema butonundan cagrilir; sahneyi aydinlik renklere cevirir.
     public void ApplyDayTheme()
     {
         SetTheme(bgDay, groundDay);
     }
 
     // Renkleri SpriteRenderer'lara atayan yardımcı fonksiyon.
+    // bgColor arka planin, groundColor zeminin yeni rengidir.
     private void SetTheme(Color bgColor, Color groundColor)
     {
         if (backgroundRenderer != null) backgroundRenderer.color = bgColor;

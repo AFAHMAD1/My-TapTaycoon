@@ -3,11 +3,17 @@ using UnityEngine;
 [System.Serializable]
 public class CardDisplayConfig
 {
+    // Kartta ikon alaninin gorunup gorunmeyecegini belirler.
     public bool showIcon = true;
+    // Bina uretim sureci gibi ilerleme barlari icin kullanilir.
     public bool showProgressBar = false;
+    // Skill/boost gibi kartlarda aciklama metnini acip kapatir.
     public bool showDescription = false;
+    // Gelir satirinin gorunup gorunmeyecegini belirler.
     public bool showIncome = true;
+    // Level yazisinin gorunup gorunmeyecegini belirler.
     public bool showLevel = true;
+    // Kartta ikinci bir buton gerekiyorsa bunu acar.
     public bool showSecondaryButton = false; // Yeni! (Orn: Prestij butonu)
     
     // Varsayılan olarak bina kartı görünümü

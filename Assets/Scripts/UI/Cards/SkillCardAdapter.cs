@@ -44,13 +44,19 @@ public class SkillCardAdapter : ICardDataProvider
     // Sağdaki butonları (Satın Al vs) UI'dan sildiğimiz için bu kısımlar tetiklenmeyecek
     // Ama kartın kendi üstüne tıklandığında OnProgressClick'i kullanabiliriz
     public double GetCost(int amount) => skill.CurrentCost();
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetIncomePerCycle() => 0d;
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAfford(int amount) => skill.CanAffordUpgradeAmount(amount);
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Purchase(int amount) { } 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetBuyButtonText(int amount) => "";
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool HasProgressBar() => true;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public float GetProgressNormalized()
     {
         if (skill.currentLevel == 0) return 0f;
@@ -62,6 +68,7 @@ public class SkillCardAdapter : ICardDataProvider
         return (maxCooldown - skill.currentCooldownTimer) / maxCooldown;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetProgressText()
     {
         if (skill.currentLevel == 0) 
@@ -77,6 +84,7 @@ public class SkillCardAdapter : ICardDataProvider
         return "KULLANIMA HAZIR!";
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void OnProgressClick()
     {
         // Satın alma / level atlama işlemleri artık Kit panelinden yapılacağı için

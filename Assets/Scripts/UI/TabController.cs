@@ -20,6 +20,7 @@ public class TabController : MonoBehaviour
     [Header("Açılış Ayarları")]
     public int defaultTabIndex = 0;
 
+    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     private void Start()
     {
         // Tüm butonlara tıklama event'ini kodla otomatik ata
@@ -32,12 +33,15 @@ public class TabController : MonoBehaviour
             }
         }
 
-        // Oyun başladığında varsayılan sekmeyi aç
+        // Oyun başladığında varsayılan sekmeyi aç.
+        // KitPanel'de defaultTabIndex 2 oldugu icin ilk acilan alt panel SkillsPanel olur.
         OpenTab(defaultTabIndex);
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void OpenTab(int index)
     {
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < tabs.Length; i++)
         {
             bool isActive = (i == index);

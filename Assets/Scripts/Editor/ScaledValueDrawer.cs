@@ -4,6 +4,7 @@ using UnityEditor;
 [CustomPropertyDrawer(typeof(ScaledValue))]
 public class ScaledValueDrawer : PropertyDrawer
 {
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
@@ -69,6 +70,7 @@ public class ScaledValueDrawer : PropertyDrawer
         EditorGUI.EndProperty();
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         float singleLineHeight = EditorGUIUtility.singleLineHeight;

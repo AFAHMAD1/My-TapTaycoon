@@ -4,6 +4,7 @@ public static class PurchaseService
 {
     public static System.Action OnAnyPurchaseCompleted;
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public static int ResolvePurchaseCount(UpgradableEntity entity, int requestedAmount)
     {
         if (entity == null)
@@ -20,6 +21,7 @@ public static class PurchaseService
         return Mathf.Max(1, requestedAmount);
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public static PurchaseResult TryPurchase(UpgradableEntity entity, int requestedAmount)
     {
         PurchaseResult result = new PurchaseResult();
@@ -35,6 +37,7 @@ public static class PurchaseService
             return result;
         }
 
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < purchaseCount; i++)
         {
             double levelCost = entity.CurrentCost();

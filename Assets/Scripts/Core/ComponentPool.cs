@@ -12,6 +12,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
     private readonly HashSet<T> knownItems = new HashSet<T>();
     private bool hasInitialized;
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     protected virtual void Awake()
     {
         if (poolRoot == null)
@@ -22,6 +23,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         InitializePoolIfNeeded();
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     public void Configure(T prefabReference, int preloadCount, Transform root = null, bool allowExpansion = false)
     {
         prefab = prefabReference;
@@ -40,6 +42,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         InitializePoolIfNeeded(true);
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     protected T GetOrCreate()
     {
         if (availableItems.Count > 0)
@@ -58,6 +61,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         return instance;
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     protected void ReleaseToPool(T item)
     {
         if (item == null)
@@ -75,6 +79,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void InitializePoolIfNeeded(bool forceRebuild = false)
     {
         if (hasInitialized && !forceRebuild)
@@ -99,6 +104,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         WarmupMissingItems();
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     private void CollectExistingPoolItems()
     {
         if (poolRoot == null)
@@ -107,6 +113,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         }
 
         T[] existingItems = poolRoot.GetComponentsInChildren<T>(true);
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < existingItems.Length; i++)
         {
             T item = existingItems[i];
@@ -122,6 +129,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         }
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     private void WarmupMissingItems()
     {
         if (prefab == null)
@@ -130,6 +138,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         }
 
         int missingCount = Mathf.Max(0, initialSize - availableItems.Count);
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < missingCount; i++)
         {
             T instance = CreateInstance();
@@ -138,6 +147,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         }
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     private void RegisterItem(T item)
     {
         if (item == null)
@@ -148,6 +158,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         knownItems.Add(item);
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private T CreateInstance()
     {
         if (prefab == null)

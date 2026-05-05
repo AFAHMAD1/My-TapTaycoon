@@ -12,6 +12,7 @@ public class DataMigrator : EditorWindow
         {
             string[] folders = path.Split('/');
             string currentPath = folders[0];
+            // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
             for (int i = 1; i < folders.Length; i++)
             {
                 if (!AssetDatabase.IsValidFolder(currentPath + "/" + folders[i]))
@@ -41,6 +42,7 @@ public class DataMigrator : EditorWindow
         Debug.Log("Tum default veriler ScriptableObject olarak Assets/Scripts/Data/Defaults klasorune eklendi!");
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private static void CreateBuilding(string name, double baseCost, float costMultiplier, double baseIncome, float incomeMultiplier, ScaleMode incomeMode, float duration, Color cardBackgroundColor, Color iconTintColor, Color buttonColor, Color incomeColor, bool requireManualCollection)
     {
         string assetPath = $"Assets/Scripts/Data/Defaults/Building_{name.Replace(" ", "")}.asset";
@@ -80,6 +82,7 @@ public class DataMigrator : EditorWindow
         AssetDatabase.CreateAsset(data, assetPath);
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private static void CreateCollectorData()
     {
         string assetPath = "Assets/Scripts/Data/Defaults/ClickUpgrade_Collector.asset";
@@ -93,6 +96,7 @@ public class DataMigrator : EditorWindow
         AssetDatabase.CreateAsset(data, assetPath);
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private static void CreateBoosts()
     {
         string boost1Path = "Assets/Scripts/Data/Defaults/Boost_Restoran.asset";

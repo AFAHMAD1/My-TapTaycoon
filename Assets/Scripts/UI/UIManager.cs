@@ -10,11 +10,13 @@ public class UIManager : MonoBehaviour
     [Header("Settings")]
     public GameObject startPanel;
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         if (Instance == null) Instance = this;
     }
 
+    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     private void Start()
     {
         // En başta tüm panelleri gizle
@@ -43,6 +45,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void TogglePanel(GameObject targetPanel)
     {
         if (targetPanel == null) return;
@@ -54,10 +57,12 @@ public class UIManager : MonoBehaviour
         targetPanel.SetActive(!wasActive);
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void HideAllPanels()
     {
         if (allPanels == null) return;
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (GameObject panel in allPanels)
         {
             if (panel != null)

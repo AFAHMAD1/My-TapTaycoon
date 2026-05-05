@@ -25,12 +25,14 @@ public class UpgradeManager : MonoBehaviour
     // Tıklama gücünün mevcut seviyesini döner.
     public int ClickPowerLevel => collectorUpgrade != null ? collectorUpgrade.currentLevel : 0;
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         Instance = this;
         ValidateSetup(); // Ayarların tam olup olmadığını kontrol et
     }
 
+    // Unity Editor bu fonksiyonu Inspector degerleri degisince calistirir; eksik ayarlari yakalamaya yarar.
     private void OnValidate()
     {
         ValidateSetup();
@@ -60,6 +62,7 @@ public class UpgradeManager : MonoBehaviour
         
         if (boostUpgrades == null || buildingData == null) return multiplier;
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var boost in boostUpgrades)
         {
             if (boost.currentLevel > 0 && boost.data != null)
@@ -83,6 +86,7 @@ public class UpgradeManager : MonoBehaviour
         float multiplier = 1f;
         if (boostUpgrades == null) return multiplier;
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var boost in boostUpgrades)
         {
             if (boost.currentLevel > 0 && boost.data != null && boost.data.targetType == BoostTargetType.CollectorSpeed)
@@ -101,6 +105,7 @@ public class UpgradeManager : MonoBehaviour
         int bonus = 0;
         if (boostUpgrades == null) return bonus;
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var boost in boostUpgrades)
         {
             if (boost.currentLevel > 0 && boost.data != null && boost.data.targetType == BoostTargetType.CollectorCapacity)

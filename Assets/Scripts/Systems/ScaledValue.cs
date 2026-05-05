@@ -21,6 +21,7 @@ public class ScaledValue
     [Min(0f)]
     public float multiplierPerLevel = 1.15f;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double Evaluate(int level)
     {
         int safeLevel = Mathf.Max(0, level);

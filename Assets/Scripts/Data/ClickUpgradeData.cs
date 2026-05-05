@@ -4,5 +4,6 @@ using UnityEngine;
 public class ClickUpgradeData : UpgradableEntityData
 {
     [Header("Tiklama Ayarlari")]
+    // Her level'da tiklama basina ne kadar para kazanilacagini ScaledValue hesaplar.
     public ScaledValue rewardPerLevel = new ScaledValue();
 }

@@ -20,6 +20,7 @@ public class Banknote : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     public void InitializeForSpawn(BanknotePool pool)
     {
         ownerPool = pool;
@@ -30,6 +31,7 @@ public class Banknote : MonoBehaviour
         StartCoroutine(PopAnimation());
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void ResetForPool()
     {
         StopAllCoroutines();
@@ -39,6 +41,7 @@ public class Banknote : MonoBehaviour
         BanknoteRegistry.Unregister(this);
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Release()
     {
         if (ownerPool != null)
@@ -50,12 +53,14 @@ public class Banknote : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     private System.Collections.IEnumerator PopAnimation()
     {
         float duration = 0.2f;
         float elapsed = 0f;
         Vector3 targetScale = Vector3.one;
 
+        // Bu dongu kosul dogru kaldigi surece calisir; kosul bozulunca durur.
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -67,6 +72,7 @@ public class Banknote : MonoBehaviour
         transform.localScale = targetScale;
     }
 
+    // Obje yok edilirken calisir; geride referans veya event kalmasini onler.
     private void OnDestroy()
     {
         BanknoteRegistry.Unregister(this);

@@ -29,6 +29,7 @@ public class GameDataGenerator : EditorWindow
         Debug.Log("Tüm veriler 'Assets/Scripts/Data/Defaults' klasörüne otomatik oluşturuldu! Gidip listelere sürükleyebilirsin.");
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private static void CreateStoreItem(string name, string desc, StoreCostType cType, float cost, StoreRewardType rType, float reward, string btnText)
     {
         string path = $"Assets/Scripts/Data/Defaults/StoreItem_{name.Replace(" ", "")}.asset";
@@ -46,6 +47,7 @@ public class GameDataGenerator : EditorWindow
         AssetDatabase.CreateAsset(asset, path);
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private static void CreateBoostItem(string name, string desc, float multiplier, float cost)
     {
         string path = $"Assets/Scripts/Data/Defaults/BoostItem_{name.Replace(" ", "")}.asset";

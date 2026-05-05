@@ -14,24 +14,28 @@ public abstract class UpgradableEntity
     
     public bool IsMaxLevel => BaseData != null && BaseData.maxLevel > 0 && currentLevel >= BaseData.maxLevel;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double CurrentCost()
     {
         if (BaseData == null) return 0d;
         return BaseData.EvaluateCost(currentLevel);
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAffordUpgrade()
     {
         return CurrencyManager.Instance != null && CurrencyManager.Instance.currentMoney >= CurrentCost();
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetTotalCostForUpgrades(int amount)
     {
         if (BaseData == null) return 0d;
         
-        int safeAmount = Mathf.Max(0, amount);
+        int safeAmount = Mathf.Min(Mathf.Max(0, amount), GetRemainingUpgradeCount());
         double totalCost = 0d;
 
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < safeAmount; i++)
         {
             totalCost += BaseData.EvaluateCost(currentLevel + i);
@@ -40,14 +44,17 @@ public abstract class UpgradableEntity
         return totalCost;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public int GetMaxAffordableUpgradeCount(double availableMoney)
     {
         if (BaseData == null) return 0;
 
         double remainingMoney = availableMoney;
         int affordableCount = 0;
+        int remainingUpgradeCount = GetRemainingUpgradeCount();
 
-        while (true)
+        // Bu dongu kosul dogru kaldigi surece calisir; kosul bozulunca durur.
+        while (affordableCount < remainingUpgradeCount)
         {
             double nextCost = BaseData.EvaluateCost(currentLevel + affordableCount);
             if (remainingMoney < nextCost)
@@ -67,6 +74,23 @@ public abstract class UpgradableEntity
         return affordableCount;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
+    public int GetRemainingUpgradeCount()
+    {
+        if (BaseData == null)
+        {
+            return 0;
+        }
+
+        if (BaseData.maxLevel <= 0)
+        {
+            return int.MaxValue;
+        }
+
+        return Mathf.Max(0, BaseData.maxLevel - currentLevel);
+    }
+
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAffordUpgradeAmount(int amount)
     {
         if (CurrencyManager.Instance == null || BaseData == null)
@@ -79,10 +103,16 @@ public abstract class UpgradableEntity
             return GetMaxAffordableUpgradeCount(CurrencyManager.Instance.currentMoney) > 0;
         }
 
-        int safeAmount = Mathf.Max(1, amount);
+        int safeAmount = Mathf.Min(Mathf.Max(1, amount), GetRemainingUpgradeCount());
+        if (safeAmount <= 0)
+        {
+            return false;
+        }
+
         return CurrencyManager.Instance.currentMoney >= GetTotalCostForUpgrades(safeAmount);
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public virtual bool TryUpgrade()
     {
         if (BaseData == null || IsMaxLevel) return false;
@@ -99,5 +129,6 @@ public abstract class UpgradableEntity
         return false;
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     protected abstract void OnUpgraded();
 }

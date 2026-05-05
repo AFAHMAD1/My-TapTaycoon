@@ -10,6 +10,7 @@ public class KitPanel : BaseUpgradePanel
     [Header("Kit Ozet Cubugu")]
     public TextMeshProUGUI progressText; // Alınan Kitler: 2/5 yazacak text
 
+    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     protected override void Start()
     {
         // Önce BaseUpgradePanel'in Start'ını çalıştır (Kartları oluştursun)
@@ -19,6 +20,7 @@ public class KitPanel : BaseUpgradePanel
         UpdateProgressText();
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void UpdateProgressText()
     {
         if (progressText == null) return;
@@ -33,10 +35,12 @@ public class KitPanel : BaseUpgradePanel
         progressText.text = $"Alınan Kitler: {purchasedKits} / {totalKits}";
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     protected override List<ICardDataProvider> GetDataProviders()
     {
         var providers = new List<ICardDataProvider>();
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var item in storeItems)
         {
             if (item != null)

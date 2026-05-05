@@ -69,6 +69,7 @@ public class UpgradeCard : MonoBehaviour
     // Kart üzerindeki tüm layout ve görsel bileşenleri zorla aktif yapar.
     private void EnableAllComponents()
     {
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var comp in GetComponents<MonoBehaviour>())
         {
             if (comp != null) comp.enabled = true;
@@ -76,8 +77,11 @@ public class UpgradeCard : MonoBehaviour
 
         if (TryGetComponent<Image>(out var img)) img.enabled = true;
         
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var layout in GetComponentsInChildren<LayoutGroup>(true)) layout.enabled = true;
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var fitter in GetComponentsInChildren<ContentSizeFitter>(true)) fitter.enabled = true;
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var graphic in GetComponentsInChildren<Graphic>(true)) graphic.enabled = true;
     }
 
@@ -165,6 +169,7 @@ public class UpgradeCard : MonoBehaviour
         }
     }
 
+    // Unity bu fonksiyonu her frame calistirir; surekli kontrol veya animasyon gereken isler burada olur.
     private void Update()
     {
         // Kart bilgilerini her karede (veya değişimde) güncelle
@@ -327,6 +332,7 @@ public class UpgradeCard : MonoBehaviour
         if (progressTimeText != null) progressTimeText.color = ProgressTextColor;
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private Slider CreateProgressSlider()
     {
         GameObject sliderObject = new GameObject("ProgressSlider", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Slider));
@@ -343,6 +349,7 @@ public class UpgradeCard : MonoBehaviour
         return slider;
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private Image CreateProgressBackground(Transform parent)
     {
         GameObject backgroundObject = new GameObject("Background", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
@@ -359,6 +366,7 @@ public class UpgradeCard : MonoBehaviour
         return image;
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private Image CreateProgressFill(Transform parent)
     {
         GameObject fillAreaObject = new GameObject("Fill Area", typeof(RectTransform));
@@ -384,6 +392,7 @@ public class UpgradeCard : MonoBehaviour
         return image;
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private TextMeshProUGUI CreateProgressLabel(Transform parent)
     {
         GameObject labelObject = new GameObject("ProgressTimeText", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));

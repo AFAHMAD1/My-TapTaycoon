@@ -25,6 +25,7 @@ public class BuildingCardAdapter : ICardDataProvider
 
     public CardDisplayConfig DisplayConfig => config;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetCost(int amount)
     {
         if (amount >= int.MaxValue)
@@ -36,17 +37,20 @@ public class BuildingCardAdapter : ICardDataProvider
         return building.GetTotalCostForUpgrades(amount);
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetIncomePerCycle()
     {
         if (building.data == null) return 0d;
         return building.currentLevel == 0 ? building.data.incomePerCycle.baseValue : building.CurrentIncome();
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAfford(int amount)
     {
         return building.CanAffordUpgradeAmount(amount);
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Purchase(int amount)
     {
         if (PassiveIncomeManager.Instance != null)
@@ -55,8 +59,10 @@ public class BuildingCardAdapter : ICardDataProvider
         }
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool HasProgressBar() => true;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public float GetProgressNormalized()
     {
         if (building.currentLevel <= 0) return 0f;
@@ -64,6 +70,7 @@ public class BuildingCardAdapter : ICardDataProvider
         return Mathf.Clamp(building.timer, 0f, duration) / duration;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetProgressText()
     {
         float duration = Mathf.Max(0.2f, building.CurrentDuration());
@@ -76,6 +83,7 @@ public class BuildingCardAdapter : ICardDataProvider
         return FormatRemainingTime(remainingTime);
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void OnProgressClick()
     {
         if (PassiveIncomeManager.Instance != null)
@@ -84,6 +92,7 @@ public class BuildingCardAdapter : ICardDataProvider
         }
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetBuyButtonText(int amount)
     {
         string baseText = building.currentLevel == 0 ? "Satin Al" : "Yukselt";
@@ -92,6 +101,7 @@ public class BuildingCardAdapter : ICardDataProvider
         return baseText;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     private string FormatRemainingTime(float seconds)
     {
         int roundedSeconds = Mathf.Max(0, Mathf.CeilToInt(seconds));
@@ -123,6 +133,7 @@ public class CollectorCardAdapter : ICardDataProvider
 
     public CardDisplayConfig DisplayConfig => config;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetCost(int amount)
     {
         if (amount >= int.MaxValue)
@@ -134,24 +145,32 @@ public class CollectorCardAdapter : ICardDataProvider
         return collector.GetTotalCostForUpgrades(amount);
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetIncomePerCycle()
     {
         if (collector.data == null) return 0d;
         return collector.currentLevel == 0 ? collector.data.rewardPerLevel.baseValue : collector.CurrentReward();
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAfford(int amount) => collector.CanAffordUpgradeAmount(amount);
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Purchase(int amount)
     {
         PurchaseService.TryPurchase(collector, amount);
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool HasProgressBar() => false;
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public float GetProgressNormalized() => 0f;
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetProgressText() => "";
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void OnProgressClick() { }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetBuyButtonText(int amount)
     {
         string baseText = "Yükselt";
@@ -160,7 +179,9 @@ public class CollectorCardAdapter : ICardDataProvider
         return baseText;
     }
     
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetSecondaryButtonText() => "Prestij!";
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void OnSecondaryButtonClick()
     {
         Debug.Log("Prestij butonuna tiklandi! (Ileride Prestij sistemi buraya baglanacak)");
@@ -190,6 +211,7 @@ public class BoostCardAdapter : ICardDataProvider
 
     public CardDisplayConfig DisplayConfig => config;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetCost(int amount)
     {
         if (amount >= int.MaxValue)
@@ -201,20 +223,28 @@ public class BoostCardAdapter : ICardDataProvider
         return boost.GetTotalCostForUpgrades(amount);
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetIncomePerCycle() => 0d;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAfford(int amount) => boost.CanAffordUpgradeAmount(amount);
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Purchase(int amount)
     {
         PurchaseService.TryPurchase(boost, amount);
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool HasProgressBar() => false;
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public float GetProgressNormalized() => 0f;
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetProgressText() => "";
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void OnProgressClick() { }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetBuyButtonText(int amount)
     {
         string baseText = boost.currentLevel == 0 ? "Satın Al" : "Yükselt";
@@ -257,9 +287,12 @@ public class StoreCardAdapter : ICardDataProvider
 
     public CardDisplayConfig DisplayConfig => config;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetCost(int amount) => data.costAmount; // Elmas veya TL miktarini dondurur (arayuz icin)
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetIncomePerCycle() => 0d;
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAfford(int amount)
     {
         // TL veya Ucretsiz ise her zaman basilabilir (odeme ekrani acilir)
@@ -270,6 +303,7 @@ public class StoreCardAdapter : ICardDataProvider
         return true; 
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Purchase(int amount)
     {
         Debug.Log($"[{data.itemName}] satin alindi/tiklandi!");
@@ -302,11 +336,16 @@ public class StoreCardAdapter : ICardDataProvider
         }
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool HasProgressBar() => false;
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public float GetProgressNormalized() => 0f;
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetProgressText() => "";
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void OnProgressClick() { }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetBuyButtonText(int amount)
     {
         if (!string.IsNullOrEmpty(data.customButtonText)) return data.customButtonText;

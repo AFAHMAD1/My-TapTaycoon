@@ -30,11 +30,13 @@ public class SaveManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
 
-        LoadGame(); // Oyun açıldığında verileri yükle
     }
 
+    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     private void Start()
     {
+        LoadGame();
+
         // Belirlenen aralıklarla otomatik kaydetmeyi başlat
         if (autoSave) InvokeRepeating(nameof(SaveGame), autoSaveInterval, autoSaveInterval);
     }
@@ -60,6 +62,7 @@ public class SaveManager : MonoBehaviour
         // Binaları kaydet
         if (PassiveIncomeManager.Instance != null)
         {
+            // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
             foreach (var building in PassiveIncomeManager.Instance.buildings)
                 data.buildingLevels.Add(building.currentLevel);
         }
@@ -70,6 +73,7 @@ public class SaveManager : MonoBehaviour
             if (UpgradeManager.Instance.collectorUpgrade != null)
                 data.collectorLevel = UpgradeManager.Instance.collectorUpgrade.currentLevel;
 
+            // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
             foreach (var boost in UpgradeManager.Instance.boostUpgrades)
                 data.boostLevels.Add(boost.currentLevel);
         }
@@ -102,10 +106,11 @@ public class SaveManager : MonoBehaviour
 
         // Verileri ilgili Manager sınıflarına dağıt
         if (CurrencyManager.Instance != null)
-            CurrencyManager.Instance.currentMoney = data.currentMoney;
+            CurrencyManager.Instance.SetMoney(data.currentMoney);
 
         if (PassiveIncomeManager.Instance != null && data.buildingLevels.Count > 0)
         {
+            // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
             for (int i = 0; i < PassiveIncomeManager.Instance.buildings.Count; i++)
             {
                 if (i < data.buildingLevels.Count)
@@ -120,6 +125,7 @@ public class SaveManager : MonoBehaviour
 
             if (data.boostLevels != null)
             {
+                // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
                 for (int i = 0; i < UpgradeManager.Instance.boostUpgrades.Count; i++)
                 {
                     if (i < data.boostLevels.Count)
@@ -128,8 +134,16 @@ public class SaveManager : MonoBehaviour
             }
         }
 
-        // Offline kazançları hesapla
         CalculateOfflineEarnings(data.lastSaveTime);
+
+        if (PassiveIncomeManager.Instance != null)
+        {
+            // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
+            foreach (var building in PassiveIncomeManager.Instance.buildings)
+            {
+                building.InitializeVisualState();
+            }
+        }
 
         Debug.Log("[SaveManager] Veriler Yüklendi.");
     }
@@ -154,8 +168,11 @@ public class SaveManager : MonoBehaviour
 
                 if (totalOfflineEarnings > 0)
                 {
-                    CurrencyManager.Instance.AddMoney(totalOfflineEarnings, false);
-                    Debug.Log($"[SaveManager] Offline Kazanç: ${NumberFormatter.Format(totalOfflineEarnings)} ({secondsOffline:F0} saniye için).");
+                    if (CurrencyManager.Instance != null)
+                    {
+                        CurrencyManager.Instance.AddMoney(totalOfflineEarnings, false);
+                        Debug.Log($"[SaveManager] Offline Kazanc: ${NumberFormatter.Format(totalOfflineEarnings)} ({secondsOffline:F0} saniye icin).");
+                    }
                 }
             }
         }

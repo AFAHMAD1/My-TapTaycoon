@@ -7142,7 +7142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025fe9be106d35f41b16c77be5394df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingPanel
-  cardPrefab: {fileID: 6554144157019958239, guid: 6a9bd33f1a8a6364d89535e6fad970bb, type: 3}
+  cardPrefab: {fileID: 6554144157019958239, guid: 9cd339ac9bfad4544a5d6cdc9855ff8e, type: 3}
   contentContainer: {fileID: 1304311092}
   panelTitle: Yeni Panel
   titleText: {fileID: 0}
@@ -9925,7 +9925,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a629a2946d3c53c4c88c543e687989d4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MoneyDisplay
+  m_EditorClassIdentifier: Assembly-CSharp::PassiveIncomeDisplay
   profitText: {fileID: 0}
   profitPrefix: 'Kar: '
   profitSuffix: ' / saniye'
@@ -12225,7 +12225,7 @@ MonoBehaviour:
     contentPanel: {fileID: 1410173970}
   - tabButton: {fileID: 1593555142}
     contentPanel: {fileID: 668980141}
-  defaultTabIndex: 0
+  defaultTabIndex: 2
 --- !u!1 &1882980002
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ public class EffectManager : MonoBehaviour
     public GameObject levelUpEffectPrefab; // Seviye atlayınca patlayan konfeti
     public GameObject clickEffectPrefab;   // Tıklayınca çıkan efekt
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         Instance = this;

@@ -15,6 +15,7 @@ public class SummaryStatsPanel : MonoBehaviour
     private TextMeshProUGUI netWorthValueText;
     private TextMeshProUGUI totalValueText;
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     public void Initialize(TMP_FontAsset fontAsset, Material fontMaterial)
     {
         EnsurePanelRoot();
@@ -22,11 +23,13 @@ public class SummaryStatsPanel : MonoBehaviour
         UpdateValues();
     }
 
+    // Unity bu fonksiyonu her frame calistirir; surekli kontrol veya animasyon gereken isler burada olur.
     private void Update()
     {
         UpdateValues();
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void EnsurePanelRoot()
     {
         panelRect = transform as RectTransform;
@@ -49,6 +52,7 @@ public class SummaryStatsPanel : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void BuildLayout(TMP_FontAsset fontAsset, Material fontMaterial)
     {
         if (transform.Find("StatsRoot") != null)
@@ -126,6 +130,7 @@ public class SummaryStatsPanel : MonoBehaviour
             TextAlignmentOptions.Center);
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     private void CacheValueReferences()
     {
         tapValueText = FindValueText("TapProfitBlock");
@@ -134,12 +139,14 @@ public class SummaryStatsPanel : MonoBehaviour
         totalValueText = FindValueText("TotalProfitBlock");
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     private TextMeshProUGUI FindValueText(string blockName)
     {
         Transform block = transform.Find($"StatsRoot/{blockName}/Value");
         return block != null ? block.GetComponent<TextMeshProUGUI>() : null;
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void CreateMetricBlock(
         Transform parent,
         string blockName,
@@ -195,6 +202,7 @@ public class SummaryStatsPanel : MonoBehaviour
             new Vector2(0f, 0f));
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private TextMeshProUGUI CreateText(
         Transform parent,
         string objectName,
@@ -243,6 +251,7 @@ public class SummaryStatsPanel : MonoBehaviour
         return tmpText;
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void UpdateValues()
     {
         double tapProfit = UpgradeManager.Instance != null ? UpgradeManager.Instance.CurrentClickValue : 0d;
@@ -261,6 +270,7 @@ public class SummaryStatsPanel : MonoBehaviour
         SetValue(totalValueText, totalProfitPerSecond);
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void SetValue(TextMeshProUGUI target, double value)
     {
         if (target == null)

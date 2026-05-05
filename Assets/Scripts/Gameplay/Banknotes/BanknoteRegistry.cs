@@ -6,6 +6,7 @@ public class BanknoteRegistry : MonoBehaviour
 {
     private static readonly List<Banknote> banknotes = new List<Banknote>();
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public static void Register(Banknote banknote)
     {
         if (banknote == null) return;
@@ -15,11 +16,13 @@ public class BanknoteRegistry : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public static void Cleanup()
     {
         banknotes.RemoveAll(b => b == null || b.isCollected);
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public static void Unregister(Banknote banknote)
     {
         if (banknote == null) return;
@@ -38,11 +41,13 @@ public class BanknoteRegistry : MonoBehaviour
 
         List<Banknote> bestGroup = new List<Banknote>();
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var seed in validNotes)
         {
             Vector2 seedPos = seed.transform.position;
             List<Banknote> currentGroup = new List<Banknote>();
 
+            // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
             foreach (var b in validNotes)
             {
                 // Yakınlık kontrolü VE kapasite sınırını aşmama (maxCount)
@@ -58,6 +63,7 @@ public class BanknoteRegistry : MonoBehaviour
             }
         }
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var note in bestGroup)
         {
             note.isReserved = true;
@@ -66,10 +72,12 @@ public class BanknoteRegistry : MonoBehaviour
         return bestGroup;
     }
 
+    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public static void ReleaseGroup(List<Banknote> group)
     {
         if (group == null) return;
 
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < group.Count; i++)
         {
             if (group[i] != null && !group[i].isCollected)

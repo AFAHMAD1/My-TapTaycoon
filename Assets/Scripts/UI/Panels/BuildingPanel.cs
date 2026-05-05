@@ -4,19 +4,21 @@ using TMPro;
 
 public class BuildingPanel : BaseUpgradePanel
 {
+    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     protected override void Start()
     {
         base.Start();
         SetupGroundStatsPanel();
     }
 
-    // Panel verisi: PassiveIncomeManager'daki binalar Listesi
+    // Bina panelinde gosterilecek kart verilerini PassiveIncomeManager'daki buildings listesinden hazirlar.
     protected override List<ICardDataProvider> GetDataProviders()
     {
         var providers = new List<ICardDataProvider>();
         
         if (PassiveIncomeManager.Instance != null)
         {
+            // Bu dongu buildings listesindeki her binayi kart sisteminin anlayacagi BuildingCardAdapter'a cevirir.
             for (int i = 0; i < PassiveIncomeManager.Instance.buildings.Count; i++)
             {
                 providers.Add(new BuildingCardAdapter(PassiveIncomeManager.Instance.buildings[i], i));

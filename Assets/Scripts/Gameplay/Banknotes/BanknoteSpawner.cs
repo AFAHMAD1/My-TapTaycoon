@@ -15,16 +15,19 @@ public class BanknoteSpawner : MonoBehaviour
     public float zDepth = 0f;
     public int preloadCount = 16;
 
+    // Obje aktif olunca calisir; event dinleyicileri veya gecici durumlar burada hazirlanir.
     private void OnEnable()
     {
         EnhancedTouchSupport.Enable();
     }
 
+    // Obje pasif olunca calisir; acik kalan event/durumlar burada temizlenir.
     private void OnDisable()
     {
         EnhancedTouchSupport.Disable();
     }
 
+    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         if (cam == null)
@@ -35,6 +38,7 @@ public class BanknoteSpawner : MonoBehaviour
         EnsurePools();
     }
 
+    // Unity bu fonksiyonu her frame calistirir; surekli kontrol veya animasyon gereken isler burada olur.
     private void Update()
     {
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -50,6 +54,7 @@ public class BanknoteSpawner : MonoBehaviour
 
         if (Touchscreen.current != null)
         {
+            // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
             foreach (Touch touch in Touch.activeTouches)
             {
                 if (touch.phase != UnityEngine.InputSystem.TouchPhase.Began)
@@ -67,6 +72,7 @@ public class BanknoteSpawner : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     private void SpawnAtScreen(Vector2 screenPos)
     {
         if (BanknotePool.Instance == null)
@@ -107,6 +113,7 @@ public class BanknoteSpawner : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void EnsurePools()
     {
         if (BanknotePool.Instance == null && banknotePrefab != null)
@@ -134,6 +141,7 @@ public class BanknoteSpawner : MonoBehaviour
         }
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     private Transform GetOrCreateRuntimeRoot(string objectName)
     {
         GameObject runtimeRoot = GameObject.Find(objectName);

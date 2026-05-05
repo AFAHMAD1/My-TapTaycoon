@@ -6,8 +6,10 @@ using System.Collections.Generic;
 
 public static class UIHelper
 {
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public static Transform FindChildRecursive(Transform parent, string targetName)
     {
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < parent.childCount; i++)
         {
             Transform child = parent.GetChild(i);
@@ -25,11 +27,13 @@ public static class UIHelper
         return null;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public static Transform FindInActiveScene(string targetName)
     {
         Scene activeScene = SceneManager.GetActiveScene();
         GameObject[] rootObjects = activeScene.GetRootGameObjects();
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (GameObject rootObject in rootObjects)
         {
             if (rootObject.name == targetName)
@@ -46,12 +50,14 @@ public static class UIHelper
         return null;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public static List<Transform> FindAllInActiveScene(string targetName)
     {
         List<Transform> results = new List<Transform>();
         Scene activeScene = SceneManager.GetActiveScene();
         GameObject[] rootObjects = activeScene.GetRootGameObjects();
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (GameObject rootObject in rootObjects)
         {
             if (rootObject.name == targetName)
@@ -65,8 +71,10 @@ public static class UIHelper
         return results;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     private static void FindAllChildrenRecursive(Transform parent, string targetName, List<Transform> results)
     {
+        // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < parent.childCount; i++)
         {
             Transform child = parent.GetChild(i);
@@ -79,8 +87,10 @@ public static class UIHelper
         }
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public static TextMeshProUGUI FindText(Transform parent, params string[] names)
     {
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (string name in names)
         {
             Transform child = FindChildRecursive(parent, name);
@@ -92,8 +102,10 @@ public static class UIHelper
         return null;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public static Button FindButton(Transform parent, params string[] names)
     {
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (string name in names)
         {
             Transform child = FindChildRecursive(parent, name);
@@ -105,8 +117,10 @@ public static class UIHelper
         return null;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public static Image FindImage(Transform parent, params string[] names)
     {
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (string name in names)
         {
             Transform child = FindChildRecursive(parent, name);
@@ -118,8 +132,10 @@ public static class UIHelper
         return null;
     }
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public static Slider FindSlider(Transform parent, params string[] names)
     {
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (string name in names)
         {
             Transform child = FindChildRecursive(parent, name);

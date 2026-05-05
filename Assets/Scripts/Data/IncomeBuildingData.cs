@@ -30,11 +30,13 @@ public class IncomeBuildingData : UpgradableEntityData
     public Color buttonColor = new Color32(32, 151, 220, 255);
     public Color incomeColor = new Color32(78, 154, 67, 255);
 
+    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public float GetDurationForLevel(int level)
     {
         float duration = Mathf.Max(0.2f, baseDuration);
         int safeLevel = Mathf.Max(1, level);
 
+        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (DurationLevelStep step in durationSteps)
         {
             if (step != null && step.requiredLevel <= safeLevel)

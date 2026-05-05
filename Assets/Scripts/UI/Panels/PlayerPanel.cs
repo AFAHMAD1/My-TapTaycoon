@@ -3,16 +3,19 @@ using UnityEngine;
 
 public class PlayerPanel : BaseUpgradePanel
 {
+    // Obje aktif olunca calisir; event dinleyicileri veya gecici durumlar burada hazirlanir.
     private void OnEnable()
     {
         PurchaseService.OnAnyPurchaseCompleted += RefreshPanel;
     }
 
+    // Obje pasif olunca calisir; acik kalan event/durumlar burada temizlenir.
     private void OnDisable()
     {
         PurchaseService.OnAnyPurchaseCompleted -= RefreshPanel;
     }
 
+    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void RefreshPanel()
     {
         if (gameObject.activeInHierarchy)
