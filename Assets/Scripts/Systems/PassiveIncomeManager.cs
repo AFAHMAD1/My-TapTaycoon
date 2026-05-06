@@ -37,12 +37,14 @@ public class IncomeBuilding : UpgradableEntity
         if (currentLevel == 0 || data == null) return 0d;
         
         // Seviyeye göre temel gelir (ScriptableObject içindeki eğriden gelir)
+        // Bu satir: 'incomePerCycle' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'baseIncome' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
         double baseIncome = data.incomePerCycle.Evaluate(currentLevel - 1);
         
         // Aktif çarpanları (UpgradeManager) uygula
         double multiplier = 1d;
         if (UpgradeManager.Instance != null)
         {
+            // Bu satir: 'Instance' uzerindeki 'GetBuildingMultiplier' metodunu cagirir ve donen sonucu 'multiplier' degiskenine kaydeder.
             multiplier = UpgradeManager.Instance.GetBuildingMultiplier(data);
         }
         
@@ -63,6 +65,7 @@ public class IncomeBuilding : UpgradableEntity
     public float CurrentDuration()
     {
         if (data == null) return 5f;
+        // Bu satir: 'data' objesi uzerindeki 'GetDurationForLevel' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         return data.GetDurationForLevel(Mathf.Max(1, currentLevel));
     }
 
@@ -75,6 +78,7 @@ public class IncomeBuilding : UpgradableEntity
         // Seviye atlayınca görsel efekt oynat
         if (EffectManager.Instance != null && spawnedVisualInstance != null)
         {
+            // Bu satir: 'Instance' objesi uzerindeki 'PlayLevelUpEffect' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             EffectManager.Instance.PlayLevelUpEffect(spawnedVisualInstance.transform.position);
         }
     }
@@ -96,6 +100,7 @@ public class IncomeBuilding : UpgradableEntity
 
         if (data.buildingPrefab != null)
         {
+            // Bu satir: 'Object' uzerindeki 'Instantiate' metodunu cagirir ve donen sonucu 'spawnedVisualInstance' degiskenine kaydeder.
             spawnedVisualInstance = Object.Instantiate(data.buildingPrefab, data.spawnOffset, Quaternion.identity);
             spawnedVisualInstance.name = $"{data.entityName}_Visual";
         }
@@ -118,6 +123,7 @@ public class IncomeBuilding : UpgradableEntity
     {
         if (!isReadyToCollect || CurrencyManager.Instance == null) return false;
 
+        // Bu satir: 'Instance' objesi uzerindeki 'AddMoney' metodunu cagirir; oyuncunun bakiyesine para ekler.
         CurrencyManager.Instance.AddMoney(CurrentIncome(), false);
         timer = 0f;
         isReadyToCollect = false;
@@ -164,6 +170,7 @@ public class PassiveIncomeManager : MonoBehaviour
             if (building.currentLevel <= 0 || building.isReadyToCollect) continue;
 
             building.timer += Time.deltaTime;
+            // Bu satir: 'building' uzerindeki 'CurrentDuration' metodunu cagirir ve sonucu 'duration' degiskenine koyar; binanin bir gelir turunu kac saniyede tamamladigini hesaplar.
             float duration = building.CurrentDuration();
 
             // Üretim süresi tamamlandı mı?
@@ -180,6 +187,7 @@ public class PassiveIncomeManager : MonoBehaviour
 
                 // Otomatik toplama: Parayı ekle ve zamanlayıcıyı sıfırla
                 building.timer = 0f;
+                // Bu satir: 'Instance' objesi uzerindeki 'AddMoney' metodunu cagirir; oyuncunun bakiyesine para ekler.
                 CurrencyManager.Instance.AddMoney(building.CurrentIncome(), false);
             }
         }
@@ -203,6 +211,7 @@ public class PassiveIncomeManager : MonoBehaviour
     public void BuyUpgrade(int index, int amount)
     {
         if (index >= 0 && index < buildings.Count)
+            // Bu satir: 'PurchaseService' objesi uzerindeki 'TryPurchase' metodunu cagirir; para yetiyorsa satin alma/seviye atlama islemini dener.
             PurchaseService.TryPurchase(buildings[index], amount);
     }
 

@@ -23,6 +23,7 @@ public class ClickUpgradeEntity : UpgradableEntity
         // Seviye atlayınca görsel efekt oynat (Karakterin bulunduğu yer veya ekranın ortası)
         if (EffectManager.Instance != null)
         {
+            // Bu satir: 'Instance' objesi uzerindeki 'PlayLevelUpEffect' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             EffectManager.Instance.PlayLevelUpEffect(Vector3.zero);
         }
     }

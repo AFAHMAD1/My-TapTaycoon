@@ -14,6 +14,7 @@ public class KitPanel : BaseUpgradePanel
     protected override void Start()
     {
         // Önce BaseUpgradePanel'in Start'ını çalıştır (Kartları oluştursun)
+        // Bu satir: base, yani miras alinan ust sinif uzerindeki 'Start' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         base.Start();
 
         // Sonra bizim yazımızı güncelle
@@ -45,6 +46,7 @@ public class KitPanel : BaseUpgradePanel
         {
             if (item != null)
             {
+                // Bu satir: 'providers' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
                 providers.Add(new StoreCardAdapter(item));
             }
         }

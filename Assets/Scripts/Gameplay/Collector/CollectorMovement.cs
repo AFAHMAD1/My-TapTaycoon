@@ -53,6 +53,7 @@ public class CollectorMovement : MonoBehaviour
     public IEnumerator JumpToPoint(Vector3 targetPosition)
     {
         Vector3 start = transform.position;
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'duration' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         float duration = Mathf.Max(0.01f, jumpDuration);
         float elapsed = 0f;
 
@@ -61,7 +62,9 @@ public class CollectorMovement : MonoBehaviour
         {
             elapsed += Time.deltaTime;
 
+            // Bu satir: 'Mathf' uzerindeki 'Clamp01' metodunu cagirir ve sonucu 't' degiskenine koyar; degeri 0 ile 1 arasina sikistirir; yuzde/progress hesabi icin kullanilir.
             float t = Mathf.Clamp01(elapsed / duration);
+            // Bu satir: 'Vector3' uzerindeki 'Lerp' metodunu cagirir ve sonucu 'pos' degiskenine koyar; iki deger arasinda yavas gecis hesaplar; animasyon ve hareketlerde kullanilir.
             Vector3 pos = Vector3.Lerp(start, targetPosition, t);
             
             // Zıplama eğrisi (Sinüs dalgası ile)

@@ -31,9 +31,11 @@ public class BuildingCardAdapter : ICardDataProvider
         if (amount >= int.MaxValue)
         {
             double money = CurrencyManager.Instance != null ? CurrencyManager.Instance.currentMoney : 0d;
+            // Bu satir: 'building' uzerindeki 'GetMaxAffordableUpgradeCount' metodunu cagirir ve sonucu 'maxAffordable' degiskenine koyar; eldeki parayla en fazla kac upgrade alinabilecegini hesaplar.
             int maxAffordable = building.GetMaxAffordableUpgradeCount(money);
             return maxAffordable > 0 ? building.GetTotalCostForUpgrades(maxAffordable) : building.CurrentCost();
         }
+        // Bu satir: 'building' objesi uzerindeki 'GetTotalCostForUpgrades' metodunu cagirir; birden fazla level satin almanin toplam maliyetini hesaplar.
         return building.GetTotalCostForUpgrades(amount);
     }
 
@@ -47,6 +49,7 @@ public class BuildingCardAdapter : ICardDataProvider
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAfford(int amount)
     {
+        // Bu satir: 'building' objesi uzerindeki 'CanAffordUpgradeAmount' metodunu cagirir; istenen sayida upgrade icin para yetip yetmedigini kontrol eder.
         return building.CanAffordUpgradeAmount(amount);
     }
 
@@ -55,6 +58,7 @@ public class BuildingCardAdapter : ICardDataProvider
     {
         if (PassiveIncomeManager.Instance != null)
         {
+            // Bu satir: 'Instance' objesi uzerindeki 'BuyUpgrade' metodunu cagirir; belirli index'teki bina/upgrade icin satin alma islemini tetikler.
             PassiveIncomeManager.Instance.BuyUpgrade(index, amount);
         }
     }
@@ -66,6 +70,7 @@ public class BuildingCardAdapter : ICardDataProvider
     public float GetProgressNormalized()
     {
         if (building.currentLevel <= 0) return 0f;
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'duration' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         float duration = Mathf.Max(0.2f, building.CurrentDuration());
         return Mathf.Clamp(building.timer, 0f, duration) / duration;
     }
@@ -73,12 +78,14 @@ public class BuildingCardAdapter : ICardDataProvider
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public string GetProgressText()
     {
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'duration' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         float duration = Mathf.Max(0.2f, building.CurrentDuration());
         if (building.currentLevel <= 0) return FormatRemainingTime(duration);
         
         if (building.data != null && building.data.requireManualCollection && building.isReadyToCollect)
             return "Toplamaya Hazir!";
             
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'remainingTime' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         float remainingTime = Mathf.Max(0f, duration - building.timer);
         return FormatRemainingTime(remainingTime);
     }
@@ -88,6 +95,7 @@ public class BuildingCardAdapter : ICardDataProvider
     {
         if (PassiveIncomeManager.Instance != null)
         {
+            // Bu satir: 'Instance' objesi uzerindeki 'CollectIncome' metodunu cagirir; hazir olan bina gelirini toplamayi dener.
             PassiveIncomeManager.Instance.CollectIncome(index);
         }
     }
@@ -104,7 +112,9 @@ public class BuildingCardAdapter : ICardDataProvider
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     private string FormatRemainingTime(float seconds)
     {
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'roundedSeconds' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         int roundedSeconds = Mathf.Max(0, Mathf.CeilToInt(seconds));
+        // Bu satir: 'TimeSpan' uzerindeki 'FromSeconds' metodunu cagirir ve sonucu 'remaining' degiskenine koyar; saniye degerini saat-dakika-saniye olarak kullanilabilecek TimeSpan yapisina cevirir.
         System.TimeSpan remaining = System.TimeSpan.FromSeconds(roundedSeconds);
         return $"{remaining.Hours:00}:{remaining.Minutes:00}:{remaining.Seconds:00}";
     }
@@ -139,9 +149,11 @@ public class CollectorCardAdapter : ICardDataProvider
         if (amount >= int.MaxValue)
         {
             double money = CurrencyManager.Instance != null ? CurrencyManager.Instance.currentMoney : 0d;
+            // Bu satir: 'collector' uzerindeki 'GetMaxAffordableUpgradeCount' metodunu cagirir ve sonucu 'maxAffordable' degiskenine koyar; eldeki parayla en fazla kac upgrade alinabilecegini hesaplar.
             int maxAffordable = collector.GetMaxAffordableUpgradeCount(money);
             return maxAffordable > 0 ? collector.GetTotalCostForUpgrades(maxAffordable) : collector.CurrentCost();
         }
+        // Bu satir: 'collector' objesi uzerindeki 'GetTotalCostForUpgrades' metodunu cagirir; birden fazla level satin almanin toplam maliyetini hesaplar.
         return collector.GetTotalCostForUpgrades(amount);
     }
 
@@ -158,6 +170,7 @@ public class CollectorCardAdapter : ICardDataProvider
     // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Purchase(int amount)
     {
+        // Bu satir: 'PurchaseService' objesi uzerindeki 'TryPurchase' metodunu cagirir; para yetiyorsa satin alma/seviye atlama islemini dener.
         PurchaseService.TryPurchase(collector, amount);
     }
 
@@ -184,6 +197,7 @@ public class CollectorCardAdapter : ICardDataProvider
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void OnSecondaryButtonClick()
     {
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log("Prestij butonuna tiklandi! (Ileride Prestij sistemi buraya baglanacak)");
     }
 }
@@ -217,9 +231,11 @@ public class BoostCardAdapter : ICardDataProvider
         if (amount >= int.MaxValue)
         {
             double money = CurrencyManager.Instance != null ? CurrencyManager.Instance.currentMoney : 0d;
+            // Bu satir: 'boost' uzerindeki 'GetMaxAffordableUpgradeCount' metodunu cagirir ve sonucu 'maxAffordable' degiskenine koyar; eldeki parayla en fazla kac upgrade alinabilecegini hesaplar.
             int maxAffordable = boost.GetMaxAffordableUpgradeCount(money);
             return maxAffordable > 0 ? boost.GetTotalCostForUpgrades(maxAffordable) : boost.CurrentCost();
         }
+        // Bu satir: 'boost' objesi uzerindeki 'GetTotalCostForUpgrades' metodunu cagirir; birden fazla level satin almanin toplam maliyetini hesaplar.
         return boost.GetTotalCostForUpgrades(amount);
     }
 
@@ -232,6 +248,7 @@ public class BoostCardAdapter : ICardDataProvider
     // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Purchase(int amount)
     {
+        // Bu satir: 'PurchaseService' objesi uzerindeki 'TryPurchase' metodunu cagirir; para yetiyorsa satin alma/seviye atlama islemini dener.
         PurchaseService.TryPurchase(boost, amount);
     }
 
@@ -306,6 +323,7 @@ public class StoreCardAdapter : ICardDataProvider
     // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Purchase(int amount)
     {
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log($"[{data.itemName}] satin alindi/tiklandi!");
         
         // Odul mantigi
@@ -314,23 +332,29 @@ public class StoreCardAdapter : ICardDataProvider
             case StoreRewardType.TimeSkipMoney:
                 if (PassiveIncomeManager.Instance != null && CurrencyManager.Instance != null)
                 {
+                    // Bu satir: 'Instance' uzerindeki 'GetTotalPassiveIncomePerSecond' metodunu cagirir ve sonucu 'totalIncomePerSec' degiskenine koyar; tum binalarin saniyelik toplam pasif gelirini hesaplar.
                     double totalIncomePerSec = PassiveIncomeManager.Instance.GetTotalPassiveIncomePerSecond();
                     double skipReward = totalIncomePerSec * (data.rewardAmount * 3600); // Saat -> Saniye
+                    // Bu satir: 'Instance' objesi uzerindeki 'AddMoney' metodunu cagirir; oyuncunun bakiyesine para ekler.
                     CurrencyManager.Instance.AddMoney(skipReward, true);
+                    // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
                     Debug.Log($"{data.rewardAmount} saatlik kazanc eklendi: {skipReward}");
                 }
                 break;
                 
             case StoreRewardType.SocialMediaReward:
+                // Bu satir: 'Application' objesi uzerindeki 'OpenURL' metodunu cagirir; tarayici veya sistem uzerinden verilen linki acar.
                 Application.OpenURL("https://instagram.com/oyunumuz");
                 // TODO: Elmas ekle
                 break;
                 
             case StoreRewardType.CooldownReset:
+                // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
                 Debug.Log("Beceriler sifirlandi!");
                 break;
                 
             case StoreRewardType.DiamondPack:
+                // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
                 Debug.Log("Google Play / App Store odeme ekrani acilacak.");
                 break;
         }

@@ -57,6 +57,7 @@ public class ThemeManager : MonoBehaviour
         if (groundRenderer != null) groundRenderer.color = groundColor;
         
         // Tema bilgisini kaydet (Oyun açıldığında hatırlanması için)
+        // Bu satir: 'PlayerPrefs' objesi uzerindeki 'SetString' metodunu cagirir; PlayerPrefs icine string veri kaydeder.
         PlayerPrefs.SetString("CurrentTheme", bgColor.ToString()); 
     }
 }

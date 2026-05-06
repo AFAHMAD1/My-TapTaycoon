@@ -15,9 +15,11 @@ public static class PurchaseService
         if (requestedAmount >= int.MaxValue)
         {
             double availableMoney = CurrencyManager.Instance != null ? CurrencyManager.Instance.currentMoney : 0d;
+            // Bu satir: 'entity' objesi uzerindeki 'GetMaxAffordableUpgradeCount' metodunu cagirir; eldeki parayla kac level alinabilecegini hesaplar.
             return entity.GetMaxAffordableUpgradeCount(availableMoney);
         }
 
+        // Bu satir: 'Mathf' objesi uzerindeki 'Max' metodunu cagirir; verilen degerlerden buyuk olani secer; minimum sinir koymak icin kullanilir.
         return Mathf.Max(1, requestedAmount);
     }
 
@@ -40,6 +42,7 @@ public static class PurchaseService
         // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < purchaseCount; i++)
         {
+            // Bu satir: 'entity' uzerindeki 'CurrentCost' metodunu cagirir ve sonucu 'levelCost' degiskenine koyar; siradaki upgrade'in mevcut level'a gore fiyatini hesaplar.
             double levelCost = entity.CurrentCost();
             if (!entity.TryUpgrade())
             {

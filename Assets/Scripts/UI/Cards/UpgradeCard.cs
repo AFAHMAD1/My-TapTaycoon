@@ -50,7 +50,9 @@ public class UpgradeCard : MonoBehaviour
         // Satın alma butonuna dinleyici ekle
         if (buyButton != null)
         {
+            // Bu satir: 'onClick' objesi uzerindeki 'RemoveListener' metodunu cagirir; daha once eklenmis belirli bir UI olay baglantisini kaldirir.
             buyButton.onClick.RemoveListener(OnPrimaryBuyClicked);
+            // Bu satir: 'onClick' objesi uzerindeki 'AddListener' metodunu cagirir; buton/toggle gibi UI olayina fonksiyon baglar; kullanici tiklayinca bu fonksiyon calisir.
             buyButton.onClick.AddListener(OnPrimaryBuyClicked);
 
             // Etkileşimli animasyon ekle (UIBounce)
@@ -108,6 +110,7 @@ public class UpgradeCard : MonoBehaviour
     {
         if (secondaryButton == null)
         {
+            // Bu satir: 'UIHelper' uzerindeki 'FindChildRecursive' metodunu cagirir ve sonucu 'existing' degiskenine koyar; verilen parent'in alt cocuklarinda isme gore derin arama yapar. Normal Find sadece tek seviye bakarken bu metot alt seviyelere de iner.
             Transform existing = UIHelper.FindChildRecursive(transform, "SecondaryButton");
             if (existing != null)
             {
@@ -118,6 +121,7 @@ public class UpgradeCard : MonoBehaviour
             {
                 // Mavi bir buton oluştur ve yerleştir
                 GameObject btnObj = new GameObject("SecondaryButton", typeof(RectTransform), typeof(Image), typeof(Button));
+                // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
                 btnObj.transform.SetParent(transform, false);
                 
                 RectTransform rect = btnObj.GetComponent<RectTransform>();
@@ -133,6 +137,7 @@ public class UpgradeCard : MonoBehaviour
                 img.color = new Color32(33, 115, 206, 255);
 
                 GameObject txtObj = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+                // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
                 txtObj.transform.SetParent(btnObj.transform, false);
                 RectTransform txtRect = txtObj.GetComponent<RectTransform>();
                 txtRect.anchorMin = Vector2.zero;
@@ -150,10 +155,13 @@ public class UpgradeCard : MonoBehaviour
 
         if (secondaryButton != null)
         {
+            // Bu satir: 'gameObject' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
             secondaryButton.gameObject.SetActive(show);
             if (show)
             {
+                // Bu satir: 'onClick' objesi uzerindeki 'RemoveAllListeners' metodunu cagirir; butondaki eski tiklama baglantilarini temizler; ayni is birden fazla kez calismasin diye kullanilir.
                 secondaryButton.onClick.RemoveAllListeners();
+                // Bu satir: 'onClick' objesi uzerindeki 'AddListener' metodunu cagirir; buton/toggle gibi UI olayina fonksiyon baglar; kullanici tiklayinca bu fonksiyon calisir.
                 secondaryButton.onClick.AddListener(() => provider.OnSecondaryButtonClick());
                 if (secondaryButtonText != null) secondaryButtonText.text = provider.GetSecondaryButtonText();
             }
@@ -165,6 +173,7 @@ public class UpgradeCard : MonoBehaviour
     {
         if (provider != null && getBuyAmountFunc != null)
         {
+            // Bu satir: 'provider' objesi uzerindeki 'Purchase' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             provider.Purchase(getBuyAmountFunc());
         }
     }
@@ -192,6 +201,7 @@ public class UpgradeCard : MonoBehaviour
         // Gelir Güncelleme
         if (config.showIncome && incomeText != null)
         {
+            // Bu satir: 'provider' uzerindeki 'GetIncomePerCycle' metodunu cagirir ve donen sonucu 'incomePerCycle' degiskenine kaydeder.
             double incomePerCycle = provider.GetIncomePerCycle();
             incomeText.text =
                 $"<size=20>Kazanç </size>" +
@@ -210,6 +220,7 @@ public class UpgradeCard : MonoBehaviour
         // Fiyat Güncelleme
         if (costText != null)
         {
+            // Bu satir: 'provider' uzerindeki 'GetCost' metodunu cagirir ve donen sonucu 'cost' degiskenine kaydeder.
             double cost = provider.GetCost(buyAmount);
             costText.text = "Fiyat: $" + NumberFormatter.Format(cost);
         }
@@ -244,6 +255,7 @@ public class UpgradeCard : MonoBehaviour
     private void EnsureDescriptionText()
     {
         if (descriptionText != null) return;
+        // Bu satir: 'UIHelper' uzerindeki 'FindText' metodunu cagirir ve sonucu 'descriptionText' degiskenine koyar; UI hiyerarsisinde verilen isimlerden birine sahip TextMeshPro yazisini arar.
         descriptionText = UIHelper.FindText(transform, "DescriptionText", "DescText");
         
         if (descriptionText == null && incomeText != null)
@@ -280,12 +292,14 @@ public class UpgradeCard : MonoBehaviour
         if (progressSlider == null) return;
 
         progressSlider.interactable = false;
+        // Bu satir: 'transform' uzerindeki 'Find' metodunu cagirir ve sonucu 'overlayTransform' degiskenine koyar; sahnede veya transform altinda verilen isimde obje arar.
         Transform overlayTransform = progressSlider.transform.Find("ClickOverlay");
         Button clickButton;
 
         if (overlayTransform == null)
         {
             GameObject overlayObj = new GameObject("ClickOverlay", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
             overlayObj.transform.SetParent(progressSlider.transform, false);
 
             RectTransform rect = overlayObj.GetComponent<RectTransform>();
@@ -307,7 +321,9 @@ public class UpgradeCard : MonoBehaviour
 
         if (clickButton != null)
         {
+            // Bu satir: 'onClick' objesi uzerindeki 'RemoveAllListeners' metodunu cagirir; butondaki eski tiklama baglantilarini temizler; ayni is birden fazla kez calismasin diye kullanilir.
             clickButton.onClick.RemoveAllListeners();
+            // Bu satir: 'onClick' objesi uzerindeki 'AddListener' metodunu cagirir; buton/toggle gibi UI olayina fonksiyon baglar; kullanici tiklayinca bu fonksiyon calisir.
             clickButton.onClick.AddListener(() => provider.OnProgressClick());
         }
     }
@@ -321,9 +337,11 @@ public class UpgradeCard : MonoBehaviour
         progressSlider.direction = Slider.Direction.LeftToRight;
         progressSlider.transition = Selectable.Transition.None;
 
+        // Bu satir: 'UIHelper' uzerindeki 'FindImage' metodunu cagirir ve sonucu 'backgroundImage' degiskenine koyar; UI hiyerarsisinde verilen isimlerden birine sahip Image component'ini arar.
         Image backgroundImage = UIHelper.FindImage(progressSlider.transform, "Background") ?? CreateProgressBackground(progressSlider.transform);
         backgroundImage.color = ProgressBackgroundColor;
 
+        // Bu satir: 'UIHelper' uzerindeki 'FindImage' metodunu cagirir ve sonucu 'fillImage' degiskenine koyar; UI hiyerarsisinde verilen isimlerden birine sahip Image component'ini arar.
         Image fillImage = UIHelper.FindImage(progressSlider.transform, "Fill") ?? CreateProgressFill(progressSlider.transform);
         fillImage.color = ProgressFillColor;
         progressSlider.fillRect = fillImage.rectTransform;
@@ -336,6 +354,7 @@ public class UpgradeCard : MonoBehaviour
     private Slider CreateProgressSlider()
     {
         GameObject sliderObject = new GameObject("ProgressSlider", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Slider));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         sliderObject.transform.SetParent(transform, false);
 
         Image rootImage = sliderObject.GetComponent<Image>();
@@ -353,6 +372,7 @@ public class UpgradeCard : MonoBehaviour
     private Image CreateProgressBackground(Transform parent)
     {
         GameObject backgroundObject = new GameObject("Background", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         backgroundObject.transform.SetParent(parent, false);
 
         RectTransform rect = backgroundObject.GetComponent<RectTransform>();
@@ -370,6 +390,7 @@ public class UpgradeCard : MonoBehaviour
     private Image CreateProgressFill(Transform parent)
     {
         GameObject fillAreaObject = new GameObject("Fill Area", typeof(RectTransform));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         fillAreaObject.transform.SetParent(parent, false);
 
         RectTransform fillAreaRect = fillAreaObject.GetComponent<RectTransform>();
@@ -379,6 +400,7 @@ public class UpgradeCard : MonoBehaviour
         fillAreaRect.offsetMax = new Vector2(-3f, -3f);
 
         GameObject fillObject = new GameObject("Fill", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         fillObject.transform.SetParent(fillAreaObject.transform, false);
 
         RectTransform fillRect = fillObject.GetComponent<RectTransform>();
@@ -396,6 +418,7 @@ public class UpgradeCard : MonoBehaviour
     private TextMeshProUGUI CreateProgressLabel(Transform parent)
     {
         GameObject labelObject = new GameObject("ProgressTimeText", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         labelObject.transform.SetParent(parent, false);
 
         TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();

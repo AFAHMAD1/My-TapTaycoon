@@ -24,6 +24,7 @@ public class ScaledValue
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double Evaluate(int level)
     {
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'safeLevel' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         int safeLevel = Mathf.Max(0, level);
         
         switch (mode)

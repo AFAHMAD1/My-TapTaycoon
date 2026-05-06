@@ -64,6 +64,7 @@ public class SaveManager : MonoBehaviour
         {
             // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
             foreach (var building in PassiveIncomeManager.Instance.buildings)
+                // Bu satir: 'buildingLevels' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
                 data.buildingLevels.Add(building.currentLevel);
         }
 
@@ -75,6 +76,7 @@ public class SaveManager : MonoBehaviour
 
             // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
             foreach (var boost in UpgradeManager.Instance.boostUpgrades)
+                // Bu satir: 'boostLevels' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
                 data.boostLevels.Add(boost.currentLevel);
         }
 
@@ -82,10 +84,14 @@ public class SaveManager : MonoBehaviour
         data.lastSaveTime = DateTime.UtcNow.ToString();
 
         // JSON'a dönüştür ve sakla
+        // Bu satir: 'JsonUtility' uzerindeki 'ToJson' metodunu cagirir ve sonucu 'json' degiskenine koyar; SaveData nesnesini JSON metnine cevirir; kayit icin string hale getirir.
         string json = JsonUtility.ToJson(data);
+        // Bu satir: 'PlayerPrefs' objesi uzerindeki 'SetString' metodunu cagirir; PlayerPrefs icine string veri kaydeder.
         PlayerPrefs.SetString("GameSave", json);
+        // Bu satir: 'PlayerPrefs' objesi uzerindeki 'Save' metodunu cagirir; PlayerPrefs degisikliklerini diske kaydeder.
         PlayerPrefs.Save();
         
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log("[SaveManager] Oyun Kaydedildi.");
     }
 
@@ -97,15 +103,18 @@ public class SaveManager : MonoBehaviour
     {
         if (!PlayerPrefs.HasKey("GameSave"))
         {
+            // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
             Debug.Log("[SaveManager] Kayıtlı dosya bulunamadı.");
             return;
         }
 
+        // Bu satir: 'PlayerPrefs' uzerindeki 'GetString' metodunu cagirir ve sonucu 'json' degiskenine koyar; PlayerPrefs icinden kayitli string veriyi okur.
         string json = PlayerPrefs.GetString("GameSave");
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
         // Verileri ilgili Manager sınıflarına dağıt
         if (CurrencyManager.Instance != null)
+            // Bu satir: 'Instance' objesi uzerindeki 'SetMoney' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             CurrencyManager.Instance.SetMoney(data.currentMoney);
 
         if (PassiveIncomeManager.Instance != null && data.buildingLevels.Count > 0)
@@ -141,10 +150,12 @@ public class SaveManager : MonoBehaviour
             // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
             foreach (var building in PassiveIncomeManager.Instance.buildings)
             {
+                // Bu satir: 'building' objesi uzerindeki 'InitializeVisualState' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
                 building.InitializeVisualState();
             }
         }
 
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log("[SaveManager] Veriler Yüklendi.");
     }
 
@@ -170,7 +181,9 @@ public class SaveManager : MonoBehaviour
                 {
                     if (CurrencyManager.Instance != null)
                     {
+                        // Bu satir: 'Instance' objesi uzerindeki 'AddMoney' metodunu cagirir; oyuncunun bakiyesine para ekler.
                         CurrencyManager.Instance.AddMoney(totalOfflineEarnings, false);
+                        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
                         Debug.Log($"[SaveManager] Offline Kazanc: ${NumberFormatter.Format(totalOfflineEarnings)} ({secondsOffline:F0} saniye icin).");
                     }
                 }
@@ -184,7 +197,9 @@ public class SaveManager : MonoBehaviour
     [ContextMenu("Reset Progress")]
     public void ResetProgress()
     {
+        // Bu satir: 'PlayerPrefs' objesi uzerindeki 'DeleteKey' metodunu cagirir; PlayerPrefs icindeki belirtilen kayit anahtarini siler.
         PlayerPrefs.DeleteKey("GameSave");
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log("[SaveManager] İlerleme Sıfırlandı. Oyunu yeniden başlatın.");
     }
 }

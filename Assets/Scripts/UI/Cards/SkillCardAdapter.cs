@@ -27,8 +27,11 @@ public class SkillCardAdapter : ICardDataProvider
         get 
         {
             // "{0} Saniyeliğine {1}x işletme kârı" gibi bir metni formatlıyoruz
+            // Bu satir: 'effectDuration' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'duration' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
             float duration = (float)skill.data.effectDuration.Evaluate(skill.currentLevel);
+            // Bu satir: 'effectPower' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'power' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
             float power = (float)skill.data.effectPower.Evaluate(skill.currentLevel);
+            // Bu satir: 'string' objesi uzerindeki 'Format' metodunu cagirir; buyuk sayiyi UI'da okunabilir kisa metne cevirir.
             return string.Format(skill.data.descriptionTemplate, duration, power);
         }
     }
@@ -61,6 +64,7 @@ public class SkillCardAdapter : ICardDataProvider
     {
         if (skill.currentLevel == 0) return 0f;
         
+        // Bu satir: 'cooldownTime' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'maxCooldown' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
         float maxCooldown = (float)skill.data.cooldownTime.Evaluate(skill.currentLevel);
         if (maxCooldown <= 0) return 1f;
 
@@ -74,6 +78,7 @@ public class SkillCardAdapter : ICardDataProvider
         if (skill.currentLevel == 0) 
         {
             // Resimdeki gibi Lv.0 olsa bile bekleme süresini (Level 1 halini) gösteriyoruz.
+            // Bu satir: 'cooldownTime' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'previewCooldown' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
             float previewCooldown = (float)skill.data.cooldownTime.Evaluate(1);
             return $"Bekleme: {Mathf.CeilToInt(previewCooldown / 60f)}m"; 
         }
@@ -91,6 +96,7 @@ public class SkillCardAdapter : ICardDataProvider
         // burada SADECE eğer beceri açıksa (Level > 0) ve hazırsa kullanma işlemi yapıyoruz.
         if (skill.IsReady && skill.currentLevel > 0)
         {
+            // Bu satir: 'skill' objesi uzerindeki 'UseSkill' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             skill.UseSkill();
         }
     }

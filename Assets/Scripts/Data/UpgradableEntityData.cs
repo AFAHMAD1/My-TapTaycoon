@@ -12,6 +12,7 @@ public abstract class UpgradableEntityData : ScriptableObject
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double EvaluateCost(int level)
     {
+        // Bu satir: 'upgradeCost' objesi uzerindeki 'Evaluate' metodunu cagirir; ScaledValue ayarlarina gore level bazli sayisal deger hesaplar.
         return upgradeCost.Evaluate(level);
     }
 }

@@ -8,6 +8,7 @@ public class BanknotePool : ComponentPool<Banknote>
     protected override void Awake()
     {
         Instance = this;
+        // Bu satir: base, yani miras alinan ust sinif uzerindeki 'Awake' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         base.Awake();
         EnsureActiveRoot();
     }
@@ -29,9 +30,13 @@ public class BanknotePool : ComponentPool<Banknote>
         }
 
         Transform banknoteTransform = banknote.transform;
+        // Bu satir: 'banknoteTransform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         banknoteTransform.SetParent(activeRoot, false);
+        // Bu satir: 'banknoteTransform' objesi uzerindeki 'SetPositionAndRotation' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         banknoteTransform.SetPositionAndRotation(position, rotation);
+        // Bu satir: 'gameObject' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         banknote.gameObject.SetActive(true);
+        // Bu satir: 'banknote' objesi uzerindeki 'InitializeForSpawn' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         banknote.InitializeForSpawn(this);
         return banknote;
     }
@@ -44,6 +49,7 @@ public class BanknotePool : ComponentPool<Banknote>
             return;
         }
 
+        // Bu satir: 'banknote' objesi uzerindeki 'ResetForPool' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         banknote.ResetForPool();
         ReleaseToPool(banknote);
     }
@@ -56,6 +62,7 @@ public class BanknotePool : ComponentPool<Banknote>
             return;
         }
 
+        // Bu satir: 'GameObject' uzerindeki 'Find' metodunu cagirir ve sonucu 'runtimeRoot' degiskenine koyar; sahnede veya transform altinda verilen isimde obje arar.
         GameObject runtimeRoot = GameObject.Find("BanknoteRuntime");
         if (runtimeRoot == null)
         {

@@ -8,6 +8,7 @@ public class FloatingTextPool : ComponentPool<FloatingText>
     protected override void Awake()
     {
         Instance = this;
+        // Bu satir: base, yani miras alinan ust sinif uzerindeki 'Awake' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         base.Awake();
         EnsureActiveRoot();
     }
@@ -29,9 +30,13 @@ public class FloatingTextPool : ComponentPool<FloatingText>
         }
 
         Transform floatingTransform = floatingText.transform;
+        // Bu satir: 'floatingTransform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         floatingTransform.SetParent(activeRoot, false);
+        // Bu satir: 'floatingTransform' objesi uzerindeki 'SetPositionAndRotation' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         floatingTransform.SetPositionAndRotation(position, rotation);
+        // Bu satir: 'gameObject' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         floatingText.gameObject.SetActive(true);
+        // Bu satir: 'floatingText' objesi uzerindeki 'InitializeForSpawn' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         floatingText.InitializeForSpawn(this);
         return floatingText;
     }
@@ -44,6 +49,7 @@ public class FloatingTextPool : ComponentPool<FloatingText>
             return;
         }
 
+        // Bu satir: 'floatingText' objesi uzerindeki 'ResetForPool' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         floatingText.ResetForPool();
         ReleaseToPool(floatingText);
     }
@@ -56,6 +62,7 @@ public class FloatingTextPool : ComponentPool<FloatingText>
             return;
         }
 
+        // Bu satir: 'GameObject' uzerindeki 'Find' metodunu cagirir ve sonucu 'runtimeRoot' degiskenine koyar; sahnede veya transform altinda verilen isimde obje arar.
         GameObject runtimeRoot = GameObject.Find("FloatingTextRuntime");
         if (runtimeRoot == null)
         {

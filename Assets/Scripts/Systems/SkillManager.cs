@@ -27,6 +27,7 @@ public class SkillManager : MonoBehaviour
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void InitializeSkills()
     {
+        // Bu satir: 'unlockedSkills' objesi uzerindeki 'Clear' metodunu cagirir; listenin icindeki tum elemanlari siler; liste bos hale gelir.
         unlockedSkills.Clear();
         if (allSkillDatas == null)
         {
@@ -38,6 +39,7 @@ public class SkillManager : MonoBehaviour
         {
             if (data != null)
             {
+                // Bu satir: 'unlockedSkills' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
                 unlockedSkills.Add(new SkillEntity(data));
             }
         }
@@ -70,6 +72,7 @@ public class SkillManager : MonoBehaviour
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void ActivateSkillEffect(SkillEntity skill)
     {
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log($"BECERİ KULLANILDI: {skill.data.entityName}");
         // Burada becerinin tipine göre geliri 2'ye katlama vb. kodlar eklenecek.
     }
@@ -77,6 +80,7 @@ public class SkillManager : MonoBehaviour
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void DeactivateSkillEffect(SkillEntity skill)
     {
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log($"BECERİ ETKİSİ BİTTİ: {skill.data.entityName}");
         // Çarpanları geri alma kodları buraya gelecek.
     }

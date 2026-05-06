@@ -27,6 +27,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
     public void Configure(T prefabReference, int preloadCount, Transform root = null, bool allowExpansion = false)
     {
         prefab = prefabReference;
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'initialSize' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         initialSize = Mathf.Max(0, preloadCount);
         allowRuntimeExpansion = allowExpansion;
 
@@ -47,11 +48,13 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
     {
         if (availableItems.Count > 0)
         {
+            // Bu satir: 'availableItems' objesi uzerindeki 'Dequeue' metodunu cagirir; Queue'nun basindaki elemani cikarip alir; pool sisteminde hazir obje almak icin kullanilir.
             return availableItems.Dequeue();
         }
 
         if (!allowRuntimeExpansion)
         {
+            // Bu satir: 'Debug' objesi uzerindeki 'LogWarning' metodunu cagirir; Unity Console'a uyari mesaji yazar; oyun durmaz ama ayar eksigi olabilir.
             Debug.LogWarning($"{name}: Pool bos. Yeni nesne uretilmedi.");
             return null;
         }
@@ -70,11 +73,14 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
         }
 
         RegisterItem(item);
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         item.transform.SetParent(poolRoot, false);
+        // Bu satir: 'gameObject' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         item.gameObject.SetActive(false);
 
         if (!availableItems.Contains(item))
         {
+            // Bu satir: 'availableItems' objesi uzerindeki 'Enqueue' metodunu cagirir; elemani Queue'nun sonuna ekler; pool sisteminde objeyi tekrar kullanima hazirlar.
             availableItems.Enqueue(item);
         }
     }
@@ -97,7 +103,9 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
             return;
         }
 
+        // Bu satir: 'availableItems' objesi uzerindeki 'Clear' metodunu cagirir; listenin icindeki tum elemanlari siler; liste bos hale gelir.
         availableItems.Clear();
+        // Bu satir: 'knownItems' objesi uzerindeki 'Clear' metodunu cagirir; listenin icindeki tum elemanlari siler; liste bos hale gelir.
         knownItems.Clear();
         hasInitialized = true;
         CollectExistingPoolItems();
@@ -123,8 +131,11 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
             }
 
             RegisterItem(item);
+            // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
             item.transform.SetParent(poolRoot, false);
+            // Bu satir: 'gameObject' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
             item.gameObject.SetActive(false);
+            // Bu satir: 'availableItems' objesi uzerindeki 'Enqueue' metodunu cagirir; elemani Queue'nun sonuna ekler; pool sisteminde objeyi tekrar kullanima hazirlar.
             availableItems.Enqueue(item);
         }
     }
@@ -137,6 +148,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
             return;
         }
 
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'missingCount' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         int missingCount = Mathf.Max(0, initialSize - availableItems.Count);
         // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < missingCount; i++)
@@ -155,6 +167,7 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
             return;
         }
 
+        // Bu satir: 'knownItems' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
         knownItems.Add(item);
     }
 
@@ -163,11 +176,13 @@ public class ComponentPool<T> : MonoBehaviour where T : Component
     {
         if (prefab == null)
         {
+            // Bu satir: 'Debug' objesi uzerindeki 'LogError' metodunu cagirir; Unity Console'a hata mesaji yazar; duzeltilmesi gereken ciddi durumlari belirtir.
             Debug.LogError($"{name}: Pool prefab is missing.");
             return null;
         }
 
         T instance = Instantiate(prefab, poolRoot);
+        // Bu satir: 'gameObject' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         instance.gameObject.SetActive(false);
         return instance;
     }

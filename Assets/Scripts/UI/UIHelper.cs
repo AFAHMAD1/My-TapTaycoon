@@ -12,6 +12,7 @@ public static class UIHelper
         // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < parent.childCount; i++)
         {
+            // Bu satir: 'parent' uzerindeki 'GetChild' metodunu cagirir ve donen sonucu 'child' degiskenine kaydeder.
             Transform child = parent.GetChild(i);
             if (child.name == targetName)
             {
@@ -30,7 +31,9 @@ public static class UIHelper
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public static Transform FindInActiveScene(string targetName)
     {
+        // Bu satir: 'SceneManager' uzerindeki 'GetActiveScene' metodunu cagirir ve sonucu 'activeScene' degiskenine koyar; Unity'de su anda aktif olan sahne bilgisini verir.
         Scene activeScene = SceneManager.GetActiveScene();
+        // Bu satir: 'activeScene' uzerindeki 'GetRootGameObjects' metodunu cagirir ve sonucu 'rootObjects' degiskenine koyar; aktif sahnedeki en ust seviye GameObject listesini verir.
         GameObject[] rootObjects = activeScene.GetRootGameObjects();
 
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
@@ -54,7 +57,9 @@ public static class UIHelper
     public static List<Transform> FindAllInActiveScene(string targetName)
     {
         List<Transform> results = new List<Transform>();
+        // Bu satir: 'SceneManager' uzerindeki 'GetActiveScene' metodunu cagirir ve sonucu 'activeScene' degiskenine koyar; Unity'de su anda aktif olan sahne bilgisini verir.
         Scene activeScene = SceneManager.GetActiveScene();
+        // Bu satir: 'activeScene' uzerindeki 'GetRootGameObjects' metodunu cagirir ve sonucu 'rootObjects' degiskenine koyar; aktif sahnedeki en ust seviye GameObject listesini verir.
         GameObject[] rootObjects = activeScene.GetRootGameObjects();
 
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
@@ -62,6 +67,7 @@ public static class UIHelper
         {
             if (rootObject.name == targetName)
             {
+                // Bu satir: 'results' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
                 results.Add(rootObject.transform);
             }
 
@@ -77,9 +83,11 @@ public static class UIHelper
         // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = 0; i < parent.childCount; i++)
         {
+            // Bu satir: 'parent' uzerindeki 'GetChild' metodunu cagirir ve donen sonucu 'child' degiskenine kaydeder.
             Transform child = parent.GetChild(i);
             if (child.name == targetName)
             {
+                // Bu satir: 'results' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
                 results.Add(child);
             }
 

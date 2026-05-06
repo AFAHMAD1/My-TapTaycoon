@@ -38,12 +38,14 @@ public class SettingsPanel : MonoBehaviour
     // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
     public void Close()
     {
+        // Bu satir: 'gameObject' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         gameObject.SetActive(false);
     }
 
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void SetMusic(bool isOn)
     {
+        // Bu satir: 'PlayerPrefs' objesi uzerindeki 'SetInt' metodunu cagirir; PlayerPrefs icine tam sayi degeri kaydeder.
         PlayerPrefs.SetInt("MusicEnabled", isOn ? 1 : 0);
         // İleride buraya ses yöneticisi (AudioManager) bağlanabilir.
     }
@@ -51,6 +53,7 @@ public class SettingsPanel : MonoBehaviour
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void SetSound(bool isOn)
     {
+        // Bu satir: 'PlayerPrefs' objesi uzerindeki 'SetInt' metodunu cagirir; PlayerPrefs icine tam sayi degeri kaydeder.
         PlayerPrefs.SetInt("SoundEnabled", isOn ? 1 : 0);
     }
 
@@ -61,10 +64,12 @@ public class SettingsPanel : MonoBehaviour
     {
         if (SaveManager.Instance != null)
         {
+            // Bu satir: 'Instance' objesi uzerindeki 'ResetProgress' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             SaveManager.Instance.ResetProgress();
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
+            // Bu satir: 'Application' objesi uzerindeki 'Quit' metodunu cagirir; oyunu kapatma istegi gonderir; Editor'da genelde etkisi sinirlidir.
             Application.Quit();
 #endif
         }

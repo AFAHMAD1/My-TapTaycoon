@@ -62,6 +62,7 @@ public class SummaryStatsPanel : MonoBehaviour
         }
 
         GameObject statsRoot = new GameObject("StatsRoot", typeof(RectTransform), typeof(LayoutElement));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         statsRoot.transform.SetParent(transform, false);
 
         RectTransform statsRect = statsRoot.GetComponent<RectTransform>();
@@ -142,6 +143,7 @@ public class SummaryStatsPanel : MonoBehaviour
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     private TextMeshProUGUI FindValueText(string blockName)
     {
+        // Bu satir: 'transform' uzerindeki 'Find' metodunu cagirir ve sonucu 'block' degiskenine koyar; sahnede veya transform altinda verilen isimde obje arar.
         Transform block = transform.Find($"StatsRoot/{blockName}/Value");
         return block != null ? block.GetComponent<TextMeshProUGUI>() : null;
     }
@@ -162,6 +164,7 @@ public class SummaryStatsPanel : MonoBehaviour
         TextAlignmentOptions alignment)
     {
         GameObject blockObject = new GameObject(blockName, typeof(RectTransform));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         blockObject.transform.SetParent(parent, false);
 
         RectTransform blockRect = blockObject.GetComponent<RectTransform>();
@@ -219,6 +222,7 @@ public class SummaryStatsPanel : MonoBehaviour
         Vector2 offsetMax)
     {
         GameObject textObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         textObject.transform.SetParent(parent, false);
 
         RectTransform textRect = textObject.GetComponent<RectTransform>();

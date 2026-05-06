@@ -97,6 +97,7 @@ public class FloatingText : MonoBehaviour
         transform.position += Vector3.up * moveSpeed * Time.deltaTime;
 
         timer += Time.deltaTime;
+        // Bu satir: 'Mathf' uzerindeki 'Lerp' metodunu cagirir ve sonucu 'alpha' degiskenine koyar; iki deger arasinda yavas gecis hesaplar; animasyon ve hareketlerde kullanilir.
         float alpha = Mathf.Lerp(1f, 0f, timer / lifetime);
 
         if (textMesh != null)
@@ -113,6 +114,7 @@ public class FloatingText : MonoBehaviour
         {
             if (ownerPool != null)
             {
+                // Bu satir: 'ownerPool' objesi uzerindeki 'Release' metodunu cagirir; kullanimi biten objeyi serbest birakir veya havuza geri gonderir.
                 ownerPool.Release(this);
             }
             else

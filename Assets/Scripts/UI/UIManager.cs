@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviour
         // Sonra hedeflenen paneli aç
         if (targetPanel != null)
         {
+            // Bu satir: 'targetPanel' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
             targetPanel.SetActive(true);
         }
     }
@@ -54,6 +55,7 @@ public class UIManager : MonoBehaviour
         HideAllPanels();
         
         // Eğer zaten açıksa kapat (Toggle), kapalıysa aç
+        // Bu satir: 'targetPanel' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         targetPanel.SetActive(!wasActive);
     }
 
@@ -67,6 +69,7 @@ public class UIManager : MonoBehaviour
         {
             if (panel != null)
             {
+                // Bu satir: 'panel' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
                 panel.SetActive(false);
             }
         }

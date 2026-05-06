@@ -18,6 +18,7 @@ public abstract class UpgradableEntity
     public double CurrentCost()
     {
         if (BaseData == null) return 0d;
+        // Bu satir: 'BaseData' objesi uzerindeki 'EvaluateCost' metodunu cagirir; verilen level icin upgrade maliyetini hesaplar.
         return BaseData.EvaluateCost(currentLevel);
     }
 
@@ -32,6 +33,7 @@ public abstract class UpgradableEntity
     {
         if (BaseData == null) return 0d;
         
+        // Bu satir: 'Mathf' uzerindeki 'Min' metodunu cagirir ve sonucu 'safeAmount' degiskenine koyar; iki degerden kucuk olani secer; burada genelde ust sinir koymak icin kullanilir.
         int safeAmount = Mathf.Min(Mathf.Max(0, amount), GetRemainingUpgradeCount());
         double totalCost = 0d;
 
@@ -56,6 +58,7 @@ public abstract class UpgradableEntity
         // Bu dongu kosul dogru kaldigi surece calisir; kosul bozulunca durur.
         while (affordableCount < remainingUpgradeCount)
         {
+            // Bu satir: 'BaseData' uzerindeki 'EvaluateCost' metodunu cagirir ve sonucu 'nextCost' degiskenine koyar; verilen level icin maliyet egrisini kullanarak fiyat hesaplar.
             double nextCost = BaseData.EvaluateCost(currentLevel + affordableCount);
             if (remainingMoney < nextCost)
             {
@@ -87,6 +90,7 @@ public abstract class UpgradableEntity
             return int.MaxValue;
         }
 
+        // Bu satir: 'Mathf' objesi uzerindeki 'Max' metodunu cagirir; verilen degerlerden buyuk olani secer; minimum sinir koymak icin kullanilir.
         return Mathf.Max(0, BaseData.maxLevel - currentLevel);
     }
 
@@ -103,6 +107,7 @@ public abstract class UpgradableEntity
             return GetMaxAffordableUpgradeCount(CurrencyManager.Instance.currentMoney) > 0;
         }
 
+        // Bu satir: 'Mathf' uzerindeki 'Min' metodunu cagirir ve sonucu 'safeAmount' degiskenine koyar; iki degerden kucuk olani secer; burada genelde ust sinir koymak icin kullanilir.
         int safeAmount = Mathf.Min(Mathf.Max(1, amount), GetRemainingUpgradeCount());
         if (safeAmount <= 0)
         {

@@ -10,6 +10,7 @@ public class DataMigrator : EditorWindow
         string path = "Assets/Scripts/Data/Defaults";
         if (!AssetDatabase.IsValidFolder(path))
         {
+            // Bu satir: 'path' uzerindeki 'Split' metodunu cagirir ve donen sonucu 'folders' degiskenine kaydeder.
             string[] folders = path.Split('/');
             string currentPath = folders[0];
             // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
@@ -17,6 +18,7 @@ public class DataMigrator : EditorWindow
             {
                 if (!AssetDatabase.IsValidFolder(currentPath + "/" + folders[i]))
                 {
+                    // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateFolder' metodunu cagirir; Unity proje klasorleri icinde yeni klasor olusturur.
                     AssetDatabase.CreateFolder(currentPath, folders[i]);
                 }
                 currentPath += "/" + folders[i];
@@ -37,8 +39,11 @@ public class DataMigrator : EditorWindow
         CreateCollectorData();
         CreateBoosts();
 
+        // Bu satir: 'AssetDatabase' objesi uzerindeki 'SaveAssets' metodunu cagirir; Editor'da olusturulan/degisen assetleri kaydeder.
         AssetDatabase.SaveAssets();
+        // Bu satir: 'AssetDatabase' objesi uzerindeki 'Refresh' metodunu cagirir; gorunumu veya veriyi guncel hale getirir.
         AssetDatabase.Refresh();
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log("Tum default veriler ScriptableObject olarak Assets/Scripts/Data/Defaults klasorune eklendi!");
     }
 
@@ -79,6 +84,7 @@ public class DataMigrator : EditorWindow
             multiplierPerLevel = costMultiplier
         };
 
+        // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
         AssetDatabase.CreateAsset(data, assetPath);
     }
 
@@ -93,6 +99,7 @@ public class DataMigrator : EditorWindow
         data.rewardPerLevel = new ScaledValue { mode = ScaleMode.Exponential, baseValue = 1d, multiplierPerLevel = 1.5f };
         data.upgradeCost = new ScaledValue { mode = ScaleMode.Exponential, baseValue = 25d, multiplierPerLevel = 1.8f };
 
+        // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
         AssetDatabase.CreateAsset(data, assetPath);
     }
 
@@ -107,6 +114,7 @@ public class DataMigrator : EditorWindow
             data.description = "Restoran karini 5x arttir";
             data.boostMultiplier = 5f;
             data.upgradeCost = new ScaledValue { mode = ScaleMode.Exponential, baseValue = 50000d, multiplierPerLevel = 1f };
+            // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
             AssetDatabase.CreateAsset(data, boost1Path);
         }
 
@@ -118,6 +126,7 @@ public class DataMigrator : EditorWindow
             data.description = "Restoranin karini oto topla";
             data.boostMultiplier = 0f;
             data.upgradeCost = new ScaledValue { mode = ScaleMode.Exponential, baseValue = 50000d, multiplierPerLevel = 1f };
+            // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
             AssetDatabase.CreateAsset(data, boost2Path);
         }
     }

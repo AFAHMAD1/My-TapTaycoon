@@ -30,6 +30,7 @@ public class PassiveIncomeDisplay : MonoBehaviour
         double passiveIncomePerSecond = 0d;
         if (PassiveIncomeManager.Instance != null)
         {
+            // Bu satir: 'Instance' uzerindeki 'GetTotalPassiveIncomePerSecond' metodunu cagirir ve sonucu 'passiveIncomePerSecond' degiskenine koyar; tum binalarin saniyelik toplam pasif gelirini hesaplar.
             passiveIncomePerSecond = PassiveIncomeManager.Instance.GetTotalPassiveIncomePerSecond();
         }
 
@@ -39,10 +40,12 @@ public class PassiveIncomeDisplay : MonoBehaviour
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     private void CacheProfitTexts()
     {
+        // Bu satir: 'profitTexts' objesi uzerindeki 'Clear' metodunu cagirir; listenin icindeki tum elemanlari siler; liste bos hale gelir.
         profitTexts.Clear();
 
         if (profitText != null)
         {
+            // Bu satir: 'profitTexts' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
             profitTexts.Add(profitText);
         }
 
@@ -55,6 +58,7 @@ public class PassiveIncomeDisplay : MonoBehaviour
                 continue;
             }
 
+            // Bu satir: 'profitTexts' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
             profitTexts.Add(text);
         }
     }

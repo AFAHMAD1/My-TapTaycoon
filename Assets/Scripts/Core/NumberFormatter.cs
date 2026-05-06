@@ -27,6 +27,7 @@ public static class NumberFormatter
         // 1000'den küçük sayıları direkt olduğu gibi yaz (ondalıksız)
         if (value < 1000d)
         {
+            // Bu satir: 'value' objesi uzerindeki 'ToString' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             return value.ToString("F0");
         }
 
@@ -80,6 +81,7 @@ public static class NumberFormatter
         result = 0d;
         if (string.IsNullOrWhiteSpace(input)) return false;
 
+        // Bu satir: 'input' uzerindeki 'Trim' metodunu cagirir ve sonucu 'input' degiskenine koyar; metnin basindaki ve sonundaki bosluklari temizler.
         input = input.Trim().ToUpperInvariant();
         
         // Sayı ve harf kısımlarını ayır
@@ -97,6 +99,7 @@ public static class NumberFormatter
         string numberPart = letterIndex >= 0 ? input.Substring(0, letterIndex).Trim() : input;
         string suffixPart = letterIndex >= 0 ? input.Substring(letterIndex).Trim() : "";
 
+        // Bu satir: 'numberPart' uzerindeki 'Replace' metodunu cagirir ve sonucu 'numberPart' degiskenine koyar; metin icindeki belirli karakterleri/metinleri baska degerle degistirir.
         numberPart = numberPart.Replace(",", ".");
         if (!double.TryParse(numberPart, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double numberValue))
         {

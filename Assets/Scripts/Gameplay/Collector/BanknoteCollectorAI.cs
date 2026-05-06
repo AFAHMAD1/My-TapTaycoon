@@ -42,6 +42,7 @@ public class BanknoteCollectorAI : MonoBehaviour
         {
             lastSearchTime = Time.time;
             // BanknoteRegistry üzerinden en iyi (en yakın/kalabalık) para grubunu çek
+            // Bu satir: 'BanknoteRegistry' uzerindeki 'GetBestGroup' metodunu cagirir ve sonucu 'group' degiskenine koyar; toplayicinin alabilecegi en uygun para grubunu hesaplayip geri dondurur.
             List<Banknote> group = BanknoteRegistry.GetBestGroup(searchRadius, CurrentMaxCapacity);
 
             if (group != null && group.Count > 0)
@@ -60,6 +61,7 @@ public class BanknoteCollectorAI : MonoBehaviour
 
         if (group == null || group.Count == 0)
         {
+            // Bu satir: 'BanknoteRegistry' objesi uzerindeki 'ReleaseGroup' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             BanknoteRegistry.ReleaseGroup(group);
             isBusy = false;
             yield break;
@@ -80,6 +82,7 @@ public class BanknoteCollectorAI : MonoBehaviour
         
         if (validCount == 0)
         {
+            // Bu satir: 'BanknoteRegistry' objesi uzerindeki 'ReleaseGroup' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             BanknoteRegistry.ReleaseGroup(group);
             isBusy = false;
             yield break;
@@ -91,6 +94,7 @@ public class BanknoteCollectorAI : MonoBehaviour
         yield return mover.MoveToX(centerPos.x);
 
         // 3. Eğer hedef yukarıdaysa zıpla
+        // Bu satir: 'Mathf' uzerindeki 'Abs' metodunu cagirir ve donen sonucu 'heightDifference' degiskenine kaydeder.
         float heightDifference = Mathf.Abs(centerPos.y - basePosition.y);
         if (heightDifference > groundLevelThreshold)
         {
@@ -119,6 +123,7 @@ public class BanknoteCollectorAI : MonoBehaviour
         // Pozisyonu tam olarak yere sabitle
         transform.position = new Vector3(transform.position.x, basePosition.y, transform.position.z);
 
+        // Bu satir: 'BanknoteRegistry' objesi uzerindeki 'ReleaseGroup' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         BanknoteRegistry.ReleaseGroup(group);
         isBusy = false;
     }

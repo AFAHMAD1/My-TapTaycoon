@@ -43,11 +43,13 @@ public class UpgradeManager : MonoBehaviour
     {
         if (collectorUpgrade == null || collectorUpgrade.data == null)
         {
+            // Bu satir: 'Debug' objesi uzerindeki 'LogWarning' metodunu cagirir; Unity Console'a uyari mesaji yazar; oyun durmaz ama ayar eksigi olabilir.
             Debug.LogWarning("[UpgradeManager] Collector Upgrade (Tıklama) data'sı eksik! Lütfen Inspector'dan atayın.");
         }
 
         if (boostUpgrades == null || boostUpgrades.Count == 0)
         {
+            // Bu satir: 'Debug' objesi uzerindeki 'LogWarning' metodunu cagirir; Unity Console'a uyari mesaji yazar; oyun durmaz ama ayar eksigi olabilir.
             Debug.LogWarning("[UpgradeManager] Boost listesi boş. Lütfen Boost objelerini atayın.");
         }
     }
@@ -127,6 +129,7 @@ public class UpgradeManager : MonoBehaviour
         }
         else
         {
+            // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
             Debug.Log("Yetersiz Bakiye!");
         }
     }

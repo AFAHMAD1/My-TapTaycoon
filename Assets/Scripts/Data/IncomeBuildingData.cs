@@ -33,7 +33,9 @@ public class IncomeBuildingData : UpgradableEntityData
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public float GetDurationForLevel(int level)
     {
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'duration' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         float duration = Mathf.Max(0.2f, baseDuration);
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'safeLevel' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         int safeLevel = Mathf.Max(1, level);
 
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
@@ -41,6 +43,7 @@ public class IncomeBuildingData : UpgradableEntityData
         {
             if (step != null && step.requiredLevel <= safeLevel)
             {
+                // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'duration' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
                 duration = Mathf.Max(0.2f, step.durationSeconds);
             }
         }

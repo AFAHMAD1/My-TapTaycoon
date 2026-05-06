@@ -13,6 +13,7 @@ public class Banknote : MonoBehaviour
         {
             if (UpgradeManager.Instance != null)
             {
+                // Bu satir: 'Math' objesi uzerindeki 'Max' metodunu cagirir; verilen degerlerden buyuk olani secer; minimum sinir koymak icin kullanilir.
                 return System.Math.Max(1.0, UpgradeManager.Instance.CurrentClickValue);
             }
 
@@ -38,6 +39,7 @@ public class Banknote : MonoBehaviour
         isCollected = false;
         isReserved = false;
         transform.localScale = Vector3.one;
+        // Bu satir: 'BanknoteRegistry' objesi uzerindeki 'Unregister' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         BanknoteRegistry.Unregister(this);
     }
 
@@ -46,6 +48,7 @@ public class Banknote : MonoBehaviour
     {
         if (ownerPool != null)
         {
+            // Bu satir: 'ownerPool' objesi uzerindeki 'Release' metodunu cagirir; kullanimi biten objeyi serbest birakir veya havuza geri gonderir.
             ownerPool.Release(this);
             return;
         }
@@ -75,6 +78,7 @@ public class Banknote : MonoBehaviour
     // Obje yok edilirken calisir; geride referans veya event kalmasini onler.
     private void OnDestroy()
     {
+        // Bu satir: 'BanknoteRegistry' objesi uzerindeki 'Unregister' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         BanknoteRegistry.Unregister(this);
     }
 }

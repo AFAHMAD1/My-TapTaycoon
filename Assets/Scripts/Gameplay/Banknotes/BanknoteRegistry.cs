@@ -12,6 +12,7 @@ public class BanknoteRegistry : MonoBehaviour
         if (banknote == null) return;
         if (!banknotes.Contains(banknote))
         {
+            // Bu satir: 'banknotes' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
             banknotes.Add(banknote);
         }
     }
@@ -19,6 +20,7 @@ public class BanknoteRegistry : MonoBehaviour
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public static void Cleanup()
     {
+        // Bu satir: 'banknotes' objesi uzerindeki 'RemoveAll' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         banknotes.RemoveAll(b => b == null || b.isCollected);
     }
 
@@ -26,6 +28,7 @@ public class BanknoteRegistry : MonoBehaviour
     public static void Unregister(Banknote banknote)
     {
         if (banknote == null) return;
+        // Bu satir: 'banknotes' objesi uzerindeki 'Remove' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         banknotes.Remove(banknote);
     }
 
@@ -34,6 +37,7 @@ public class BanknoteRegistry : MonoBehaviour
     {
         Cleanup();
 
+        // Bu satir: 'banknotes' uzerindeki 'Where' metodunu cagirir ve donen sonucu 'validNotes' degiskenine kaydeder.
         var validNotes = banknotes.Where(b => !b.isCollected && !b.isReserved).ToList();
 
         if (validNotes.Count == 0)
@@ -53,6 +57,7 @@ public class BanknoteRegistry : MonoBehaviour
                 // Yakınlık kontrolü VE kapasite sınırını aşmama (maxCount)
                 if (Vector2.Distance(seedPos, b.transform.position) <= maxRadius && currentGroup.Count < maxCount)
                 {
+                    // Bu satir: 'currentGroup' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
                     currentGroup.Add(b);
                 }
             }

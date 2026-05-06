@@ -100,7 +100,9 @@ public class CurrencyManager : MonoBehaviour
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     public void SetMoney(double amount)
     {
+        // Bu satir: 'Math' uzerindeki 'Max' metodunu cagirir ve sonucu 'currentMoney' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         currentMoney = System.Math.Max(0d, amount);
+        // Bu satir: 'recentActiveIncomeSamples' objesi uzerindeki 'Clear' metodunu cagirir; listenin icindeki tum elemanlari siler; liste bos hale gelir.
         recentActiveIncomeSamples.Clear();
         UpdateUI();
     }
@@ -130,6 +132,7 @@ public class CurrencyManager : MonoBehaviour
         // Bu dongu kosul dogru kaldigi surece calisir; kosul bozulunca durur.
         while (recentActiveIncomeSamples.Count > 0 && recentActiveIncomeSamples.Peek().time < cutoffTime)
         {
+            // Bu satir: 'recentActiveIncomeSamples' objesi uzerindeki 'Dequeue' metodunu cagirir; Queue'nun basindaki elemani cikarip alir; pool sisteminde hazir obje almak icin kullanilir.
             recentActiveIncomeSamples.Dequeue();
         }
     }

@@ -41,6 +41,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     {
         if (cardPrefab == null)
         {
+            // Bu satir: 'Debug' objesi uzerindeki 'LogError' metodunu cagirir; Unity Console'a hata mesaji yazar; duzeltilmesi gereken ciddi durumlari belirtir.
             Debug.LogError($"[{GetType().Name}] HATA: 'Card Prefab' alani bos! Lutfen Unity Inspector'dan UpgradeCard prefabini bu alana surukleyin.");
             return;
         }
@@ -55,6 +56,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
             }
             else
             {
+                // Bu satir: 'Debug' objesi uzerindeki 'LogError' metodunu cagirir; Unity Console'a hata mesaji yazar; duzeltilmesi gereken ciddi durumlari belirtir.
                 Debug.LogError($"[{GetType().Name}] HATA: 'Content Container' bulunamadi! Lutfen Inspector'dan atayin veya panele bir Scroll View ekleyin.");
                 return;
             }
@@ -106,7 +108,9 @@ public abstract class BaseUpgradePanel : MonoBehaviour
             // Eski componenti silebiliriz eğer varsa ama biz temiz çalışacağız
         }
 
+        // Bu satir: 'uiCard' objesi uzerindeki 'Setup' metodunu cagirir; UI kartini veya gorsel objeyi verilen veriyle kullanima hazirlar.
         uiCard.Setup(provider, () => SelectedBuyAmount);
+        // Bu satir: 'uiCards' objesi uzerindeki 'Add' metodunu cagirir; listeye yeni bir eleman ekler; boylece daha sonra donguyle okunabilir.
         uiCards.Add(uiCard);
         return uiCard;
     }
@@ -115,6 +119,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     protected GameObject CreateSectionHeader(string title)
     {
         GameObject headerObj = new GameObject($"Header_{title}", typeof(RectTransform), typeof(LayoutElement));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         headerObj.transform.SetParent(contentContainer, false);
         
         LayoutElement layoutElement = headerObj.GetComponent<LayoutElement>();
@@ -123,6 +128,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         layoutElement.flexibleHeight = 0f;
         
         GameObject textObj = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         textObj.transform.SetParent(headerObj.transform, false);
         
         RectTransform textRect = textObj.GetComponent<RectTransform>();
@@ -144,6 +150,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     protected void ClearContainer()
     {
+        // Bu satir: 'uiCards' objesi uzerindeki 'Clear' metodunu cagirir; listenin icindeki tum elemanlari siler; liste bos hale gelir.
         uiCards.Clear();
         // Bu dongu sayac kullanarak ayni islemi belirli sayida tekrarlar.
         for (int i = contentContainer.childCount - 1; i >= 0; i--)
@@ -202,12 +209,14 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     protected virtual void SetupBuyModeButton()
     {
+        // Bu satir: 'UIHelper' uzerindeki 'FindChildRecursive' metodunu cagirir ve sonucu 'panelSummaryBar' degiskenine koyar; verilen parent'in alt cocuklarinda isme gore derin arama yapar. Normal Find sadece tek seviye bakarken bu metot alt seviyelere de iner.
         Transform panelSummaryBar = UIHelper.FindChildRecursive(transform, "SummaryBar");
         
         if (panelSummaryBar == null)
         {
             // Eger SummaryBar yoksa, otomatik olarak panelin icine (en uste) olustur
             GameObject summaryObj = new GameObject("SummaryBar", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+            // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
             summaryObj.transform.SetParent(transform, false);
             summaryObj.transform.SetSiblingIndex(0); // ScrollView'in ustunde gorunmesi icin en uste aliyoruz
             
@@ -229,11 +238,13 @@ public abstract class BaseUpgradePanel : MonoBehaviour
             panelSummaryBar = summaryObj.transform;
         }
 
+        // Bu satir: 'UIHelper' uzerindeki 'FindChildRecursive' metodunu cagirir ve sonucu 'buyModeTransform' degiskenine koyar; verilen parent'in alt cocuklarinda isme gore derin arama yapar. Normal Find sadece tek seviye bakarken bu metot alt seviyelere de iner.
         Transform buyModeTransform = UIHelper.FindChildRecursive(panelSummaryBar, "BuyModeButton");
         if (buyModeTransform == null)
         {
             // BuyModeButton yoksa otomatik olustur
             GameObject buttonObj = new GameObject("BuyModeButton", typeof(RectTransform), typeof(Image), typeof(Button));
+            // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
             buttonObj.transform.SetParent(panelSummaryBar, false);
             
             RectTransform btnRect = buttonObj.GetComponent<RectTransform>();
@@ -243,6 +254,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
             btnImg.color = new Color(0.2f, 0.6f, 1f, 1f); // Mavi bir buton
 
             GameObject textObj = new GameObject("Text (TMP)", typeof(RectTransform), typeof(TextMeshProUGUI));
+            // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
             textObj.transform.SetParent(buttonObj.transform, false);
             
             RectTransform txtRect = textObj.GetComponent<RectTransform>();
@@ -266,7 +278,9 @@ public abstract class BaseUpgradePanel : MonoBehaviour
 
         if (buyModeButtonContext_Button != null)
         {
+            // Bu satir: 'onClick' objesi uzerindeki 'RemoveAllListeners' metodunu cagirir; butondaki eski tiklama baglantilarini temizler; ayni is birden fazla kez calismasin diye kullanilir.
             buyModeButtonContext_Button.onClick.RemoveAllListeners();
+            // Bu satir: 'onClick' objesi uzerindeki 'AddListener' metodunu cagirir; buton/toggle gibi UI olayina fonksiyon baglar; kullanici tiklayinca bu fonksiyon calisir.
             buyModeButtonContext_Button.onClick.AddListener(ToggleBuyModeDropdown);
             EnsureBuyModeDropdown();
             RefreshBuyModeButtonLabel();
@@ -279,6 +293,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         if (buyModeButtonContext_DropdownRoot != null || buyModeButtonContext_SummaryBar == null) return;
 
         GameObject dropdownObject = new GameObject("BuyModeDropdown", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         dropdownObject.transform.SetParent(buyModeButtonContext_SummaryBar, false);
 
         RectTransform dropdownRect = dropdownObject.GetComponent<RectTransform>();
@@ -305,6 +320,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         }
 
         buyModeButtonContext_DropdownRoot = dropdownObject;
+        // Bu satir: 'buyModeButtonContext_DropdownRoot' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         buyModeButtonContext_DropdownRoot.SetActive(false);
         PositionDropdown();
     }
@@ -313,6 +329,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     private void CreateBuyModeOption(Transform parent, int amount)
     {
         GameObject optionObject = new GameObject($"Option_{GetBuyAmountLabel(amount)}", typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         optionObject.transform.SetParent(parent, false);
 
         RectTransform optionRect = optionObject.GetComponent<RectTransform>();
@@ -323,6 +340,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
 
         Button optionButton = optionObject.GetComponent<Button>();
         optionButton.targetGraphic = optionImage;
+        // Bu satir: 'onClick' objesi uzerindeki 'AddListener' metodunu cagirir; buton/toggle gibi UI olayina fonksiyon baglar; kullanici tiklayinca bu fonksiyon calisir.
         optionButton.onClick.AddListener(() => SetSelectedBuyAmount(amount));
 
         LayoutElement layoutElement = optionObject.GetComponent<LayoutElement>();
@@ -330,6 +348,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         layoutElement.preferredHeight = 34f;
 
         GameObject labelObject = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
+        // Bu satir: 'transform' objesi uzerindeki 'SetParent' metodunu cagirir; UI/obje hiyerarsisinde bu objeyi verilen parent altina tasir.
         labelObject.transform.SetParent(optionObject.transform, false);
         
         RectTransform labelRect = labelObject.GetComponent<RectTransform>();
@@ -358,11 +377,13 @@ public abstract class BaseUpgradePanel : MonoBehaviour
         if (buyModeButtonContext_DropdownRoot == null) return;
         
         bool active = !buyModeButtonContext_DropdownRoot.activeSelf;
+        // Bu satir: 'buyModeButtonContext_DropdownRoot' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         buyModeButtonContext_DropdownRoot.SetActive(active);
         
         if (active)
         {
             PositionDropdown();
+            // Bu satir: 'transform' objesi uzerindeki 'SetAsLastSibling' metodunu cagirir; objeyi parent icinde en sona alir; UI'da genelde en onde gorunmesine yardim eder.
             buyModeButtonContext_DropdownRoot.transform.SetAsLastSibling();
         }
     }
@@ -370,11 +391,13 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void SetSelectedBuyAmount(int amount)
     {
+        // Bu satir: 'Mathf' uzerindeki 'Max' metodunu cagirir ve sonucu 'SelectedBuyAmount' degiskenine koyar; iki degerden buyuk olani secer; burada genelde alt sinir koymak icin kullanilir.
         SelectedBuyAmount = Mathf.Max(1, amount);
         RefreshBuyModeButtonLabel();
         
         if (buyModeButtonContext_DropdownRoot != null)
         {
+            // Bu satir: 'buyModeButtonContext_DropdownRoot' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
             buyModeButtonContext_DropdownRoot.SetActive(false);
         }
     }

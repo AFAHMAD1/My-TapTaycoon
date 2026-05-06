@@ -24,8 +24,11 @@ public class GameDataGenerator : EditorWindow
             CreateBoostItem($"Bina Boost {i}", $"Secili binanin gelirini {i + 1} kat arttirir.", i + 1, 500 * i);
         }
 
+        // Bu satir: 'AssetDatabase' objesi uzerindeki 'SaveAssets' metodunu cagirir; Editor'da olusturulan/degisen assetleri kaydeder.
         AssetDatabase.SaveAssets();
+        // Bu satir: 'AssetDatabase' objesi uzerindeki 'Refresh' metodunu cagirir; gorunumu veya veriyi guncel hale getirir.
         AssetDatabase.Refresh();
+        // Bu satir: 'Debug' objesi uzerindeki 'Log' metodunu cagirir; Unity Console'a bilgi mesaji yazar.
         Debug.Log("Tüm veriler 'Assets/Scripts/Data/Defaults' klasörüne otomatik oluşturuldu! Gidip listelere sürükleyebilirsin.");
     }
 
@@ -44,6 +47,7 @@ public class GameDataGenerator : EditorWindow
         asset.rewardAmount = reward;
         asset.customButtonText = btnText;
 
+        // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
         AssetDatabase.CreateAsset(asset, path);
     }
 
@@ -60,6 +64,7 @@ public class GameDataGenerator : EditorWindow
         asset.maxLevel = 1;
         asset.upgradeCost.baseValue = cost;
 
+        // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
         AssetDatabase.CreateAsset(asset, path);
     }
 }
