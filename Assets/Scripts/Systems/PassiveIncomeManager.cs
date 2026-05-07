@@ -128,12 +128,19 @@ public class IncomeBuilding : UpgradableEntity
 /// <summary>
 /// Tüm binaların pasif gelir üretim sürecini yöneten merkezi yönetici.
 /// </summary>
-public class PassiveIncomeManager : MonoBehaviour
+public class PassiveIncomeManager : MonoBehaviour, IPassiveIncomeManager, ISaveable
 {
     public static PassiveIncomeManager Instance { get; private set; }
 
     [Header("Binalar ve Tesisler")]
     public List<IncomeBuilding> buildings = new List<IncomeBuilding>();
+
+    /// <summary>
+    /// IPassiveIncomeManager arayüzü gerekliliği.
+    /// Mevcut 'buildings' alanını salt-okunur olarak dışarıya sunar.
+    /// Dış kodlar listeyi okuyabilir ancak doğrudan değiştiremez.
+    /// </summary>
+    public IReadOnlyList<IncomeBuilding> Buildings => buildings;
 
     [Header("Gelir Kontrolu")]
     public bool enablePassiveIncome = true;
@@ -176,7 +183,11 @@ public class PassiveIncomeManager : MonoBehaviour
                 }
 
                 // Otomatik toplama: Parayı ekle ve zamanlayıcıyı sıfırla
-                building.timer = 0f;
+                // [BUG-05 FIX] Was 'building.timer = 0f' which loses any overshoot time.
+                // On a slow frame (e.g. app resume spike), the timer could overshoot by more
+                // than one full duration, silently skipping an entire income cycle.
+                // Subtracting 'duration' instead preserves the remainder so no time is lost.
+                building.timer -= duration;
                 CurrencyManager.Instance.AddMoney(building.CurrentIncome(), false);
             }
         }
@@ -207,5 +218,29 @@ public class PassiveIncomeManager : MonoBehaviour
         if (index >= 0 && index < buildings.Count)
             return buildings[index].TryCollectIncome();
         return false;
+    }
+
+    // --- ISaveable ---
+
+    public void OnSave(SaveData data)
+    {
+        data.buildingLevels.Clear();
+        foreach (var building in buildings)
+            data.buildingLevels.Add(building.currentLevel);
+    }
+
+    public void OnLoad(SaveData data)
+    {
+        if (data.buildingLevels == null || data.buildingLevels.Count == 0) return;
+
+        for (int i = 0; i < buildings.Count; i++)
+        {
+            if (i < data.buildingLevels.Count)
+                buildings[i].currentLevel = data.buildingLevels[i];
+        }
+
+        // Seviyeleri yukledikten sonra gorselleri guncelle
+        foreach (var building in buildings)
+            building.InitializeVisualState();
     }
 }
