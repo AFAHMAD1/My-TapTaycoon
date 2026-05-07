@@ -35,8 +35,6 @@ public class CurrencyManager : MonoBehaviour, ICurrencyManager, ISaveable
     // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
-        // [BUG-01 FIX] Added proper singleton guard to prevent duplicate instances
-        // from overwriting the existing one (e.g. on scene reload).
         if (Instance == null)
         {
             Instance = this;
