@@ -10,8 +10,31 @@ public class SkillsPanel : BaseUpgradePanel
 
     protected override void Start()
     {
+        showBuyModeSelector = false;
+        cardHeight = 190f;
+        cardSpacing = 18f;
+        topPadding = 24;
+        sidePadding = 24;
+
         base.Start();
+        ConfigureScrollSpeed();
         EnsureCloseButton();
+    }
+
+    private void ConfigureScrollSpeed()
+    {
+        ScrollRect scrollRect = GetComponentInChildren<ScrollRect>(true);
+        if (scrollRect == null)
+        {
+            return;
+        }
+
+        scrollRect.horizontal = false;
+        scrollRect.vertical = true;
+        scrollRect.scrollSensitivity = 35f;
+        scrollRect.inertia = true;
+        scrollRect.decelerationRate = 0.18f;
+        scrollRect.elasticity = 0.08f;
     }
 
     private void EnsureCloseButton()

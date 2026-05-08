@@ -10,66 +10,59 @@ public class UIManager : MonoBehaviour
     [Header("Settings")]
     public GameObject startPanel;
 
-    // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
         if (Instance == null) Instance = this;
+        else { Destroy(gameObject); return; }
     }
 
-    // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
     private void Start()
     {
-        // En başta tüm panelleri gizle
         HideAllPanels();
 
-        // Eğer bir başlangıç paneli seçildiyse onu aç
         if (startPanel != null)
         {
             OpenPanel(startPanel);
         }
     }
 
-    /// <summary>
-    /// Bu fonksiyonu butonların OnClick() eventinde çağıracağız.
-    /// Parametre olarak açılmasını istediğimiz Panel (GameObject) gönderilmeli.
-    /// </summary>
     public void OpenPanel(GameObject targetPanel)
     {
-        // Önce tüm panelleri kapat
         HideAllPanels();
 
-        // Sonra hedeflenen paneli aç
         if (targetPanel != null)
         {
-            // Bu satir: 'targetPanel' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
             targetPanel.SetActive(true);
         }
     }
 
-    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
+    public void OpenPanel(UnityEngine.Object targetObject)
+    {
+        OpenPanel(targetObject as GameObject);
+    }
+
     public void TogglePanel(GameObject targetPanel)
     {
         if (targetPanel == null) return;
 
         bool wasActive = targetPanel.activeSelf;
         HideAllPanels();
-        
-        // Eğer zaten açıksa kapat (Toggle), kapalıysa aç
-        // Bu satir: 'targetPanel' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
         targetPanel.SetActive(!wasActive);
     }
 
-    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
+    public void TogglePanel(UnityEngine.Object targetObject)
+    {
+        TogglePanel(targetObject as GameObject);
+    }
+
     public void HideAllPanels()
     {
         if (allPanels == null) return;
 
-        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (GameObject panel in allPanels)
         {
             if (panel != null)
             {
-                // Bu satir: 'panel' objesi uzerindeki 'SetActive' metodunu cagirir; hedef GameObject'i acar veya kapatir; true gorunur/aktif, false gizli/pasif yapar.
                 panel.SetActive(false);
             }
         }
