@@ -9,6 +9,7 @@ public class CardDisplayConfig
     public bool showIncome = true;
     public bool showLevel = true;
     public bool showSecondaryButton = false; // Yeni! (Orn: Prestij butonu)
+    public bool useSkillCardLayout = false;
     
     // Varsayılan olarak bina kartı görünümü
     public static CardDisplayConfig DefaultBuildingConfig => new CardDisplayConfig

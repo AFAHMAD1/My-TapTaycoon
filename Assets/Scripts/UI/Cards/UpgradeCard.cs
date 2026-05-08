@@ -63,6 +63,7 @@ public class UpgradeCard : MonoBehaviour
         
         // Veri kaynağının konfigürasyonuna göre UI elemanlarını aç/kapat (Örn: Mağaza ürününde seviye gösterme)
         ApplyDisplayConfig();
+        ApplySkillCardLayoutIfNeeded();
         ForceUpdate(); // İlk güncellemeyi yap
     }
 
@@ -94,6 +95,120 @@ public class UpgradeCard : MonoBehaviour
         if (levelText != null) levelText.gameObject.SetActive(config.showLevel);
         
         EnsureSecondaryButton(config.showSecondaryButton);
+    }
+
+    private void ApplySkillCardLayoutIfNeeded()
+    {
+        if (provider == null || provider.DisplayConfig == null || !provider.DisplayConfig.useSkillCardLayout)
+        {
+            return;
+        }
+
+        Transform leftArea = UIHelper.FindChildRecursive(transform, "LeftArea");
+        if (leftArea is RectTransform leftRect)
+        {
+            leftRect.anchorMin = new Vector2(0f, 0.5f);
+            leftRect.anchorMax = new Vector2(0f, 0.5f);
+            leftRect.pivot = new Vector2(0.5f, 0.5f);
+            leftRect.anchoredPosition = new Vector2(78f, 0f);
+            leftRect.sizeDelta = new Vector2(104f, 104f);
+        }
+
+        if (iconImage != null && iconImage.transform is RectTransform iconRect)
+        {
+            iconRect.anchorMin = new Vector2(0.5f, 0.5f);
+            iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+            iconRect.pivot = new Vector2(0.5f, 0.5f);
+            iconRect.anchoredPosition = Vector2.zero;
+            iconRect.sizeDelta = new Vector2(86f, 86f);
+            iconImage.preserveAspect = true;
+        }
+
+        Transform centerArea = UIHelper.FindChildRecursive(transform, "CenterArea");
+        if (centerArea is RectTransform centerRect)
+        {
+            foreach (LayoutGroup layoutGroup in centerArea.GetComponents<LayoutGroup>())
+            {
+                layoutGroup.enabled = false;
+            }
+
+            foreach (ContentSizeFitter fitter in centerArea.GetComponents<ContentSizeFitter>())
+            {
+                fitter.enabled = false;
+            }
+
+            centerRect.anchorMin = Vector2.zero;
+            centerRect.anchorMax = Vector2.one;
+            centerRect.pivot = new Vector2(0.5f, 0.5f);
+            centerRect.offsetMin = new Vector2(150f, 18f);
+            centerRect.offsetMax = new Vector2(-24f, -18f);
+        }
+
+        ConfigureSkillText(nameText, new Vector2(0f, 1f), new Vector2(0.72f, 1f), new Vector2(0f, 1f),
+            Vector2.zero, new Vector2(0f, 38f), 24f, TextAlignmentOptions.Left);
+
+        ConfigureSkillText(levelText, new Vector2(0.74f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f),
+            Vector2.zero, new Vector2(0f, 36f), 22f, TextAlignmentOptions.Right);
+
+        ConfigureSkillText(descriptionText, new Vector2(0f, 0.36f), new Vector2(1f, 0.86f), new Vector2(0f, 1f),
+            new Vector2(0f, -4f), Vector2.zero, 19f, TextAlignmentOptions.TopLeft);
+
+        ConfigureSkillProgressBar(centerArea);
+    }
+
+    private void ConfigureSkillText(TextMeshProUGUI text, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot,
+        Vector2 anchoredPosition, Vector2 sizeDelta, float fontSize, TextAlignmentOptions alignment)
+    {
+        if (text == null || text.transform is not RectTransform rect)
+        {
+            return;
+        }
+
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+        rect.pivot = pivot;
+        rect.anchoredPosition = anchoredPosition;
+        rect.sizeDelta = sizeDelta;
+
+        text.fontSize = fontSize;
+        text.enableAutoSizing = true;
+        text.fontSizeMin = 14f;
+        text.fontSizeMax = fontSize;
+        text.alignment = alignment;
+        text.overflowMode = TextOverflowModes.Ellipsis;
+        text.textWrappingMode = TextWrappingModes.Normal;
+        text.raycastTarget = false;
+    }
+
+    private void ConfigureSkillProgressBar(Transform centerArea)
+    {
+        if (progressSlider == null || progressSlider.transform is not RectTransform sliderRect)
+        {
+            return;
+        }
+
+        sliderRect.SetParent(centerArea ?? transform, false);
+        sliderRect.anchorMin = new Vector2(0f, 0f);
+        sliderRect.anchorMax = new Vector2(1f, 0f);
+        sliderRect.pivot = new Vector2(0.5f, 0f);
+        sliderRect.anchoredPosition = Vector2.zero;
+        sliderRect.sizeDelta = new Vector2(0f, 34f);
+
+        if (progressTimeText != null && progressTimeText.transform is RectTransform labelRect)
+        {
+            labelRect.SetParent(progressSlider.transform, false);
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = Vector2.zero;
+            labelRect.offsetMax = Vector2.zero;
+
+            progressTimeText.fontSize = 18f;
+            progressTimeText.enableAutoSizing = true;
+            progressTimeText.fontSizeMin = 12f;
+            progressTimeText.fontSizeMax = 18f;
+            progressTimeText.alignment = TextAlignmentOptions.Center;
+            progressTimeText.raycastTarget = false;
+        }
     }
 
     private Button secondaryButton;
@@ -239,7 +354,7 @@ public class UpgradeCard : MonoBehaviour
     private void EnsureDescriptionText()
     {
         if (descriptionText != null) return;
-        descriptionText = UIHelper.FindText(transform, "DescriptionText", "DescText");
+        descriptionText = UIHelper.FindText(transform, "DescriptionText", "DescText", "Description");
         
         if (descriptionText == null && incomeText != null)
         {
@@ -259,7 +374,8 @@ public class UpgradeCard : MonoBehaviour
         incomeText ??= UIHelper.FindText(transform, "GelirYazisi", "IncomeText");
         levelText ??= UIHelper.FindText(transform, "SeviyeYazisi", "LevelText");
         costText ??= UIHelper.FindText(transform, "FiyatYazisi", "PriceText");
-        progressTimeText ??= UIHelper.FindText(transform, "ProgressTimeText", "ProgressLabel");
+        descriptionText ??= UIHelper.FindText(transform, "DescriptionText", "DescText", "Description");
+        progressTimeText ??= UIHelper.FindText(transform, "ProgressTimeText", "ProgressLabel", "BeklemeSuresi");
 
         if (buyButton == null) buyButton = UIHelper.FindButton(transform, "Button", "ActionButton");
         if (buyButtonText == null && buyButton != null) buyButtonText = buyButton.GetComponentInChildren<TextMeshProUGUI>(true);

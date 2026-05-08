@@ -43,6 +43,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void OpenPanel(UnityEngine.Object targetObject)
+    {
+        OpenPanel(targetObject as GameObject);
+    }
+
     public void TogglePanel(GameObject targetPanel)
     {
         if (targetPanel == null) return;
@@ -52,6 +57,11 @@ public class UIManager : MonoBehaviour
         
         // Eğer zaten açıksa kapat (Toggle), kapalıysa aç
         targetPanel.SetActive(!wasActive);
+    }
+
+    public void TogglePanel(UnityEngine.Object targetObject)
+    {
+        TogglePanel(targetObject as GameObject);
     }
 
     public void HideAllPanels()
