@@ -124,7 +124,10 @@ public class DataMigrator : EditorWindow
             BoostUpgradeData data = ScriptableObject.CreateInstance<BoostUpgradeData>();
             data.entityName = "Otomatik Topla";
             data.description = "Restoranin karini oto topla";
-            data.boostMultiplier = 0f;
+            // [BUG-10 FIX] Was 0f — when UpgradeManager multiplies income by this value,
+            // a 0x multiplier wipes ALL building income to zero the moment this boost is purchased.
+            // Set to 1f (neutral) since this is a behavioural flag, not an income multiplier.
+            data.boostMultiplier = 1f;
             data.upgradeCost = new ScaledValue { mode = ScaleMode.Exponential, baseValue = 50000d, multiplierPerLevel = 1f };
             // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
             AssetDatabase.CreateAsset(data, boost2Path);

@@ -6,7 +6,7 @@ using UnityEngine;
 /// Oyunun temel para yönetim sistemidir. 
 /// Paranın artması, harcanması ve UI üzerindeki güncel durumunu yönetir.
 /// </summary>
-public class CurrencyManager : MonoBehaviour
+public class CurrencyManager : MonoBehaviour, ICurrencyManager, ISaveable
 {
     // Singleton Pattern: Diğer tüm scriptlerden 'CurrencyManager.Instance' ile ulaşılabilir.
     public static CurrencyManager Instance { get; private set; }
@@ -14,6 +14,13 @@ public class CurrencyManager : MonoBehaviour
     [Header("Para Verileri")]
     public double currentMoney = 0; // Mevcut para miktarı (double kullanarak çok yüksek sayılara destek veriyoruz)
     public TextMeshProUGUI moneyText; // Ekranda parayı gösteren yazı bileşeni
+
+    /// <summary>
+    /// ICurrencyManager arayüzü gerekliliği.
+    /// Mevcut 'currentMoney' alanını dışarıya property olarak sunar.
+    /// Eski kodlar currentMoney alanını kullanmaya devam edebilir.
+    /// </summary>
+    public double CurrentMoney => currentMoney;
 
     // Son 1 saniye içindeki kazancı hesaplamak için kullanılan veri yapısı
     private readonly Queue<IncomeSample> recentActiveIncomeSamples = new Queue<IncomeSample>();
@@ -28,13 +35,16 @@ public class CurrencyManager : MonoBehaviour
     // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        // [BUG-01 FIX] Added proper singleton guard to prevent duplicate instances
+        // from overwriting the existing one (e.g. on scene reload).
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
         {
             Destroy(gameObject);
-            return;
         }
-
-        Instance = this;
     }
 
     // Unity bu fonksiyonu oyun baslarken calistirir; burada baslangic kurulumu yapilir.
@@ -146,5 +156,18 @@ public class CurrencyManager : MonoBehaviour
         {
             moneyText.text = NumberFormatter.Format(currentMoney);
         }
+    }
+
+    // --- ISaveable ---
+
+    public void OnSave(SaveData data)
+    {
+        data.currentMoney = currentMoney;
+    }
+
+    public void OnLoad(SaveData data)
+    {
+        currentMoney = data.currentMoney;
+        UpdateUI();
     }
 }

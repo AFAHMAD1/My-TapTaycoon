@@ -5,9 +5,16 @@ using UnityEngine;
 /// Binalar, ozellikler bu sinifi miras alarak kendi ScriptableObject verilerini referans gosterir.
 /// </summary>
 [System.Serializable]
-public abstract class UpgradableEntity
+public abstract class UpgradableEntity : IUpgradable
 {
     public int currentLevel = 0;
+
+    /// <summary>
+    /// IUpgradable arayüzü gerekliliği.
+    /// Unity serialize edebilmesi için 'currentLevel' alanı korunur;
+    /// bu property onu dışarıya salt-okunur olarak sunar.
+    /// </summary>
+    public int CurrentLevel => currentLevel;
 
     // Alt siniflar kendi SO data'larini dondurecek
     public abstract UpgradableEntityData BaseData { get; }

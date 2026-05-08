@@ -15,7 +15,8 @@ public class SkillCardAdapter : ICardDataProvider
             showDescription = true,
             showIncome = false,
             showLevel = true,
-            showSecondaryButton = false
+            showSecondaryButton = false,
+            useSkillCardLayout = true
         };
     }
 

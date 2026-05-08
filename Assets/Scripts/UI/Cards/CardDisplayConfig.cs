@@ -15,6 +15,7 @@ public class CardDisplayConfig
     public bool showLevel = true;
     // Kartta ikinci bir buton gerekiyorsa bunu acar.
     public bool showSecondaryButton = false; // Yeni! (Orn: Prestij butonu)
+    public bool useSkillCardLayout = false;
     
     // Varsayılan olarak bina kartı görünümü
     public static CardDisplayConfig DefaultBuildingConfig => new CardDisplayConfig
