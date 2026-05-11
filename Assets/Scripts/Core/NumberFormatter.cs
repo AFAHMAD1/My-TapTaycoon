@@ -55,6 +55,46 @@ public static class NumberFormatter
         return scaledValue.ToString(numericFormat, System.Globalization.CultureInfo.InvariantCulture) + suffix;
     }
 
+    public static string FormatIncome(double value)
+    {
+        if (double.IsNaN(value) || double.IsInfinity(value))
+        {
+            return "0";
+        }
+
+        if (value < 0d)
+        {
+            return "-" + FormatIncome(-value);
+        }
+
+        if (value < 1000d)
+        {
+            return value.ToString("F0", System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        int suffixIndex = -1;
+        double scaledValue = value;
+
+        while (scaledValue >= 1000d)
+        {
+            scaledValue /= 1000d;
+            suffixIndex++;
+        }
+
+        if (scaledValue >= 999.995d)
+        {
+            scaledValue /= 1000d;
+            suffixIndex++;
+        }
+
+        return scaledValue.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) + GetSuffix(suffixIndex);
+    }
+
+    public static string FormatPrice(double value)
+    {
+        return FormatIncome(value);
+    }
+
     /// <summary>
     /// Suffix listesinden uygun harfi çeker. Liste biterse AA, BB gibi alfabetik devam eder.
     /// </summary>

@@ -32,6 +32,7 @@ public class UpgradeManager : MonoBehaviour, ISaveable
         // [BUG-02 FIX] Singleton duplicate guard eklendi.
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
+    }
 
     // Unity Editor bu fonksiyonu Inspector degerleri degisince calistirir; eksik ayarlari yakalamaya yarar.
     private void OnValidate() => ValidateSetup();

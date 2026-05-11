@@ -44,6 +44,7 @@ public class UpgradeCard : MonoBehaviour
 
         // Referanslar boşsa otomatik olarak bulmaya çalış
         AutoAssignReferencesIfNeeded();
+        ConfigureIncomeText();
         EnsureProgressBarVisuals();
         EnsureDescriptionText();
 
@@ -204,8 +205,8 @@ public class UpgradeCard : MonoBehaviour
             // Bu satir: 'provider' uzerindeki 'GetIncomePerCycle' metodunu cagirir ve donen sonucu 'incomePerCycle' degiskenine kaydeder.
             double incomePerCycle = provider.GetIncomePerCycle();
             incomeText.text =
-                $"<size=20>Kazanç </size>" +
-                $"<size=24><color=#{ColorUtility.ToHtmlStringRGB(provider.IncomeColor)}>${NumberFormatter.Format(incomePerCycle)} / Tur</color></size>";
+                $"<size=18>Kazanç </size>" +
+                $"<size=20><color=#{ColorUtility.ToHtmlStringRGB(provider.IncomeColor)}>${NumberFormatter.FormatIncome(incomePerCycle)} / Tur</color></size>";
         }
 
         // Açıklama Güncelleme
@@ -222,7 +223,7 @@ public class UpgradeCard : MonoBehaviour
         {
             // Bu satir: 'provider' uzerindeki 'GetCost' metodunu cagirir ve donen sonucu 'cost' degiskenine kaydeder.
             double cost = provider.GetCost(buyAmount);
-            costText.text = "Fiyat: $" + NumberFormatter.Format(cost);
+            costText.text = "Fiyat: $" + NumberFormatter.FormatPrice(cost);
         }
 
         // Progress Bar Güncelleme
@@ -284,6 +285,17 @@ public class UpgradeCard : MonoBehaviour
         if (iconImage == null) iconImage = UIHelper.FindImage(transform, "Image", "BuildingIcon");
         if (buyButtonImage == null && buyButton != null) buyButtonImage = buyButton.GetComponent<Image>();
         if (progressSlider == null) progressSlider = UIHelper.FindSlider(transform, "ProgressSlider");
+    }
+
+    private void ConfigureIncomeText()
+    {
+        if (incomeText == null) return;
+
+        incomeText.enableAutoSizing = true;
+        incomeText.fontSizeMin = 12f;
+        incomeText.fontSizeMax = 20f;
+        incomeText.enableWordWrapping = false;
+        incomeText.overflowMode = TextOverflowModes.Overflow;
     }
 
     // Progress bar'a tıklanarak manuel toplama yapılmasına imkan sağlar.

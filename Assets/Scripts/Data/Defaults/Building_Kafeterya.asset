@@ -21,7 +21,7 @@ MonoBehaviour:
   maxLevel: 0
   incomePerCycle:
     mode: 1
-    baseValueString: 
+    baseValueString: 10
     baseValue: 10
     multiplierPerLevel: 10
   baseDuration: 10

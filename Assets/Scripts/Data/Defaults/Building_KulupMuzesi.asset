@@ -15,13 +15,13 @@ MonoBehaviour:
   entityName: Kulup Muzesi
   upgradeCost:
     mode: 0
-    baseValueString: 
-    baseValue: 750
+    baseValueString: 10.50K
+    baseValue: 10500
     multiplierPerLevel: 1.15
   incomePerCycle:
     mode: 0
-    baseValueString: 
-    baseValue: 42
+    baseValueString: 1.00K
+    baseValue: 1000
     multiplierPerLevel: 1.38
   baseDuration: 7
   durationSteps:

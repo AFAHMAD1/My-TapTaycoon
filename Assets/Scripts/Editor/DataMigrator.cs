@@ -26,15 +26,15 @@ public class DataMigrator : EditorWindow
         }
 
         CreateBuilding("Kafeterya", 50, 1.08f, 10, 10f, ScaleMode.Linear, 10f, new Color32(247, 224, 179, 255), new Color32(222, 119, 55, 255), new Color32(47, 125, 211, 255), new Color32(98, 156, 64, 255), true);
-        CreateBuilding("Bilet Gisesi", 100, 1.15f, 5, 1.35f, ScaleMode.Exponential, 5f, new Color32(231, 217, 181, 255), new Color32(194, 48, 48, 255), new Color32(32, 151, 220, 255), new Color32(78, 154, 67, 255), false);
-        CreateBuilding("Kulup Muzesi", 750, 1.15f, 42, 1.38f, ScaleMode.Exponential, 7f, new Color32(226, 220, 196, 255), new Color32(139, 93, 46, 255), new Color32(43, 129, 210, 255), new Color32(91, 160, 84, 255), false);
-        CreateBuilding("Antrenman Tesisi", 25000, 1.15f, 1500, 1.42f, ScaleMode.Exponential, 10f, new Color32(217, 230, 205, 255), new Color32(70, 140, 74, 255), new Color32(40, 127, 201, 255), new Color32(66, 150, 72, 255), false);
-        CreateBuilding("Taraftar Magazasi", 5000, 1.15f, 300, 1.4f, ScaleMode.Exponential, 8f, new Color32(228, 218, 189, 255), new Color32(154, 58, 136, 255), new Color32(46, 115, 201, 255), new Color32(72, 145, 72, 255), false);
-        CreateBuilding("Otopark", 12000, 1.15f, 820, 1.4f, ScaleMode.Exponential, 9f, new Color32(219, 225, 210, 255), new Color32(94, 114, 126, 255), new Color32(55, 132, 206, 255), new Color32(74, 147, 77, 255), false);
-        CreateBuilding("Stadyum", 1000000, 1.15f, 80000, 1.38f, ScaleMode.Exponential, 15f, new Color32(209, 217, 193, 255), new Color32(50, 128, 105, 255), new Color32(33, 122, 197, 255), new Color32(65, 149, 76, 255), false);
-        CreateBuilding("Medya Merkezi", 18000000, 1.15f, 1400000, 1.36f, ScaleMode.Exponential, 18f, new Color32(220, 213, 233, 255), new Color32(103, 77, 165, 255), new Color32(73, 127, 226, 255), new Color32(74, 163, 93, 255), false);
-        CreateBuilding("Alisveris Merkezi", 75000000, 1.15f, 6200000, 1.34f, ScaleMode.Exponential, 20f, new Color32(243, 222, 206, 255), new Color32(207, 115, 66, 255), new Color32(48, 153, 214, 255), new Color32(83, 166, 89, 255), false);
-        CreateBuilding("Mega Arena", 4000000000, 1.15f, 420000000, 1.32f, ScaleMode.Exponential, 28f, new Color32(236, 217, 196, 255), new Color32(133, 88, 56, 255), new Color32(24, 105, 191, 255), new Color32(99, 181, 75, 255), false);
+        CreateBuilding("Bilet Gisesi", 700, 1.15f, 60, 1.35f, ScaleMode.Exponential, 5f, new Color32(231, 217, 181, 255), new Color32(194, 48, 48, 255), new Color32(32, 151, 220, 255), new Color32(78, 154, 67, 255), false);
+        CreateBuilding("Kulup Muzesi", 10500, 1.15f, 1000, 1.38f, ScaleMode.Exponential, 7f, new Color32(226, 220, 196, 255), new Color32(139, 93, 46, 255), new Color32(43, 129, 210, 255), new Color32(91, 160, 84, 255), false);
+        CreateBuilding("Antrenman Tesisi", 189000, 1.15f, 10000, 1.42f, ScaleMode.Exponential, 10f, new Color32(217, 230, 205, 255), new Color32(70, 140, 74, 255), new Color32(40, 127, 201, 255), new Color32(66, 150, 72, 255), false);
+        CreateBuilding("Taraftar Magazasi", 3780000, 1.15f, 175000, 1.4f, ScaleMode.Exponential, 8f, new Color32(228, 218, 189, 255), new Color32(154, 58, 136, 255), new Color32(46, 115, 201, 255), new Color32(72, 145, 72, 255), false);
+        CreateBuilding("Otopark", 83200000, 1.15f, 1100000, 1.4f, ScaleMode.Exponential, 9f, new Color32(219, 225, 210, 255), new Color32(94, 114, 126, 255), new Color32(55, 132, 206, 255), new Color32(74, 147, 77, 255), false);
+        CreateBuilding("Stadyum", 2080, 1.15f, 9370000, 1.38f, ScaleMode.Exponential, 15f, new Color32(209, 217, 193, 255), new Color32(50, 128, 105, 255), new Color32(33, 122, 197, 255), new Color32(65, 149, 76, 255), false);
+        CreateBuilding("Medya Merkezi", 62400000000, 1.15f, 70000000, 1.36f, ScaleMode.Exponential, 18f, new Color32(220, 213, 233, 255), new Color32(103, 77, 165, 255), new Color32(73, 127, 226, 255), new Color32(74, 163, 93, 255), false);
+        CreateBuilding("Alisveris Merkezi", 2490000000000, 1.15f, 581250000, 1.34f, ScaleMode.Exponential, 20f, new Color32(243, 222, 206, 255), new Color32(207, 115, 66, 255), new Color32(48, 153, 214, 255), new Color32(83, 166, 89, 255), false);
+        CreateBuilding("Mega Arena", 125000000000000, 1.15f, 4240000000, 1.32f, ScaleMode.Exponential, 28f, new Color32(236, 217, 196, 255), new Color32(133, 88, 56, 255), new Color32(24, 105, 191, 255), new Color32(99, 181, 75, 255), false);
 
         CreateCollectorData();
         CreateBoosts();

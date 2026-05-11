@@ -15,13 +15,13 @@ MonoBehaviour:
   entityName: Stadyum
   upgradeCost:
     mode: 0
-    baseValueString: 
-    baseValue: 1000000
+    baseValueString: 2.08K
+    baseValue: 2080
     multiplierPerLevel: 1.15
   incomePerCycle:
     mode: 0
-    baseValueString: 
-    baseValue: 80000
+    baseValueString: 9.37M
+    baseValue: 9370000
     multiplierPerLevel: 1.38
   baseDuration: 15
   durationSteps:

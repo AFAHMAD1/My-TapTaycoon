@@ -15,13 +15,13 @@ MonoBehaviour:
   entityName: Mega Arena
   upgradeCost:
     mode: 0
-    baseValueString: 
-    baseValue: 4000000000
+    baseValueString: 125.00T
+    baseValue: 125000000000000
     multiplierPerLevel: 1.15
   incomePerCycle:
     mode: 0
-    baseValueString: 
-    baseValue: 420000000
+    baseValueString: 4.24B
+    baseValue: 4240000000
     multiplierPerLevel: 1.32
   baseDuration: 28
   durationSteps:

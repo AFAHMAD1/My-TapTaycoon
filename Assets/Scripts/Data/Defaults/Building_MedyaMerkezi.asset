@@ -15,13 +15,13 @@ MonoBehaviour:
   entityName: Medya Merkezi
   upgradeCost:
     mode: 0
-    baseValueString: 
-    baseValue: 18000000
+    baseValueString: 62.40B
+    baseValue: 62400000000
     multiplierPerLevel: 1.15
   incomePerCycle:
     mode: 0
-    baseValueString: 
-    baseValue: 1400000
+    baseValueString: 70.00M
+    baseValue: 70000000
     multiplierPerLevel: 1.36
   baseDuration: 18
   durationSteps:

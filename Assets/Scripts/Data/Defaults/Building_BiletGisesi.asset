@@ -15,13 +15,13 @@ MonoBehaviour:
   entityName: Bilet Gisesi
   upgradeCost:
     mode: 0
-    baseValueString: 
-    baseValue: 100
+    baseValueString: 700
+    baseValue: 700
     multiplierPerLevel: 1.15
   incomePerCycle:
     mode: 0
-    baseValueString: 
-    baseValue: 5
+    baseValueString: 60
+    baseValue: 60
     multiplierPerLevel: 1.35
   baseDuration: 5
   durationSteps:
