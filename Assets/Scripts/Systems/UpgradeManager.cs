@@ -32,6 +32,7 @@ public class UpgradeManager : MonoBehaviour, ISaveable
     {
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
+    }
 
         EnsureDefaultPlayerProfitUpgrades();
     }
