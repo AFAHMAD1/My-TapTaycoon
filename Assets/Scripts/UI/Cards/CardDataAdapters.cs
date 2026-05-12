@@ -271,7 +271,7 @@ public class BoostCardAdapter : ICardDataProvider
     }
 }
 
-public class StoreCardAdapter : ICardDataProvider
+public class StoreCardAdapter : ICardDataProvider, IStoreCardVisualProvider
 {
     private StoreItemData data;
     private CardDisplayConfig config;
@@ -298,9 +298,28 @@ public class StoreCardAdapter : ICardDataProvider
 
     public Sprite Icon => data.icon;
     public Color CardColor => data.cardBackgroundColor;
-    public Color ButtonColor => data.buttonColor;
+    public Color ButtonColor => data.visualType == StoreCardVisualType.SocialMedia ? data.socialButtonColor : data.buttonColor;
     public Color IconTintColor => data.iconTintColor;
     public Color IncomeColor => Color.white;
+    public StoreCardVisualType VisualType => data.visualType;
+    public bool ShowPriceRow => data.showPriceRow && data.visualType != StoreCardVisualType.SocialMedia;
+    public Sprite PriceIcon => data.priceIcon;
+    public string LeftActionText => data.visualType == StoreCardVisualType.SocialMedia ? "Takip Et" : "Satın Al";
+    public Vector2 ButtonSize => data.visualType == StoreCardVisualType.SocialMedia ? data.socialButtonSize : data.normalButtonSize;
+    public string PriceText
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(data.priceTextOverride)) return data.priceTextOverride;
+
+            return data.costType switch
+            {
+                StoreCostType.Diamond => data.costAmount.ToString("F0", System.Globalization.CultureInfo.InvariantCulture),
+                StoreCostType.RealMoneyTRY => $"{data.costAmount.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} TL",
+                _ => ""
+            };
+        }
+    }
 
     public CardDisplayConfig DisplayConfig => config;
 
@@ -373,12 +392,13 @@ public class StoreCardAdapter : ICardDataProvider
     public string GetBuyButtonText(int amount)
     {
         if (!string.IsNullOrEmpty(data.customButtonText)) return data.customButtonText;
+        if (data.costType == StoreCostType.RealMoneyTRY && !string.IsNullOrWhiteSpace(data.priceTextOverride)) return data.priceTextOverride;
         
         return data.costType switch
         {
-            StoreCostType.Free => "Ücretsiz",
-            StoreCostType.RealMoneyTRY => $"{data.costAmount} TL",
-            StoreCostType.Diamond => $"{data.costAmount} Elmas",
+            StoreCostType.Free => "Takip Et",
+            StoreCostType.RealMoneyTRY => $"{data.costAmount.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} TL",
+            StoreCostType.Diamond => data.costAmount.ToString("F0", System.Globalization.CultureInfo.InvariantCulture),
             _ => "Al"
         };
     }

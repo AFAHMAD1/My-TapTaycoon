@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca167004492a6e4d9a12a6facd1f521, type: 3}
   m_Name: StoreItem_ElmasPaketi
   m_EditorClassIdentifier: Assembly-CSharp::StoreItemData
-  itemName: Elmas Paketi
-  description: Oyun ici elmas satin al
+  itemName: 180 Elmas
+  description: Baslangic elmas paketi.
   icon: {fileID: 0}
   costType: 1
-  costAmount: 19.99
+  costAmount: 3.97
   customButtonText: 
   rewardType: 3
-  rewardAmount: 0
-  cardBackgroundColor: {r: 0.9411765, g: 0.9411765, b: 0.9411765, a: 1}
-  buttonColor: {r: 0.1254902, g: 0.5921569, b: 0.8627451, a: 1}
+  rewardAmount: 180
+  visualType: 2
+  showPriceRow: 1
+  priceTextOverride: 3.97 TL
+  priceIcon: {fileID: 0}
+  normalButtonSize: {x: 170, y: 80}
+  socialButtonSize: {x: 0, y: 0}
+  cardBackgroundColor: {r: 0.78, g: 0.73, b: 0.58, a: 1}
+  buttonColor: {r: 1, g: 0.62, b: 0.12, a: 1}
+  socialButtonColor: {r: 0.22, g: 0.36, b: 0.62, a: 1}
+  iconTintColor: {r: 1, g: 1, b: 1, a: 1}

@@ -22,6 +22,13 @@ public enum StoreRewardType
     DiamondPack       // Gercek parayla elmas alimi
 }
 
+public enum StoreCardVisualType
+{
+    SocialMedia,
+    DiamondFeature,
+    DiamondPackTRY
+}
+
 [CreateAssetMenu(fileName = "New Store Item", menuName = "IdleGame/Store Item (Kit)")]
 public class StoreItemData : ScriptableObject
 {
@@ -44,7 +51,14 @@ public class StoreItemData : ScriptableObject
     public float rewardAmount; // 24 (saat) veya 50 (elmas) vs.
 
     [Header("Gorsel Tema")]
+    public StoreCardVisualType visualType = StoreCardVisualType.DiamondFeature;
+    public bool showPriceRow = true;
+    public string priceTextOverride;
+    public Sprite priceIcon;
+    public Vector2 normalButtonSize = Vector2.zero;
+    public Vector2 socialButtonSize = Vector2.zero;
     public Color cardBackgroundColor = new Color32(240, 240, 240, 255);
     public Color buttonColor = new Color32(32, 151, 220, 255);
+    public Color socialButtonColor = new Color32(51, 153, 255, 255);
     public Color iconTintColor = Color.white;
 }

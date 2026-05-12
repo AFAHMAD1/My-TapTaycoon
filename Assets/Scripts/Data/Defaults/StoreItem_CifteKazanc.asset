@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ca167004492a6e4d9a12a6facd1f521, type: 3}
-  m_Name: StoreItem_Yagdir
+  m_Name: StoreItem_CifteKazanc
   m_EditorClassIdentifier: Assembly-CSharp::StoreItemData
-  itemName: Para Yagdir
-  description: 24 saatlik kazanci hemen al.
+  itemName: Cifte Kazanc
+  description: Sonraki 24 saat boyunca kazancini ikiye katla.
   icon: {fileID: 0}
   costType: 0
-  costAmount: 100
+  costAmount: 150
   customButtonText: 
   rewardType: 0
   rewardAmount: 24

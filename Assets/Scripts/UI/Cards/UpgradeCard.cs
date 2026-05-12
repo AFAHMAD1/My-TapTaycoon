@@ -25,6 +25,9 @@ public class UpgradeCard : MonoBehaviour
     public Image cardBackgroundImage; // Kartın arka planı
     public Image iconImage; // Nesne ikonu
     public Image buyButtonImage; // Butonun görseli
+    public Transform priceRow;
+    public Image priceIconImage;
+    public TextMeshProUGUI leftActionText;
     public Slider progressSlider; // Üretim süresini gösteren bar
     public TextMeshProUGUI progressTimeText; // Süreyi yazılı gösteren metin
 
@@ -45,7 +48,6 @@ public class UpgradeCard : MonoBehaviour
         // Referanslar boşsa otomatik olarak bulmaya çalış
         AutoAssignReferencesIfNeeded();
         ConfigureIncomeText();
-        EnsureProgressBarVisuals();
         EnsureDescriptionText();
 
         // Satın alma butonuna dinleyici ekle
@@ -61,9 +63,6 @@ public class UpgradeCard : MonoBehaviour
                 buyButton.gameObject.AddComponent<UIBounce>();
         }
 
-        // Progress bar (slider) üzerine tıklama desteği kur
-        SetupProgressSliderClickHandler();
-        
         // Veri kaynağının konfigürasyonuna göre UI elemanlarını aç/kapat (Örn: Mağaza ürününde seviye gösterme)
         ApplyDisplayConfig();
         ForceUpdate(); // İlk güncellemeyi yap
@@ -93,6 +92,12 @@ public class UpgradeCard : MonoBehaviour
     {
         if (provider == null || provider.DisplayConfig == null) return;
         CardDisplayConfig config = provider.DisplayConfig;
+
+        if (config.showProgressBar)
+        {
+            EnsureProgressBarVisuals();
+            SetupProgressSliderClickHandler();
+        }
 
         if (iconImage != null) iconImage.gameObject.SetActive(config.showIcon);
         if (progressSlider != null) progressSlider.gameObject.SetActive(config.showProgressBar);
@@ -223,7 +228,7 @@ public class UpgradeCard : MonoBehaviour
         {
             // Bu satir: 'provider' uzerindeki 'GetCost' metodunu cagirir ve donen sonucu 'cost' degiskenine kaydeder.
             double cost = provider.GetCost(buyAmount);
-            costText.text = "Fiyat: $" + NumberFormatter.FormatPrice(cost);
+            costText.text = GetCostText(cost);
         }
 
         // Progress Bar Güncelleme
@@ -241,7 +246,48 @@ public class UpgradeCard : MonoBehaviour
             iconImage.color = provider.IconTintColor;
         }
 
+        ApplyStoreVisuals();
+
         if (buyButtonText != null) buyButtonText.text = provider.GetBuyButtonText(buyAmount);
+    }
+
+    private string GetCostText(double cost)
+    {
+        if (provider is IStoreCardVisualProvider storeVisual)
+        {
+            return storeVisual.PriceText;
+        }
+
+        return "Fiyat: $" + NumberFormatter.FormatPrice(cost);
+    }
+
+    private void ApplyStoreVisuals()
+    {
+        if (!(provider is IStoreCardVisualProvider storeVisual)) return;
+
+        if (priceRow != null) priceRow.gameObject.SetActive(storeVisual.ShowPriceRow);
+        if (costText != null) costText.gameObject.SetActive(storeVisual.ShowPriceRow);
+
+        if (priceIconImage != null)
+        {
+            bool showPriceIcon = storeVisual.ShowPriceRow && storeVisual.PriceIcon != null;
+            priceIconImage.gameObject.SetActive(showPriceIcon);
+            priceIconImage.sprite = storeVisual.PriceIcon;
+        }
+
+        if (leftActionText != null)
+        {
+            leftActionText.text = storeVisual.LeftActionText;
+        }
+
+        if (buyButton != null && storeVisual.ButtonSize != Vector2.zero)
+        {
+            RectTransform buttonRect = buyButton.GetComponent<RectTransform>();
+            if (buttonRect != null)
+            {
+                buttonRect.sizeDelta = storeVisual.ButtonSize;
+            }
+        }
     }
 
     // Üretim ilerleme çubuğunu günceller.
@@ -277,14 +323,17 @@ public class UpgradeCard : MonoBehaviour
         incomeText ??= UIHelper.FindText(transform, "GelirYazisi", "IncomeText");
         levelText ??= UIHelper.FindText(transform, "SeviyeYazisi", "LevelText");
         costText ??= UIHelper.FindText(transform, "FiyatYazisi", "PriceText");
+        leftActionText ??= UIHelper.FindText(transform, "LeftActionText", "ActionLabel", "FollowText");
         progressTimeText ??= UIHelper.FindText(transform, "ProgressTimeText", "ProgressLabel");
 
         if (buyButton == null) buyButton = UIHelper.FindButton(transform, "Button", "ActionButton");
         if (buyButtonText == null && buyButton != null) buyButtonText = buyButton.GetComponentInChildren<TextMeshProUGUI>(true);
         if (cardBackgroundImage == null) cardBackgroundImage = GetComponent<Image>();
         if (iconImage == null) iconImage = UIHelper.FindImage(transform, "Image", "BuildingIcon");
+        if (priceIconImage == null) priceIconImage = UIHelper.FindImage(transform, "PriceIcon", "CostIcon");
         if (buyButtonImage == null && buyButton != null) buyButtonImage = buyButton.GetComponent<Image>();
         if (progressSlider == null) progressSlider = UIHelper.FindSlider(transform, "ProgressSlider");
+        priceRow ??= UIHelper.FindChildRecursive(transform, "PriceRow");
     }
 
     private void ConfigureIncomeText()

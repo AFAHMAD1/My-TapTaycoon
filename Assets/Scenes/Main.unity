@@ -12191,7 +12191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8073074cd9a7faa47b829f152c3eaa59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KitPanel
-  cardPrefab: {fileID: 6554144157019958239, guid: 6a9bd33f1a8a6364d89535e6fad970bb, type: 3}
+  cardPrefab: {fileID: 6554144157019958239, guid: b915c971fd9a11f4aa33570f2b08bc0b, type: 3}
   contentContainer: {fileID: 0}
   panelTitle: Kitler
   titleText: {fileID: 746948043}
@@ -12200,11 +12200,21 @@ MonoBehaviour:
   cardSpacing: 24
   topPadding: 12
   sidePadding: 12
+  preservePrefabCardLayout: 1
+  fallbackCardHeight: 160
   storeItems:
-  - {fileID: 11400000, guid: 09f0f2fd1024ef04ead7af45c0dd87b9, type: 2}
-  - {fileID: 11400000, guid: d962cf0a804fd3446bfdd504678ed7fd, type: 2}
   - {fileID: 11400000, guid: c35759a7f75247c439e82e650187a09d, type: 2}
+  - {fileID: 11400000, guid: 4a6d9f2c0b8e4f7aa3c2d1e0f9a8b7c6, type: 2}
+  - {fileID: 11400000, guid: 5b7e1c3d9a0f4b6c8d2e3f4a5b6c7d8e, type: 2}
   - {fileID: 11400000, guid: 5d8ad74e95a925c41b356c70deb14367, type: 2}
+  - {fileID: 11400000, guid: 09f0f2fd1024ef04ead7af45c0dd87b9, type: 2}
+  - {fileID: 11400000, guid: 6c8f2d4e0b1a4c7d9e3f5a6b7c8d9e0f, type: 2}
+  - {fileID: 11400000, guid: d962cf0a804fd3446bfdd504678ed7fd, type: 2}
+  - {fileID: 11400000, guid: 7d9a3e5f1c2b4d8e0f4a6b7c8d9e0f1a, type: 2}
+  - {fileID: 11400000, guid: 8e0b4f6a2d3c5e9f1a5b7c8d9e0f1a2b, type: 2}
+  - {fileID: 11400000, guid: 9f1c5a7b3e4d6f0a2b6c8d9e0f1a2b3c, type: 2}
+  - {fileID: 11400000, guid: a2b6c8d9e0f1a2b3c4d5e6f708192a3b, type: 2}
+  - {fileID: 11400000, guid: b3c7d9e0f1a2b3c4d5e6f708192a3b4c, type: 2}
   progressText: {fileID: 0}
 --- !u!114 &1845085208
 MonoBehaviour:

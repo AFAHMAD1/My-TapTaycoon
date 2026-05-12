@@ -1,11 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class KitPanel : BaseUpgradePanel
 {
     [Header("Magaza Icerikleri")]
     public List<StoreItemData> storeItems = new List<StoreItemData>();
+
+    [Header("Kit Kart Yerlesimi")]
+    public bool preservePrefabCardLayout = true;
+    public float fallbackCardHeight = 160f;
 
     [Header("Kit Ozet Cubugu")]
     public TextMeshProUGUI progressText; // Alınan Kitler: 2/5 yazacak text
@@ -52,6 +57,48 @@ public class KitPanel : BaseUpgradePanel
         }
 
         return providers;
+    }
+    protected override void ConfigureContentLayout()
+    {
+        base.ConfigureContentLayout();
+
+        VerticalLayoutGroup layoutGroup = contentContainer.GetComponent<VerticalLayoutGroup>();
+        if (layoutGroup == null) return;
+
+        layoutGroup.childControlHeight = false;
+        layoutGroup.childForceExpandHeight = false;
+    }
+
+    protected override void ConfigureCardLayout(GameObject cardObj)
+    {
+        if (!preservePrefabCardLayout)
+        {
+            base.ConfigureCardLayout(cardObj);
+            return;
+        }
+
+        RectTransform rectTransform = cardObj.GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            rectTransform.anchorMin = new Vector2(0f, 1f);
+            rectTransform.anchorMax = new Vector2(1f, 1f);
+            rectTransform.pivot = new Vector2(0.5f, 1f);
+            rectTransform.anchoredPosition = Vector2.zero;
+            float height = rectTransform.sizeDelta.y > 0f ? rectTransform.sizeDelta.y : fallbackCardHeight;
+            rectTransform.sizeDelta = new Vector2(0f, height);
+        }
+
+        LayoutElement layoutElement = cardObj.GetComponent<LayoutElement>();
+        if (layoutElement != null)
+        {
+            layoutElement.enabled = true;
+            layoutElement.flexibleHeight = 0f;
+        }
+
+        if (cardObj.TryGetComponent<UnityEngine.UI.Image>(out var img))
+        {
+            img.enabled = true;
+        }
     }
 }
 

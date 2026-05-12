@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca167004492a6e4d9a12a6facd1f521, type: 3}
   m_Name: StoreItem_BeceriSifirlama
   m_EditorClassIdentifier: Assembly-CSharp::StoreItemData
-  itemName: Beceri Sifirlama
-  description: "Beceri s\u0131f\u0131rlama CD2"
+  itemName: Beceri Beklemesini Sifirla
+  description: Tum beceri bekleme surelerini sifirla.
   icon: {fileID: 0}
-  costType: 2
+  costType: 0
   costAmount: 0
   customButtonText: 
   rewardType: 1
   rewardAmount: 0
-  cardBackgroundColor: {r: 0.9411765, g: 0.9411765, b: 0.9411765, a: 1}
-  buttonColor: {r: 0.1254902, g: 0.5921569, b: 0.8627451, a: 1}
+  visualType: 1
+  showPriceRow: 1
+  priceTextOverride: ""
+  priceIcon: {fileID: 0}
+  normalButtonSize: {x: 170, y: 80}
+  socialButtonSize: {x: 0, y: 0}
+  cardBackgroundColor: {r: 0.78, g: 0.73, b: 0.58, a: 1}
+  buttonColor: {r: 0.42, g: 0.38, b: 0.34, a: 1}
+  socialButtonColor: {r: 0.22, g: 0.36, b: 0.62, a: 1}
+  iconTintColor: {r: 1, g: 1, b: 1, a: 1}

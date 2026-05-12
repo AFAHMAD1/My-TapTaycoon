@@ -34,3 +34,13 @@ public interface ICardDataProvider
     string GetSecondaryButtonText() => "Prestij!";
     void OnSecondaryButtonClick() { }
 }
+
+public interface IStoreCardVisualProvider
+{
+    StoreCardVisualType VisualType { get; }
+    bool ShowPriceRow { get; }
+    string PriceText { get; }
+    Sprite PriceIcon { get; }
+    string LeftActionText { get; }
+    Vector2 ButtonSize { get; }
+}
