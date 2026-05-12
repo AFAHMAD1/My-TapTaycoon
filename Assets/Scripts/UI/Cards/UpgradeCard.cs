@@ -257,7 +257,7 @@ public class UpgradeCard : MonoBehaviour
     {
         if (descriptionText != null) return;
         // Bu satir: 'UIHelper' uzerindeki 'FindText' metodunu cagirir ve sonucu 'descriptionText' degiskenine koyar; UI hiyerarsisinde verilen isimlerden birine sahip TextMeshPro yazisini arar.
-        descriptionText = UIHelper.FindText(transform, "DescriptionText", "DescText");
+        descriptionText = UIHelper.FindText(transform, "DescriptionText", "DescText", "InsideText");
         
         if (descriptionText == null && incomeText != null)
         {

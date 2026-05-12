@@ -271,6 +271,98 @@ public class BoostCardAdapter : ICardDataProvider
     }
 }
 
+public class PlayerProfitCardAdapter : ICardDataProvider
+{
+    private readonly PlayerProfitUpgrade playerUpgrade;
+    private readonly CardDisplayConfig config;
+
+    public PlayerProfitCardAdapter(PlayerProfitUpgrade playerUpgrade)
+    {
+        this.playerUpgrade = playerUpgrade;
+        config = new CardDisplayConfig
+        {
+            showIcon = true,
+            showProgressBar = false,
+            showDescription = true,
+            showIncome = false,
+            showLevel = true,
+            showSecondaryButton = false
+        };
+    }
+
+    public string DisplayName => playerUpgrade != null ? playerUpgrade.playerName : "Player";
+    public int CurrentLevel => playerUpgrade != null ? playerUpgrade.currentLevel : 0;
+
+    public string Description
+    {
+        get
+        {
+            if (playerUpgrade == null)
+            {
+                return "";
+            }
+
+            string current = playerUpgrade.CurrentMultiplier().ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+            string next = playerUpgrade.PreviewNextMultiplier().ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+            return playerUpgrade.currentLevel <= 0
+                ? $"Building profit x{next} after bought"
+                : $"Building profit x{current}";
+        }
+    }
+
+    public Sprite Icon => playerUpgrade != null ? playerUpgrade.icon : null;
+    public Color CardColor => playerUpgrade != null ? playerUpgrade.cardBackgroundColor : Color.white;
+    public Color ButtonColor => playerUpgrade != null ? playerUpgrade.buttonColor : Color.white;
+    public Color IconTintColor => playerUpgrade != null ? playerUpgrade.iconTintColor : Color.white;
+    public Color IncomeColor => playerUpgrade != null ? playerUpgrade.incomeColor : Color.white;
+    public CardDisplayConfig DisplayConfig => config;
+
+    public double GetCost(int amount)
+    {
+        return playerUpgrade != null ? playerUpgrade.GetTotalCost(amount) : 0d;
+    }
+
+    public double GetIncomePerCycle()
+    {
+        return playerUpgrade != null ? playerUpgrade.CurrentMultiplier() : 1d;
+    }
+
+    public bool CanAfford(int amount)
+    {
+        return playerUpgrade != null && playerUpgrade.CanAfford(amount);
+    }
+
+    public void Purchase(int amount)
+    {
+        playerUpgrade?.TryPurchase(amount);
+    }
+
+    public bool HasProgressBar() => false;
+    public float GetProgressNormalized() => 0f;
+    public string GetProgressText() => "";
+    public void OnProgressClick() { }
+
+    public string GetBuyButtonText(int amount)
+    {
+        if (playerUpgrade == null)
+        {
+            return "Buy";
+        }
+
+        if (playerUpgrade.IsMaxLevel)
+        {
+            return "Bought";
+        }
+
+        if (amount >= int.MaxValue)
+        {
+            return "Buy MAX";
+        }
+
+        return amount > 1 ? $"Buy x{amount}" : "Buy";
+    }
+}
+
 public class StoreCardAdapter : ICardDataProvider
 {
     private StoreItemData data;
