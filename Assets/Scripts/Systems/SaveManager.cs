@@ -13,6 +13,7 @@ public class SaveData
     public List<int> buildingLevels = new List<int>();      // Bina seviyeleri
     public int collectorLevel;                              // Tıklama/Karakter seviyesi
     public List<int> boostLevels = new List<int>();         // Boost seviyeleri
+    public List<int> playerProfitLevels = new List<int>();  // Player panel profit multiplier levels
     public List<int> skillLevels = new List<int>();         // [BUG-06 FIX] Beceri seviyeleri
     public string lastSaveTime;                             // Offline kazanç için
 }

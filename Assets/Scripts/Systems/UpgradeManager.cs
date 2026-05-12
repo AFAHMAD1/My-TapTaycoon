@@ -15,6 +15,10 @@ public class UpgradeManager : MonoBehaviour, ISaveable
     [Tooltip("Binaların gelirini veya robotun hızını artıran özel geliştirmeler.")]
     public List<BoostUpgrade> boostUpgrades = new List<BoostUpgrade>();
 
+    [Header("Player Profit Upgrades")]
+    [Tooltip("Player panel cards. Bought players multiply the profit of purchased buildings.")]
+    public List<PlayerProfitUpgrade> playerProfitUpgrades = new List<PlayerProfitUpgrade>();
+
     // Beceri sistemi tarafından geçici olarak ayarlanan çarpanlar (BUG-07 FIX)
     private double _skillBuildingMultiplier = 1d;
     private double _skillClickMultiplier = 1d;
@@ -32,6 +36,8 @@ public class UpgradeManager : MonoBehaviour, ISaveable
         // [BUG-02 FIX] Singleton duplicate guard eklendi.
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
+
+        EnsureDefaultPlayerProfitUpgrades();
     }
 
     // Unity Editor bu fonksiyonu Inspector degerleri degisince calistirir; eksik ayarlari yakalamaya yarar.
@@ -56,7 +62,7 @@ public class UpgradeManager : MonoBehaviour, ISaveable
     {
         double multiplier = _skillBuildingMultiplier; // Beceri çarpanıyla başla
 
-        if (boostUpgrades == null || buildingData == null) return multiplier;
+        if (boostUpgrades == null || buildingData == null) return multiplier * GetPlayerProfitMultiplier();
 
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var boost in boostUpgrades)
@@ -70,6 +76,22 @@ public class UpgradeManager : MonoBehaviour, ISaveable
                 }
             }
         }
+        return multiplier * GetPlayerProfitMultiplier();
+    }
+
+    public double GetPlayerProfitMultiplier()
+    {
+        EnsureDefaultPlayerProfitUpgrades();
+
+        double multiplier = 1d;
+        foreach (PlayerProfitUpgrade playerUpgrade in playerProfitUpgrades)
+        {
+            if (playerUpgrade != null)
+            {
+                multiplier *= playerUpgrade.CurrentMultiplier();
+            }
+        }
+
         return multiplier;
     }
 
@@ -136,6 +158,11 @@ public class UpgradeManager : MonoBehaviour, ISaveable
         if (boostUpgrades != null)
             foreach (var boost in boostUpgrades)
                 data.boostLevels.Add(boost.currentLevel);
+
+        data.playerProfitLevels.Clear();
+        EnsureDefaultPlayerProfitUpgrades();
+        foreach (var playerUpgrade in playerProfitUpgrades)
+            data.playerProfitLevels.Add(playerUpgrade != null ? playerUpgrade.currentLevel : 0);
     }
 
     public void OnLoad(SaveData data)
@@ -150,6 +177,84 @@ public class UpgradeManager : MonoBehaviour, ISaveable
                 if (i < data.boostLevels.Count)
                     boostUpgrades[i].currentLevel = data.boostLevels[i];
             }
+        }
+
+        EnsureDefaultPlayerProfitUpgrades();
+        if (data.playerProfitLevels != null)
+        {
+            for (int i = 0; i < playerProfitUpgrades.Count; i++)
+            {
+                if (i < data.playerProfitLevels.Count && playerProfitUpgrades[i] != null)
+                    playerProfitUpgrades[i].currentLevel = data.playerProfitLevels[i];
+            }
+        }
+    }
+
+    private void EnsureDefaultPlayerProfitUpgrades()
+    {
+        if (playerProfitUpgrades == null)
+        {
+            playerProfitUpgrades = new List<PlayerProfitUpgrade>();
+        }
+
+        if (playerProfitUpgrades.Count > 0)
+        {
+            return;
+        }
+
+        string[] names =
+        {
+            "Rookie Striker",
+            "Wing Runner",
+            "Midfield Engine",
+            "Set Piece Ace",
+            "Captain",
+            "Star Forward",
+            "Playmaker",
+            "Clean Sheet Wall",
+            "Golden Boot",
+            "Legend"
+        };
+
+        double[] costs =
+        {
+            250d,
+            1500d,
+            10000d,
+            75000d,
+            500000d,
+            3500000d,
+            25000000d,
+            180000000d,
+            1250000000d,
+            10000000000d
+        };
+
+        float[] multipliers =
+        {
+            1.10f,
+            1.15f,
+            1.20f,
+            1.25f,
+            1.35f,
+            1.50f,
+            1.75f,
+            2.00f,
+            2.50f,
+            3.00f
+        };
+
+        for (int i = 0; i < names.Length; i++)
+        {
+            playerProfitUpgrades.Add(new PlayerProfitUpgrade
+            {
+                playerName = names[i],
+                description = "Multiplies bought building profit.",
+                baseCost = costs[i],
+                costMultiplierPerLevel = 2f,
+                profitMultiplierPerLevel = multipliers[i],
+                maxLevel = 1
+            });
         }
     }
 }
