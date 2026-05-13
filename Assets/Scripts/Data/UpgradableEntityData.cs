@@ -10,7 +10,7 @@ public abstract class UpgradableEntityData : ScriptableObject
     public int maxLevel = 0; // 0 ise sinirsiz
 
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
-    public double EvaluateCost(int level)
+    public virtual double EvaluateCost(int level)
     {
         // Bu satir: 'upgradeCost' objesi uzerindeki 'Evaluate' metodunu cagirir; ScaledValue ayarlarina gore level bazli sayisal deger hesaplar.
         return upgradeCost.Evaluate(level);

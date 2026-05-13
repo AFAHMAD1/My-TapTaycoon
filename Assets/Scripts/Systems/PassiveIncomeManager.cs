@@ -174,7 +174,20 @@ public class PassiveIncomeManager : MonoBehaviour, IPassiveIncomeManager, ISavea
         foreach (var building in buildings)
         {
             // Bina henüz satın alınmadıysa veya manuel toplama bekliyorsa geç
-            if (building.currentLevel <= 0 || building.isReadyToCollect) continue;
+            if (building.currentLevel <= 0) continue;
+
+            bool autoCollectFromSkill = UpgradeManager.Instance != null &&
+                                        UpgradeManager.Instance.IsPlayerPanelAutoCollectEnabled(building.data);
+
+            if (building.isReadyToCollect)
+            {
+                if (autoCollectFromSkill)
+                {
+                    building.TryCollectIncome();
+                }
+
+                continue;
+            }
 
             building.timer += Time.deltaTime;
             // Bu satir: 'building' uzerindeki 'CurrentDuration' metodunu cagirir ve sonucu 'duration' degiskenine koyar; binanin bir gelir turunu kac saniyede tamamladigini hesaplar.
@@ -186,7 +199,7 @@ public class PassiveIncomeManager : MonoBehaviour, IPassiveIncomeManager, ISavea
                 building.timer = duration;
 
                 // Eğer manuel tıklama gerekiyorsa beklemeye al
-                if (building.data != null && building.data.requireManualCollection)
+                if (building.data != null && building.data.requireManualCollection && !autoCollectFromSkill)
                 {
                     building.isReadyToCollect = true;
                     continue;

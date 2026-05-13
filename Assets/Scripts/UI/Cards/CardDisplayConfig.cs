@@ -32,7 +32,7 @@ public class CardDisplayConfig
     {
         showIcon = true,
         showProgressBar = false,
-        showDescription = false,
+        showDescription = true,
         showIncome = true,
         showLevel = true,
         showSecondaryButton = false

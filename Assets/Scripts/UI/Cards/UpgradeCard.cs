@@ -280,12 +280,23 @@ public class UpgradeCard : MonoBehaviour
             leftActionText.text = storeVisual.LeftActionText;
         }
 
-        if (buyButton != null && storeVisual.ButtonSize != Vector2.zero)
+        if (buyButton != null)
         {
             RectTransform buttonRect = buyButton.GetComponent<RectTransform>();
             if (buttonRect != null)
             {
-                buttonRect.sizeDelta = storeVisual.ButtonSize;
+                if (storeVisual.VisualType == StoreCardVisualType.SocialMedia)
+                {
+                    buttonRect.anchorMin = Vector2.zero;
+                    buttonRect.anchorMax = Vector2.one;
+                    buttonRect.pivot = new Vector2(0.5f, 0.5f);
+                    buttonRect.offsetMin = Vector2.zero;
+                    buttonRect.offsetMax = Vector2.zero;
+                }
+                else if (storeVisual.ButtonSize != Vector2.zero)
+                {
+                    buttonRect.sizeDelta = storeVisual.ButtonSize;
+                }
             }
         }
     }

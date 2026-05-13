@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: StoreItem_Facebook
   m_EditorClassIdentifier: Assembly-CSharp::StoreItemData
   itemName: Facebook'u Begen
-  description: Facebook'ta bizi begen ve 25 elmas kazan!
+  description: Facebook'ta bizi takip et ve 25 elmas kazan!
   icon: {fileID: 0}
   costType: 2
   costAmount: 0
-  customButtonText: Begen
+  customButtonText: Takip Et
   rewardType: 2
   rewardAmount: 25
   visualType: 0
   showPriceRow: 0
-  priceTextOverride: ""
+  priceTextOverride: 
   priceIcon: {fileID: 0}
   normalButtonSize: {x: 0, y: 0}
-  socialButtonSize: {x: 220, y: 95}
+  socialButtonSize: {x: 250, y: 95}
   cardBackgroundColor: {r: 0.78, g: 0.73, b: 0.58, a: 1}
   buttonColor: {r: 1, g: 0.62, b: 0.12, a: 1}
   socialButtonColor: {r: 0.22, g: 0.36, b: 0.62, a: 1}

@@ -132,8 +132,8 @@ public class CollectorCardAdapter : ICardDataProvider
     }
 
     public string DisplayName => collector.data != null ? collector.data.entityName : "Tiklama";
-    public int CurrentLevel => collector.currentLevel;
-    public string Description => "";
+    public int CurrentLevel => collector.DisplayLevel;
+    public string Description => $"Kazanır ${NumberFormatter.FormatIncome(GetIncomePerCycle())} / Dokun";
 
     public Sprite Icon => null; // Varsayılan collector ikonu yok, varsa eklenecek
     public Color CardColor => new Color32(236, 217, 196, 255);
@@ -161,7 +161,7 @@ public class CollectorCardAdapter : ICardDataProvider
     public double GetIncomePerCycle()
     {
         if (collector.data == null) return 0d;
-        return collector.currentLevel == 0 ? collector.data.rewardPerLevel.baseValue : collector.CurrentReward();
+        return collector.CurrentReward();
     }
 
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
@@ -484,12 +484,11 @@ public class StoreCardAdapter : ICardDataProvider, IStoreCardVisualProvider
     public string GetBuyButtonText(int amount)
     {
         if (!string.IsNullOrEmpty(data.customButtonText)) return data.customButtonText;
-        if (data.costType == StoreCostType.RealMoneyTRY && !string.IsNullOrWhiteSpace(data.priceTextOverride)) return data.priceTextOverride;
         
         return data.costType switch
         {
             StoreCostType.Free => "Takip Et",
-            StoreCostType.RealMoneyTRY => $"{data.costAmount.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} TL",
+            StoreCostType.RealMoneyTRY => "Satin Al",
             StoreCostType.Diamond => data.costAmount.ToString("F0", System.Globalization.CultureInfo.InvariantCulture),
             _ => "Al"
         };
