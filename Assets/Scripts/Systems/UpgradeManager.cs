@@ -20,6 +20,7 @@ public class UpgradeManager : MonoBehaviour, ISaveable
     public List<PlayerProfitUpgrade> playerProfitUpgrades = new List<PlayerProfitUpgrade>();
 
     private double _skillBuildingMultiplier = 1d;
+    private double _businessSurchargeMultiplier = 1d;
     private double _skillClickMultiplier = 1d;
 
     public double CurrentClickValue =>
@@ -32,7 +33,6 @@ public class UpgradeManager : MonoBehaviour, ISaveable
     {
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
-    }
 
         EnsureDefaultPlayerProfitUpgrades();
     }
@@ -50,7 +50,7 @@ public class UpgradeManager : MonoBehaviour, ISaveable
 
     public double GetBuildingMultiplier(IncomeBuildingData buildingData)
     {
-        double multiplier = _skillBuildingMultiplier;
+        double multiplier = _skillBuildingMultiplier * _businessSurchargeMultiplier;
 
         if (boostUpgrades != null && buildingData != null)
         {
@@ -148,8 +148,10 @@ public class UpgradeManager : MonoBehaviour, ISaveable
     }
 
     public void SetSkillBuildingMultiplier(double multiplier) => _skillBuildingMultiplier = multiplier;
+    public void SetBusinessSurchargeMultiplier(double multiplier) => _businessSurchargeMultiplier = multiplier;
     public void SetSkillClickMultiplier(double multiplier) => _skillClickMultiplier = multiplier;
     public void ResetSkillBuildingMultiplier() => _skillBuildingMultiplier = 1d;
+    public void ResetBusinessSurchargeMultiplier() => _businessSurchargeMultiplier = 1d;
     public void ResetSkillClickMultiplier() => _skillClickMultiplier = 1d;
 
     public void OnSave(SaveData data)

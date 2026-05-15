@@ -14,7 +14,7 @@ public class SkillCardAdapter : ICardDataProvider
             showProgressBar = false,
             showDescription = true,
             showIncome = false,
-            showLevel = true,
+            showLevel = false,
             showSecondaryButton = false,
             useSkillCardLayout = true
         };
@@ -27,10 +27,11 @@ public class SkillCardAdapter : ICardDataProvider
     {
         get
         {
-            float duration = (float)skill.data.effectDuration.Evaluate(skill.currentLevel);
-            float power = (float)skill.data.effectPower.Evaluate(skill.currentLevel);
+            int previewLevel = Mathf.Max(1, skill.currentLevel);
+            float duration = (float)skill.data.effectDuration.Evaluate(previewLevel);
+            float power = (float)skill.data.effectPower.Evaluate(previewLevel);
             string effectText = string.Format(skill.data.descriptionTemplate, duration, power);
-            return $"<b>Cooldown:</b> <color=#E8464A>{GetCooldownText()}</color>\n<i>{effectText}</i>";
+            return effectText;
         }
     }
 
@@ -46,11 +47,22 @@ public class SkillCardAdapter : ICardDataProvider
     public double GetIncomePerCycle() => 0d;
     public bool CanAfford(int amount) => skill.CanAffordUpgradeAmount(amount);
     public void Purchase(int amount) { }
-    public string GetBuyButtonText(int amount) => "";
+    public string GetBuyButtonText(int amount)
+    {
+        return IsUnlocked() ? "Satin Alindi" : "Satin Alinmadi";
+    }
 
     public bool HasProgressBar() => false;
     public float GetProgressNormalized() => 0f;
-    public string GetProgressText() => "";
+    public string GetProgressText()
+    {
+        if (skill.currentCooldownTimer > 0f)
+        {
+            return $"Bekleme Suresi: {FormatSeconds(skill.currentCooldownTimer)}";
+        }
+
+        return $"Bekleme Suresi: {GetCooldownText()}";
+    }
 
     public void OnProgressClick()
     {
@@ -64,7 +76,36 @@ public class SkillCardAdapter : ICardDataProvider
     {
         int previewLevel = Mathf.Max(1, skill.currentLevel);
         float cooldownSeconds = (float)skill.data.cooldownTime.Evaluate(previewLevel);
-        int minutes = Mathf.CeilToInt(cooldownSeconds / 60f);
-        return $"{minutes}m";
+        return FormatSeconds(cooldownSeconds);
+    }
+
+    private bool IsUnlocked()
+    {
+        if (skill?.data == null)
+        {
+            return false;
+        }
+
+        switch (skill.data.skillId)
+        {
+            case SkillId.QuickCash:
+                return QuickCashButton.IsUnlocked;
+            case SkillId.BusinessSurcharge:
+                return BusinessSurchargeButton.IsUnlocked;
+            default:
+                return skill.currentLevel > 0;
+        }
+    }
+
+    private string FormatSeconds(float secondsValue)
+    {
+        if (secondsValue < 60f)
+        {
+            return $"{Mathf.CeilToInt(secondsValue)}s";
+        }
+
+        int minutes = Mathf.FloorToInt(secondsValue / 60f);
+        int seconds = Mathf.CeilToInt(secondsValue % 60f);
+        return seconds > 0 ? $"{minutes}m {seconds}s" : $"{minutes}m";
     }
 }

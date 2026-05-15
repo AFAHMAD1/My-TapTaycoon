@@ -12,6 +12,10 @@ public class SaveData
     public List<int> boostLevels = new List<int>();
     public List<int> playerProfitLevels = new List<int>();
     public List<int> skillLevels = new List<int>();
+    public bool quickCashUnlocked;
+    public int quickCashLevel;
+    public bool businessSurchargeUnlocked;
+    public int businessSurchargeLevel;
     public string lastSaveTime;
 }
 

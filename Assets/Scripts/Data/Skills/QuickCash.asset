@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ef2de5c27638c647b566925b78d9ce7, type: 3}
+  m_Name: QuickCash
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  entityName: Quick Cash
+  upgradeCost:
+    mode: 0
+    baseValueString: 500
+    baseValue: 500
+    multiplierPerLevel: 10
+  maxLevel: 10
+  skillId: 1
+  effectType: 1
+  descriptionTemplate: Hemen para al
+  icon: {fileID: 0}
+  effectDuration:
+    mode: 1
+    baseValueString: 0
+    baseValue: 0
+    multiplierPerLevel: 0
+  effectPower:
+    mode: 1
+    baseValueString: 1
+    baseValue: 1
+    multiplierPerLevel: 0
+  cooldownTime:
+    mode: 1
+    baseValueString: 15
+    baseValue: 15
+    multiplierPerLevel: 0
+  cardBackgroundColor: {r: 0.9607843, g: 0.9411765, b: 0.88235295, a: 1}

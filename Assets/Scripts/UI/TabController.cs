@@ -25,8 +25,8 @@ public class TabController : MonoBehaviour
     public bool openDefaultTabOnStart = true;
 
     [Header("Kapatma Butonlari")]
-    [Tooltip("Adds a red X close button to each tab content panel.")]
-    public bool addCloseButtonsToTabs = true;
+    [Tooltip("Adds a red X close button to each tab content panel. Keep disabled when panels already include ClosingButton prefabs.")]
+    public bool addCloseButtonsToTabs = false;
 
     private void Start()
     {
@@ -40,9 +40,9 @@ public class TabController : MonoBehaviour
                 tabs[i].tabButton.onClick.AddListener(() => OpenTab(index));
             }
 
-            if (addCloseButtonsToTabs && tabs[i].contentPanel != null)
+            if (tabs[i].contentPanel != null)
             {
-                EnsureCloseButton(tabs[i].contentPanel);
+                WireCloseButton(tabs[i].contentPanel);
             }
         }
 
@@ -61,11 +61,11 @@ public class TabController : MonoBehaviour
         }
     }
 
-    private void EnsureCloseButton(GameObject panel)
+    private void WireCloseButton(GameObject panel)
     {
-        Button closeButton = UIHelper.FindButton(panel.transform, "CloseButton", "KapatButonu");
+        Button closeButton = UIHelper.FindButton(panel.transform, "ClosingButton", "CloseButton", "ExitButton", "KapatButonu");
 
-        if (closeButton == null)
+        if (closeButton == null && addCloseButtonsToTabs)
         {
             GameObject buttonObject = new GameObject("CloseButton", typeof(RectTransform), typeof(Image), typeof(Button));
             buttonObject.transform.SetParent(panel.transform, false);
@@ -98,6 +98,11 @@ public class TabController : MonoBehaviour
             text.raycastTarget = false;
 
             closeButton = buttonObject.GetComponent<Button>();
+        }
+
+        if (closeButton == null)
+        {
+            return;
         }
 
         closeButton.onClick.RemoveAllListeners();

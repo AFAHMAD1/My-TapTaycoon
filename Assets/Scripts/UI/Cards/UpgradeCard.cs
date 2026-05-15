@@ -20,6 +20,7 @@ public class UpgradeCard : MonoBehaviour
     public TextMeshProUGUI levelText; // Mevcut seviye
     public TextMeshProUGUI costText; // Satın alma maliyeti
     public TextMeshProUGUI descriptionText; // Açıklama metni
+    public TextMeshProUGUI statusText;
     public Button buyButton; // Satın al butonu
     public TextMeshProUGUI buyButtonText; // Buton üzerindeki yazı
     public Image cardBackgroundImage; // Kartın arka planı
@@ -40,12 +41,15 @@ public class UpgradeCard : MonoBehaviour
         getBuyAmountFunc = getBuyAmount;
         
         // Görünürlüğü garantilemek için tüm alt bileşenleri aktif et
-        EnableAllComponents();
+        EnableAllComponents(dataProvider?.DisplayConfig == null || !dataProvider.DisplayConfig.useSkillCardLayout);
 
         // Referanslar boşsa otomatik olarak bulmaya çalış
         AutoAssignReferencesIfNeeded();
         ConfigureIncomeText();
-        EnsureProgressBarVisuals();
+        if (dataProvider?.DisplayConfig != null && dataProvider.DisplayConfig.showProgressBar)
+        {
+            EnsureProgressBarVisuals();
+        }
         EnsureDescriptionText();
 
         // Satın alma butonuna dinleyici ekle
@@ -66,12 +70,11 @@ public class UpgradeCard : MonoBehaviour
         
         // Veri kaynağının konfigürasyonuna göre UI elemanlarını aç/kapat (Örn: Mağaza ürününde seviye gösterme)
         ApplyDisplayConfig();
-        ConfigureSpecialLayout();
         ForceUpdate(); // İlk güncellemeyi yap
     }
 
     // Kart üzerindeki tüm layout ve görsel bileşenleri zorla aktif yapar.
-    private void EnableAllComponents()
+    private void EnableAllComponents(bool enableLayoutComponents)
     {
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var comp in GetComponents<MonoBehaviour>())
@@ -82,9 +85,12 @@ public class UpgradeCard : MonoBehaviour
         if (TryGetComponent<Image>(out var img)) img.enabled = true;
         
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
-        foreach (var layout in GetComponentsInChildren<LayoutGroup>(true)) layout.enabled = true;
-        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
-        foreach (var fitter in GetComponentsInChildren<ContentSizeFitter>(true)) fitter.enabled = true;
+        if (enableLayoutComponents)
+        {
+            foreach (var layout in GetComponentsInChildren<LayoutGroup>(true)) layout.enabled = true;
+            // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
+            foreach (var fitter in GetComponentsInChildren<ContentSizeFitter>(true)) fitter.enabled = true;
+        }
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var graphic in GetComponentsInChildren<Graphic>(true)) graphic.enabled = true;
     }
@@ -291,7 +297,10 @@ public class UpgradeCard : MonoBehaviour
         int buyAmount = getBuyAmountFunc != null ? getBuyAmountFunc() : 1;
 
         // İsim Güncelleme
-        if (nameText != null) nameText.text = $"<size=24><b>{provider.DisplayName}</b></size>";
+        if (nameText != null)
+        {
+            nameText.text = config.useSkillCardLayout ? provider.DisplayName : $"<size=24><b>{provider.DisplayName}</b></size>";
+        }
 
         // Gelir Güncelleme
         if (config.showIncome && incomeText != null)
@@ -322,6 +331,7 @@ public class UpgradeCard : MonoBehaviour
 
         // Progress Bar Güncelleme
         if (config.showProgressBar && provider.HasProgressBar()) UpdateProgressBar();
+        else if (config.useSkillCardLayout && progressTimeText != null) progressTimeText.text = provider.GetProgressText();
 
         // Buton Aktiflik Kontrolü (Para yetiyor mu?)
         if (buyButton != null) buyButton.interactable = provider.CanAfford(buyAmount);
@@ -336,6 +346,7 @@ public class UpgradeCard : MonoBehaviour
         }
 
         if (buyButtonText != null) buyButtonText.text = provider.GetBuyButtonText(buyAmount);
+        if (statusText != null) statusText.text = provider.GetBuyButtonText(buyAmount);
     }
 
     // Üretim ilerleme çubuğunu günceller.
@@ -370,6 +381,7 @@ public class UpgradeCard : MonoBehaviour
         incomeText ??= UIHelper.FindText(transform, "GelirYazisi", "IncomeText");
         levelText ??= UIHelper.FindText(transform, "SeviyeYazisi", "LevelText");
         costText ??= UIHelper.FindText(transform, "FiyatYazisi", "PriceText");
+        statusText ??= UIHelper.FindText(transform, "Bought or Not", "BoughtOrNot", "StatusText");
 
         progressTimeText ??= UIHelper.FindText(transform, "ProgressTimeText", "ProgressLabel", "BeklemeSuresi");
 

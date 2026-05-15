@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PlayerPanel : BaseUpgradePanel
 {
+    [Header("Skill Sale Items")]
+    [SerializeField] private bool showQuickCashSaleItem = true;
+    [SerializeField] private bool showBusinessSurchargeSaleItem = true;
+
     protected override void Start()
     {
         Transform cardRoot = UIHelper.FindChildRecursive(transform, "Cardroots");
@@ -36,19 +40,50 @@ public class PlayerPanel : BaseUpgradePanel
     {
         List<ICardDataProvider> providers = new List<ICardDataProvider>();
 
-        if (UpgradeManager.Instance == null || UpgradeManager.Instance.playerProfitUpgrades == null)
+        if (UpgradeManager.Instance != null && UpgradeManager.Instance.playerProfitUpgrades != null)
         {
-            return providers;
-        }
-
-        foreach (PlayerProfitUpgrade playerUpgrade in UpgradeManager.Instance.playerProfitUpgrades)
-        {
-            if (playerUpgrade != null)
+            foreach (PlayerProfitUpgrade playerUpgrade in UpgradeManager.Instance.playerProfitUpgrades)
             {
-                providers.Add(new PlayerProfitCardAdapter(playerUpgrade));
+                if (playerUpgrade != null)
+                {
+                    providers.Add(new PlayerProfitCardAdapter(playerUpgrade));
+                }
             }
         }
 
+        if (showQuickCashSaleItem)
+        {
+            providers.Add(new QuickCashUnlockCardAdapter(GetQuickCashSkillData()));
+        }
+
+        if (showBusinessSurchargeSaleItem)
+        {
+            providers.Add(new BusinessSurchargeUnlockCardAdapter(GetSkillData(SkillId.BusinessSurcharge)));
+        }
+
         return providers;
+    }
+
+    private SkillData GetQuickCashSkillData()
+    {
+        return GetSkillData(SkillId.QuickCash);
+    }
+
+    private SkillData GetSkillData(SkillId skillId)
+    {
+        if (SkillManager.Instance == null || SkillManager.Instance.allSkillDatas == null)
+        {
+            return null;
+        }
+
+        foreach (SkillData skillData in SkillManager.Instance.allSkillDatas)
+        {
+            if (skillData != null && skillData.skillId == skillId)
+            {
+                return skillData;
+            }
+        }
+
+        return null;
     }
 }

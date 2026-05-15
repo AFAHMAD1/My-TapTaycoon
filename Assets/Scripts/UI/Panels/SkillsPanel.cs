@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SkillsPanel : BaseUpgradePanel
 {
@@ -10,10 +11,10 @@ public class SkillsPanel : BaseUpgradePanel
     protected override void Start()
     {
         showBuyModeSelector = false;
-        cardHeight = 190f;
-        cardSpacing = 18f;
-        topPadding = 24;
-        sidePadding = 24;
+        cardHeight = 170f;
+        cardSpacing = 14f;
+        topPadding = 18;
+        sidePadding = 18;
 
         base.Start();
         ConfigureScrollSpeed();
@@ -40,7 +41,7 @@ public class SkillsPanel : BaseUpgradePanel
     {
         if (closeButton == null)
         {
-            closeButton = UIHelper.FindButton(transform, "CloseButton", "KapatButonu");
+            closeButton = UIHelper.FindButton(transform, "ClosingButton", "CloseButton", "ExitButton", "KapatButonu");
         }
 
         if (closeButton == null)

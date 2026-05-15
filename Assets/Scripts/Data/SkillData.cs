@@ -12,10 +12,18 @@ public enum SkillEffectType
     ClickPowerBoost     // Örn: Midas'ın Eli (Dokunma kârı 10x)
 }
 
+public enum SkillId
+{
+    None = 0,
+    QuickCash = 1,
+    BusinessSurcharge = 2
+}
+
 [CreateAssetMenu(fileName = "New Skill", menuName = "IdleGame/Skill Data")]
 public class SkillData : UpgradableEntityData
 {
     [Header("Beceri Ayarlari")]
+    public SkillId skillId;
     // Skill kullanildiginda hangi tur etki calisacak bunu belirler.
     public SkillEffectType effectType;
     // UI aciklamasinda level'a gore doldurulacak metin sablonudur.
