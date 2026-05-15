@@ -22,6 +22,14 @@ public class PlayerProfitUpgrade
     [Min(1f)]
     public float profitMultiplierPerLevel = 1.25f;
 
+    [Header("Targeting")]
+    [Tooltip("If true, this player multiplies every building. If false, it only multiplies the building at Target Building Index.")]
+    public bool affectsAllBuildings = true;
+
+    [Tooltip("Zero-based building tab index. 0 means building tab 1, 1 means building tab 2, etc.")]
+    [Min(-1)]
+    public int targetBuildingIndex = -1;
+
     [Header("Colors")]
     public Color cardBackgroundColor = new Color32(236, 217, 196, 255);
     public Color buttonColor = new Color32(32, 151, 220, 255);
@@ -43,6 +51,36 @@ public class PlayerProfitUpgrade
     public double PreviewNextMultiplier()
     {
         return System.Math.Pow(Mathf.Max(1f, profitMultiplierPerLevel), currentLevel + 1);
+    }
+
+    public bool AppliesToBuilding(IncomeBuildingData buildingData)
+    {
+        if (affectsAllBuildings)
+        {
+            return true;
+        }
+
+        if (buildingData == null || PassiveIncomeManager.Instance == null)
+        {
+            return false;
+        }
+
+        var buildings = PassiveIncomeManager.Instance.buildings;
+        return targetBuildingIndex >= 0 &&
+               targetBuildingIndex < buildings.Count &&
+               buildings[targetBuildingIndex] != null &&
+               buildings[targetBuildingIndex].data == buildingData;
+    }
+
+    public string GetTargetLabel()
+    {
+        if (affectsAllBuildings)
+        {
+            return "all buildings";
+        }
+
+        int tabNumber = targetBuildingIndex + 1;
+        return tabNumber > 0 ? $"building tab {tabNumber}" : "one building";
     }
 
     public double CostAtLevel(int level)

@@ -304,9 +304,10 @@ public class PlayerProfitCardAdapter : ICardDataProvider
 
             string current = playerUpgrade.CurrentMultiplier().ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
             string next = playerUpgrade.PreviewNextMultiplier().ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+            string target = playerUpgrade.GetTargetLabel();
             return playerUpgrade.currentLevel <= 0
-                ? $"Building profit x{next} after bought"
-                : $"Building profit x{current}";
+                ? $"{target} profit x{next} after bought"
+                : $"{target} profit x{current}";
         }
     }
 

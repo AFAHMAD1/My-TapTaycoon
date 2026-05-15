@@ -66,7 +66,7 @@ public class UpgradeCard : MonoBehaviour
         
         // Veri kaynağının konfigürasyonuna göre UI elemanlarını aç/kapat (Örn: Mağaza ürününde seviye gösterme)
         ApplyDisplayConfig();
-        ApplySkillCardLayoutIfNeeded();
+        ConfigureSpecialLayout();
         ForceUpdate(); // İlk güncellemeyi yap
     }
 
@@ -100,122 +100,101 @@ public class UpgradeCard : MonoBehaviour
         if (descriptionText != null) descriptionText.gameObject.SetActive(config.showDescription);
         if (incomeText != null) incomeText.gameObject.SetActive(config.showIncome);
         if (levelText != null) levelText.gameObject.SetActive(config.showLevel);
+
+        if (config.useSkillCardLayout)
+        {
+            if (costText != null) costText.gameObject.SetActive(false);
+            if (buyButton != null) buyButton.gameObject.SetActive(false);
+        }
         
         EnsureSecondaryButton(config.showSecondaryButton);
     }
 
-    private void ApplySkillCardLayoutIfNeeded()
+    private void ConfigureSpecialLayout()
     {
-        if (provider == null || provider.DisplayConfig == null || !provider.DisplayConfig.useSkillCardLayout)
+        if (provider?.DisplayConfig == null || !provider.DisplayConfig.useSkillCardLayout) return;
+
+        RectTransform leftArea = UIHelper.FindChildRecursive(transform, "LeftArea") as RectTransform;
+        RectTransform centerArea = UIHelper.FindChildRecursive(transform, "CenterArea") as RectTransform;
+
+        if (TryGetComponent<Outline>(out var outline))
         {
-            return;
+            outline.effectColor = Color.white;
+            outline.effectDistance = new Vector2(0f, -3f);
         }
 
-        Transform leftArea = UIHelper.FindChildRecursive(transform, "LeftArea");
-        if (leftArea is RectTransform leftRect)
-        {
-            leftRect.anchorMin = new Vector2(0f, 0.5f);
-            leftRect.anchorMax = new Vector2(0f, 0.5f);
-            leftRect.pivot = new Vector2(0.5f, 0.5f);
-            leftRect.anchoredPosition = new Vector2(78f, 0f);
-            leftRect.sizeDelta = new Vector2(104f, 104f);
-        }
+        ConfigureRect(leftArea, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(24f, 0f), new Vector2(120f, -22f));
+        ConfigureRect(centerArea, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(82f, 0f), new Vector2(-184f, -22f));
 
-        if (iconImage != null && iconImage.transform is RectTransform iconRect)
+        if (iconImage != null)
         {
-            iconRect.anchorMin = new Vector2(0.5f, 0.5f);
-            iconRect.anchorMax = new Vector2(0.5f, 0.5f);
-            iconRect.pivot = new Vector2(0.5f, 0.5f);
-            iconRect.anchoredPosition = Vector2.zero;
-            iconRect.sizeDelta = new Vector2(86f, 86f);
+            ConfigureRect(iconImage.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(96f, 96f));
             iconImage.preserveAspect = true;
         }
 
-        Transform centerArea = UIHelper.FindChildRecursive(transform, "CenterArea");
-        if (centerArea is RectTransform centerRect)
+        if (nameText != null)
         {
-            foreach (LayoutGroup layoutGroup in centerArea.GetComponents<LayoutGroup>())
-            {
-                layoutGroup.enabled = false;
-            }
-
-            foreach (ContentSizeFitter fitter in centerArea.GetComponents<ContentSizeFitter>())
-            {
-                fitter.enabled = false;
-            }
-
-            centerRect.anchorMin = Vector2.zero;
-            centerRect.anchorMax = Vector2.one;
-            centerRect.pivot = new Vector2(0.5f, 0.5f);
-            centerRect.offsetMin = new Vector2(150f, 18f);
-            centerRect.offsetMax = new Vector2(-24f, -18f);
+            ConfigureRect(nameText.rectTransform, new Vector2(0f, 0.58f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(-46f, -4f), new Vector2(-96f, -4f));
+            nameText.alignment = TextAlignmentOptions.MidlineLeft;
+            nameText.enableAutoSizing = true;
+            nameText.fontSizeMin = 18f;
+            nameText.fontSizeMax = 28f;
+            nameText.textWrappingMode = TextWrappingModes.NoWrap;
+            nameText.overflowMode = TextOverflowModes.Ellipsis;
+            nameText.color = new Color32(68, 63, 56, 255);
         }
 
-        ConfigureSkillText(nameText, new Vector2(0f, 1f), new Vector2(0.72f, 1f), new Vector2(0f, 1f),
-            Vector2.zero, new Vector2(0f, 38f), 24f, TextAlignmentOptions.Left);
+        if (levelText != null)
+        {
+            ConfigureRect(levelText.rectTransform, new Vector2(1f, 0.62f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(-2f, -2f), new Vector2(90f, -8f));
+            levelText.alignment = TextAlignmentOptions.MidlineRight;
+            levelText.enableAutoSizing = true;
+            levelText.fontSizeMin = 18f;
+            levelText.fontSizeMax = 26f;
+            levelText.color = new Color32(16, 133, 188, 255);
+        }
 
-        ConfigureSkillText(levelText, new Vector2(0.74f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f),
-            Vector2.zero, new Vector2(0f, 36f), 22f, TextAlignmentOptions.Right);
+        if (descriptionText != null)
+        {
+            ConfigureRect(descriptionText.rectTransform, new Vector2(0f, 0.06f), new Vector2(1f, 0.62f), new Vector2(0.5f, 0.5f), new Vector2(-2f, 0f), new Vector2(-4f, -4f));
+            descriptionText.alignment = TextAlignmentOptions.MidlineLeft;
+            descriptionText.enableAutoSizing = true;
+            descriptionText.fontSizeMin = 15f;
+            descriptionText.fontSizeMax = 22f;
+            descriptionText.textWrappingMode = TextWrappingModes.Normal;
+            descriptionText.overflowMode = TextOverflowModes.Ellipsis;
+            descriptionText.color = new Color32(68, 63, 56, 255);
+        }
 
-        ConfigureSkillText(descriptionText, new Vector2(0f, 0.36f), new Vector2(1f, 0.86f), new Vector2(0f, 1f),
-            new Vector2(0f, -4f), Vector2.zero, 19f, TextAlignmentOptions.TopLeft);
+        if (progressSlider != null)
+        {
+            if (centerArea != null && progressSlider.transform.parent != centerArea)
+            {
+                progressSlider.transform.SetParent(centerArea, false);
+            }
 
-        ConfigureSkillProgressBar(centerArea);
+            ConfigureRect(progressSlider.transform as RectTransform, new Vector2(0f, 0.06f), new Vector2(1f, 0.28f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(0f, -4f));
+        }
+
+        if (progressTimeText != null)
+        {
+            ConfigureRect(progressTimeText.rectTransform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+            progressTimeText.alignment = TextAlignmentOptions.Center;
+            progressTimeText.enableAutoSizing = true;
+            progressTimeText.fontSizeMin = 12f;
+            progressTimeText.fontSizeMax = 20f;
+        }
     }
 
-    private void ConfigureSkillText(TextMeshProUGUI text, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot,
-        Vector2 anchoredPosition, Vector2 sizeDelta, float fontSize, TextAlignmentOptions alignment)
+    private void ConfigureRect(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 anchoredPosition, Vector2 sizeDelta)
     {
-        if (text == null || text.transform is not RectTransform rect)
-        {
-            return;
-        }
+        if (rect == null) return;
 
         rect.anchorMin = anchorMin;
         rect.anchorMax = anchorMax;
         rect.pivot = pivot;
         rect.anchoredPosition = anchoredPosition;
         rect.sizeDelta = sizeDelta;
-
-        text.fontSize = fontSize;
-        text.enableAutoSizing = true;
-        text.fontSizeMin = 14f;
-        text.fontSizeMax = fontSize;
-        text.alignment = alignment;
-        text.overflowMode = TextOverflowModes.Ellipsis;
-        text.textWrappingMode = TextWrappingModes.Normal;
-        text.raycastTarget = false;
-    }
-
-    private void ConfigureSkillProgressBar(Transform centerArea)
-    {
-        if (progressSlider == null || progressSlider.transform is not RectTransform sliderRect)
-        {
-            return;
-        }
-
-        sliderRect.SetParent(centerArea ?? transform, false);
-        sliderRect.anchorMin = new Vector2(0f, 0f);
-        sliderRect.anchorMax = new Vector2(1f, 0f);
-        sliderRect.pivot = new Vector2(0.5f, 0f);
-        sliderRect.anchoredPosition = Vector2.zero;
-        sliderRect.sizeDelta = new Vector2(0f, 34f);
-
-        if (progressTimeText != null && progressTimeText.transform is RectTransform labelRect)
-        {
-            labelRect.SetParent(progressSlider.transform, false);
-            labelRect.anchorMin = Vector2.zero;
-            labelRect.anchorMax = Vector2.one;
-            labelRect.offsetMin = Vector2.zero;
-            labelRect.offsetMax = Vector2.zero;
-
-            progressTimeText.fontSize = 18f;
-            progressTimeText.enableAutoSizing = true;
-            progressTimeText.fontSizeMin = 12f;
-            progressTimeText.fontSizeMax = 18f;
-            progressTimeText.alignment = TextAlignmentOptions.Center;
-            progressTimeText.raycastTarget = false;
-        }
     }
 
     private Button secondaryButton;
@@ -391,7 +370,7 @@ public class UpgradeCard : MonoBehaviour
         incomeText ??= UIHelper.FindText(transform, "GelirYazisi", "IncomeText");
         levelText ??= UIHelper.FindText(transform, "SeviyeYazisi", "LevelText");
         costText ??= UIHelper.FindText(transform, "FiyatYazisi", "PriceText");
-        descriptionText ??= UIHelper.FindText(transform, "DescriptionText", "DescText", "Description");
+
         progressTimeText ??= UIHelper.FindText(transform, "ProgressTimeText", "ProgressLabel", "BeklemeSuresi");
 
         if (buyButton == null) buyButton = UIHelper.FindButton(transform, "Button", "ActionButton");
@@ -409,7 +388,7 @@ public class UpgradeCard : MonoBehaviour
         incomeText.enableAutoSizing = true;
         incomeText.fontSizeMin = 12f;
         incomeText.fontSizeMax = 20f;
-        incomeText.enableWordWrapping = false;
+        incomeText.textWrappingMode = TextWrappingModes.NoWrap;
         incomeText.overflowMode = TextOverflowModes.Overflow;
     }
 
