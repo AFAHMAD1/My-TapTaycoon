@@ -7,6 +7,7 @@ public class PlayerPanel : BaseUpgradePanel
     [SerializeField] private bool showQuickCashSaleItem = true;
     [SerializeField] private bool showBusinessSurchargeSaleItem = true;
     [SerializeField] private bool showOtomaticBasSaleItem = true;
+    [SerializeField] private bool showHandOfMidasSaleItem = true;
 
     private TapLevelRiserWidget tapLevelRiserWidget;
 
@@ -69,6 +70,11 @@ public class PlayerPanel : BaseUpgradePanel
         if (showOtomaticBasSaleItem)
         {
             providers.Add(new OtomaticBasUnlockCardAdapter(GetSkillData(SkillId.OtomaticBas)));
+        }
+
+        if (showHandOfMidasSaleItem)
+        {
+            providers.Add(new HandOfMidasUnlockCardAdapter(GetSkillData(SkillId.HandOfMidas)));
         }
 
         return providers;

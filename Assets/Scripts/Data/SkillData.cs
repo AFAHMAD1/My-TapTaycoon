@@ -17,7 +17,8 @@ public enum SkillId
     None = 0,
     QuickCash = 1,
     BusinessSurcharge = 2,
-    OtomaticBas = 3
+    OtomaticBas = 3,
+    HandOfMidas = 4
 }
 
 [CreateAssetMenu(fileName = "New Skill", menuName = "IdleGame/Skill Data")]

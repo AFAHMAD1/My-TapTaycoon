@@ -109,6 +109,8 @@ public class SkillCardAdapter : ICardDataProvider
                 return BusinessSurchargeButton.IsUnlocked;
             case SkillId.OtomaticBas:
                 return OtomaticBasButton.IsUnlocked;
+            case SkillId.HandOfMidas:
+                return HandOfMidasButton.IsUnlocked;
             default:
                 return skill.currentLevel > 0;
         }
@@ -129,6 +131,8 @@ public class SkillCardAdapter : ICardDataProvider
                 return BusinessSurchargeButton.CurrentLevel;
             case SkillId.OtomaticBas:
                 return OtomaticBasButton.CurrentLevel;
+            case SkillId.HandOfMidas:
+                return HandOfMidasButton.CurrentLevel;
             default:
                 return skill.currentLevel;
         }

@@ -12,29 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef2de5c27638c647b566925b78d9ce7, type: 3}
   m_Name: MidasSkill
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  entityName: "Midas\u0131n Eli"
+  entityName: Hand of Midas
   upgradeCost:
     mode: 0
-    baseValueString: 1
-    baseValue: 1
-    multiplierPerLevel: 1.15
-  maxLevel: 0
+    baseValueString: 10000
+    baseValue: 10000
+    multiplierPerLevel: 2
+  maxLevel: 5
+  skillId: 4
   effectType: 3
-  descriptionTemplate: "\"{0} saniyeli\u011Fine dokunma k\xE2r\u0131 {1}x olur.\""
+  descriptionTemplate: "{0}s boyunca tap kazanci x{1}"
   icon: {fileID: 0}
   effectDuration:
-    mode: 0
-    baseValueString: 1
-    baseValue: 1
-    multiplierPerLevel: 1.15
+    mode: 1
+    baseValueString: 30
+    baseValue: 30
+    multiplierPerLevel: 5
   effectPower:
-    mode: 0
-    baseValueString: 1
-    baseValue: 1
-    multiplierPerLevel: 1.15
+    mode: 1
+    baseValueString: 10
+    baseValue: 10
+    multiplierPerLevel: 2
   cooldownTime:
-    mode: 0
-    baseValueString: 1
-    baseValue: 1
-    multiplierPerLevel: 1.15
+    mode: 1
+    baseValueString: 900
+    baseValue: 900
+    multiplierPerLevel: 0
   cardBackgroundColor: {r: 0.9607843, g: 0.9411765, b: 0.88235295, a: 1}
