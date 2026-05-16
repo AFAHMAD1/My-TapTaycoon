@@ -21,15 +21,16 @@ public class SkillCardAdapter : ICardDataProvider
     }
 
     public string DisplayName => skill.data.entityName;
-    public int CurrentLevel => skill.currentLevel;
+    public int CurrentLevel => GetEffectiveLevel();
 
     public string Description
     {
         get
         {
-            int previewLevel = Mathf.Max(1, skill.currentLevel);
-            float duration = (float)skill.data.effectDuration.Evaluate(previewLevel);
-            float power = (float)skill.data.effectPower.Evaluate(previewLevel);
+            int previewLevel = Mathf.Max(1, GetEffectiveLevel());
+            int valueLevel = Mathf.Max(0, previewLevel - 1);
+            float duration = (float)skill.data.effectDuration.Evaluate(valueLevel);
+            float power = (float)skill.data.effectPower.Evaluate(valueLevel);
             string effectText = string.Format(skill.data.descriptionTemplate, duration, power);
             return effectText;
         }
@@ -61,6 +62,11 @@ public class SkillCardAdapter : ICardDataProvider
             return $"Bekleme Suresi: {FormatSeconds(skill.currentCooldownTimer)}";
         }
 
+        if (skill.data != null && skill.data.skillId == SkillId.OtomaticBas)
+        {
+            return $"Sure: {GetDurationText()}";
+        }
+
         return $"Bekleme Suresi: {GetCooldownText()}";
     }
 
@@ -74,9 +80,18 @@ public class SkillCardAdapter : ICardDataProvider
 
     private string GetCooldownText()
     {
-        int previewLevel = Mathf.Max(1, skill.currentLevel);
-        float cooldownSeconds = (float)skill.data.cooldownTime.Evaluate(previewLevel);
+        int previewLevel = Mathf.Max(1, GetEffectiveLevel());
+        int valueLevel = Mathf.Max(0, previewLevel - 1);
+        float cooldownSeconds = (float)skill.data.cooldownTime.Evaluate(valueLevel);
         return FormatSeconds(cooldownSeconds);
+    }
+
+    private string GetDurationText()
+    {
+        int previewLevel = Mathf.Max(1, GetEffectiveLevel());
+        int valueLevel = Mathf.Max(0, previewLevel - 1);
+        float durationSeconds = (float)skill.data.effectDuration.Evaluate(valueLevel);
+        return FormatSeconds(durationSeconds);
     }
 
     private bool IsUnlocked()
@@ -92,8 +107,30 @@ public class SkillCardAdapter : ICardDataProvider
                 return QuickCashButton.IsUnlocked;
             case SkillId.BusinessSurcharge:
                 return BusinessSurchargeButton.IsUnlocked;
+            case SkillId.OtomaticBas:
+                return OtomaticBasButton.IsUnlocked;
             default:
                 return skill.currentLevel > 0;
+        }
+    }
+
+    private int GetEffectiveLevel()
+    {
+        if (skill?.data == null)
+        {
+            return 0;
+        }
+
+        switch (skill.data.skillId)
+        {
+            case SkillId.QuickCash:
+                return QuickCashButton.CurrentLevel;
+            case SkillId.BusinessSurcharge:
+                return BusinessSurchargeButton.CurrentLevel;
+            case SkillId.OtomaticBas:
+                return OtomaticBasButton.CurrentLevel;
+            default:
+                return skill.currentLevel;
         }
     }
 

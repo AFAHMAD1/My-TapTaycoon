@@ -6,6 +6,7 @@ public class PlayerPanel : BaseUpgradePanel
     [Header("Skill Sale Items")]
     [SerializeField] private bool showQuickCashSaleItem = true;
     [SerializeField] private bool showBusinessSurchargeSaleItem = true;
+    [SerializeField] private bool showOtomaticBasSaleItem = true;
 
     protected override void Start()
     {
@@ -59,6 +60,11 @@ public class PlayerPanel : BaseUpgradePanel
         if (showBusinessSurchargeSaleItem)
         {
             providers.Add(new BusinessSurchargeUnlockCardAdapter(GetSkillData(SkillId.BusinessSurcharge)));
+        }
+
+        if (showOtomaticBasSaleItem)
+        {
+            providers.Add(new OtomaticBasUnlockCardAdapter(GetSkillData(SkillId.OtomaticBas)));
         }
 
         return providers;

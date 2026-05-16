@@ -16,6 +16,8 @@ public class SaveData
     public int quickCashLevel;
     public bool businessSurchargeUnlocked;
     public int businessSurchargeLevel;
+    public bool otomaticBasUnlocked;
+    public int otomaticBasLevel;
     public string lastSaveTime;
 }
 

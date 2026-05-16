@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9117935862141731884}
   - component: {fileID: 7291484382295037124}
   - component: {fileID: 8471502636083347218}
+  - component: {fileID: 5538392018123456789}
   m_Layer: 5
   m_Name: Skill'sButtonPrefab
   m_TagString: Untagged
@@ -136,7 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuickCashButton
   button: {fileID: 9117935862141731884}
-  buttonSlotSkillId: 2
+  buttonSlotSkillId: 0
   minBalancePercent: 0.1
   maxBalancePercent: 0.2
   cooldownSeconds: 15
@@ -153,10 +154,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BusinessSurchargeButton
   button: {fileID: 9117935862141731884}
-  buttonSlotSkillId: 2
+  buttonSlotSkillId: 0
   incomeMultiplier: 10
   boostDurationSeconds: 30
   cooldownSeconds: 60
+--- !u!114 &5538392018123456789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6105198058030886776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c2f6f1a0d3449e7ad1c0b759fc070b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OtomaticBasButton
+  button: {fileID: 9117935862141731884}
+  buttonSlotSkillId: 0
+  baseTapsPerSecond: 2
+  tapsPerLevelBonus: 1
+  baseDurationSeconds: 30
+  durationPerLevelBonus: 5
+  horizontalScreenRandomness: 0.12
+  verticalScreenRandomness: 0.12
 --- !u!1 &7483606707656811893
 GameObject:
   m_ObjectHideFlags: 0
