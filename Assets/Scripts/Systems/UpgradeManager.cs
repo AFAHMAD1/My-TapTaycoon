@@ -23,11 +23,18 @@ public class UpgradeManager : MonoBehaviour, ISaveable
     private double _businessSurchargeMultiplier = 1d;
     private double _skillClickMultiplier = 1d;
 
+    private const double TapLevelRiserBaseCost = 30d;
+    private const double TapLevelRiserCostMultiplier = 3d;
+    private const double TapLevelRiserValueMultiplier = 2d;
+
     public double CurrentClickValue =>
-        (collectorUpgrade != null ? collectorUpgrade.CurrentReward() : 1d) * _skillClickMultiplier;
+        (collectorUpgrade != null ? collectorUpgrade.CurrentReward() : 1d) * TapLevelRiserMultiplier * _skillClickMultiplier;
 
     public double NextUpgradeCost => collectorUpgrade != null ? collectorUpgrade.CurrentCost() : 0d;
     public int ClickPowerLevel => collectorUpgrade != null ? collectorUpgrade.currentLevel : 0;
+    public int TapLevelRiserLevel { get; private set; }
+    public double TapLevelRiserMultiplier => SafePow(TapLevelRiserValueMultiplier, TapLevelRiserLevel);
+    public double TapLevelRiserNextCost => TapLevelRiserBaseCost * SafePow(TapLevelRiserCostMultiplier, TapLevelRiserLevel);
 
     private void Awake()
     {
@@ -147,6 +154,32 @@ public class UpgradeManager : MonoBehaviour, ISaveable
         Debug.Log("Yetersiz Bakiye!");
     }
 
+    public bool CanBuyTapLevelRiser()
+    {
+        return CurrencyManager.Instance != null &&
+               CurrencyManager.Instance.currentMoney >= TapLevelRiserNextCost;
+    }
+
+    public bool TryBuyTapLevelRiser()
+    {
+        if (CurrencyManager.Instance == null)
+        {
+            Debug.LogWarning("[UpgradeManager] Tap level upgrade could not be bought because CurrencyManager is missing.");
+            return false;
+        }
+
+        double cost = TapLevelRiserNextCost;
+        if (!CurrencyManager.Instance.SpendMoney(cost))
+        {
+            Debug.Log("Yetersiz Bakiye!");
+            return false;
+        }
+
+        TapLevelRiserLevel++;
+        PurchaseService.OnAnyPurchaseCompleted?.Invoke();
+        return true;
+    }
+
     public void SetSkillBuildingMultiplier(double multiplier) => _skillBuildingMultiplier = multiplier;
     public void SetBusinessSurchargeMultiplier(double multiplier) => _businessSurchargeMultiplier = multiplier;
     public void SetSkillClickMultiplier(double multiplier) => _skillClickMultiplier = multiplier;
@@ -157,6 +190,7 @@ public class UpgradeManager : MonoBehaviour, ISaveable
     public void OnSave(SaveData data)
     {
         data.collectorLevel = collectorUpgrade != null ? collectorUpgrade.currentLevel : 0;
+        data.tapLevelRiserLevel = TapLevelRiserLevel;
 
         data.boostLevels.Clear();
         if (boostUpgrades != null)
@@ -180,6 +214,8 @@ public class UpgradeManager : MonoBehaviour, ISaveable
         if (collectorUpgrade != null)
             collectorUpgrade.currentLevel = data.collectorLevel;
 
+        TapLevelRiserLevel = Mathf.Max(0, data.tapLevelRiserLevel);
+
         if (data.boostLevels != null && boostUpgrades != null)
         {
             for (int i = 0; i < boostUpgrades.Count; i++)
@@ -198,6 +234,12 @@ public class UpgradeManager : MonoBehaviour, ISaveable
                     playerProfitUpgrades[i].currentLevel = data.playerProfitLevels[i];
             }
         }
+    }
+
+    private static double SafePow(double baseValue, int exponent)
+    {
+        double value = System.Math.Pow(baseValue, Mathf.Max(0, exponent));
+        return double.IsNaN(value) || double.IsInfinity(value) ? double.MaxValue : value;
     }
 
     private void EnsureDefaultPlayerProfitUpgrades()

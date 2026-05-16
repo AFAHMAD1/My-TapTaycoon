@@ -18,6 +18,7 @@ public class SaveData
     public int businessSurchargeLevel;
     public bool otomaticBasUnlocked;
     public int otomaticBasLevel;
+    public int tapLevelRiserLevel;
     public string lastSaveTime;
 }
 

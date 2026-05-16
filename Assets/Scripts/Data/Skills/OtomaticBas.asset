@@ -35,7 +35,7 @@ MonoBehaviour:
     multiplierPerLevel: 1
   cooldownTime:
     mode: 1
-    baseValueString: 0
-    baseValue: 0
+    baseValueString: 600
+    baseValue: 600
     multiplierPerLevel: 0
   cardBackgroundColor: {r: 0.9607843, g: 0.9411765, b: 0.88235295, a: 1}

@@ -15,11 +15,13 @@ public class OtomaticBasButton : MonoBehaviour, ISaveable
     [SerializeField] private float tapsPerLevelBonus = 1f;
     [SerializeField] private float baseDurationSeconds = 30f;
     [SerializeField] private float durationPerLevelBonus = 5f;
+    [SerializeField] private float cooldownSeconds = 600f;
     [SerializeField] private float horizontalScreenRandomness = 0.12f;
     [SerializeField] private float verticalScreenRandomness = 0.12f;
 
     private bool isActive;
     private float activeTimer;
+    private float cooldownTimer;
     private float tapAccumulator;
 
     private void Awake()
@@ -70,6 +72,15 @@ public class OtomaticBasButton : MonoBehaviour, ISaveable
 
     private void Update()
     {
+        if (cooldownTimer > 0f)
+        {
+            cooldownTimer -= Time.deltaTime;
+            if (cooldownTimer <= 0f)
+            {
+                RefreshButtonState();
+            }
+        }
+
         if (!isActive)
         {
             return;
@@ -110,17 +121,18 @@ public class OtomaticBasButton : MonoBehaviour, ISaveable
 
     private void UseOtomaticBas()
     {
-        if (!IsUnlocked || isActive || BanknoteSpawner.Instance == null)
+        if (!IsUnlocked || isActive || cooldownTimer > 0f || BanknoteSpawner.Instance == null)
         {
             return;
         }
 
         isActive = true;
         activeTimer = GetCurrentDurationSeconds();
+        cooldownTimer = cooldownSeconds;
         tapAccumulator = 0f;
         RefreshButtonState();
 
-        Debug.Log($"[Otomatic Bas] Auto tap started: {GetCurrentTapsPerSecond():0.##} taps/s for {activeTimer:0}s.");
+        Debug.Log($"[Otomatic Bas] Auto tap started: {GetCurrentTapsPerSecond():0.##} taps/s for {activeTimer:0}s. Cooldown: {cooldownSeconds:0}s.");
     }
 
     private void PerformAutoTap()
@@ -140,7 +152,7 @@ public class OtomaticBasButton : MonoBehaviour, ISaveable
     {
         if (button != null)
         {
-            button.interactable = IsUnlocked && !isActive;
+            button.interactable = IsUnlocked && !isActive && cooldownTimer <= 0f;
         }
     }
 
