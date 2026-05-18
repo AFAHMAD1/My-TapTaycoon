@@ -20,6 +20,7 @@ public class UpgradeCard : MonoBehaviour
     public TextMeshProUGUI levelText; // Mevcut seviye
     public TextMeshProUGUI costText; // Satın alma maliyeti
     public TextMeshProUGUI descriptionText; // Açıklama metni
+    public TextMeshProUGUI statusText;
     public Button buyButton; // Satın al butonu
     public TextMeshProUGUI buyButtonText; // Buton üzerindeki yazı
     public Image cardBackgroundImage; // Kartın arka planı
@@ -43,11 +44,15 @@ public class UpgradeCard : MonoBehaviour
         getBuyAmountFunc = getBuyAmount;
         
         // Görünürlüğü garantilemek için tüm alt bileşenleri aktif et
-        EnableAllComponents();
+        EnableAllComponents(dataProvider?.DisplayConfig == null || !dataProvider.DisplayConfig.useSkillCardLayout);
 
         // Referanslar boşsa otomatik olarak bulmaya çalış
         AutoAssignReferencesIfNeeded();
         ConfigureIncomeText();
+        if (dataProvider?.DisplayConfig != null && dataProvider.DisplayConfig.showProgressBar)
+        {
+            EnsureProgressBarVisuals();
+        }
         EnsureDescriptionText();
 
         // Satın alma butonuna dinleyici ekle
@@ -69,7 +74,7 @@ public class UpgradeCard : MonoBehaviour
     }
 
     // Kart üzerindeki tüm layout ve görsel bileşenleri zorla aktif yapar.
-    private void EnableAllComponents()
+    private void EnableAllComponents(bool enableLayoutComponents)
     {
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var comp in GetComponents<MonoBehaviour>())
@@ -80,9 +85,12 @@ public class UpgradeCard : MonoBehaviour
         if (TryGetComponent<Image>(out var img)) img.enabled = true;
         
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
-        foreach (var layout in GetComponentsInChildren<LayoutGroup>(true)) layout.enabled = true;
-        // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
-        foreach (var fitter in GetComponentsInChildren<ContentSizeFitter>(true)) fitter.enabled = true;
+        if (enableLayoutComponents)
+        {
+            foreach (var layout in GetComponentsInChildren<LayoutGroup>(true)) layout.enabled = true;
+            // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
+            foreach (var fitter in GetComponentsInChildren<ContentSizeFitter>(true)) fitter.enabled = true;
+        }
         // Bu dongu listedeki elemanlari tek tek gezer; her eleman icin ayni islemi uygular.
         foreach (var graphic in GetComponentsInChildren<Graphic>(true)) graphic.enabled = true;
     }
@@ -104,8 +112,102 @@ public class UpgradeCard : MonoBehaviour
         if (descriptionText != null) descriptionText.gameObject.SetActive(config.showDescription);
         if (incomeText != null) incomeText.gameObject.SetActive(config.showIncome);
         if (levelText != null) levelText.gameObject.SetActive(config.showLevel);
+
+        if (config.useSkillCardLayout)
+        {
+            if (costText != null) costText.gameObject.SetActive(false);
+            if (buyButton != null) buyButton.gameObject.SetActive(false);
+        }
         
         EnsureSecondaryButton(config.showSecondaryButton);
+        ConfigureSpecialLayout();
+    }
+
+    private void ConfigureSpecialLayout()
+    {
+        if (provider?.DisplayConfig == null || !provider.DisplayConfig.useSkillCardLayout) return;
+
+        RectTransform leftArea = UIHelper.FindChildRecursive(transform, "LeftArea") as RectTransform;
+        RectTransform centerArea = UIHelper.FindChildRecursive(transform, "CenterArea") as RectTransform;
+
+        if (TryGetComponent<Outline>(out var outline))
+        {
+            outline.effectColor = Color.white;
+            outline.effectDistance = new Vector2(0f, -3f);
+        }
+
+        ConfigureRect(leftArea, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(24f, 0f), new Vector2(120f, -22f));
+        ConfigureRect(centerArea, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(82f, 0f), new Vector2(-184f, -22f));
+
+        if (iconImage != null)
+        {
+            ConfigureRect(iconImage.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(96f, 96f));
+            iconImage.preserveAspect = true;
+        }
+
+        if (nameText != null)
+        {
+            ConfigureRect(nameText.rectTransform, new Vector2(0f, 0.58f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(-46f, -4f), new Vector2(-96f, -4f));
+            nameText.alignment = TextAlignmentOptions.MidlineLeft;
+            nameText.enableAutoSizing = true;
+            nameText.fontSizeMin = 18f;
+            nameText.fontSizeMax = 28f;
+            nameText.textWrappingMode = TextWrappingModes.NoWrap;
+            nameText.overflowMode = TextOverflowModes.Ellipsis;
+            nameText.color = new Color32(68, 63, 56, 255);
+        }
+
+        if (levelText != null)
+        {
+            ConfigureRect(levelText.rectTransform, new Vector2(1f, 0.62f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(-2f, -2f), new Vector2(90f, -8f));
+            levelText.alignment = TextAlignmentOptions.MidlineRight;
+            levelText.enableAutoSizing = true;
+            levelText.fontSizeMin = 18f;
+            levelText.fontSizeMax = 26f;
+            levelText.color = new Color32(16, 133, 188, 255);
+        }
+
+        if (descriptionText != null)
+        {
+            ConfigureRect(descriptionText.rectTransform, new Vector2(0f, 0.06f), new Vector2(1f, 0.62f), new Vector2(0.5f, 0.5f), new Vector2(-2f, 0f), new Vector2(-4f, -4f));
+            descriptionText.alignment = TextAlignmentOptions.MidlineLeft;
+            descriptionText.enableAutoSizing = true;
+            descriptionText.fontSizeMin = 15f;
+            descriptionText.fontSizeMax = 22f;
+            descriptionText.textWrappingMode = TextWrappingModes.Normal;
+            descriptionText.overflowMode = TextOverflowModes.Ellipsis;
+            descriptionText.color = new Color32(68, 63, 56, 255);
+        }
+
+        if (progressSlider != null)
+        {
+            if (centerArea != null && progressSlider.transform.parent != centerArea)
+            {
+                progressSlider.transform.SetParent(centerArea, false);
+            }
+
+            ConfigureRect(progressSlider.transform as RectTransform, new Vector2(0f, 0.06f), new Vector2(1f, 0.28f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(0f, -4f));
+        }
+
+        if (progressTimeText != null)
+        {
+            ConfigureRect(progressTimeText.rectTransform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+            progressTimeText.alignment = TextAlignmentOptions.Center;
+            progressTimeText.enableAutoSizing = true;
+            progressTimeText.fontSizeMin = 12f;
+            progressTimeText.fontSizeMax = 20f;
+        }
+    }
+
+    private void ConfigureRect(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 anchoredPosition, Vector2 sizeDelta)
+    {
+        if (rect == null) return;
+
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+        rect.pivot = pivot;
+        rect.anchoredPosition = anchoredPosition;
+        rect.sizeDelta = sizeDelta;
     }
 
     private Button secondaryButton;
@@ -202,7 +304,10 @@ public class UpgradeCard : MonoBehaviour
         int buyAmount = getBuyAmountFunc != null ? getBuyAmountFunc() : 1;
 
         // İsim Güncelleme
-        if (nameText != null) nameText.text = $"<size=24><b>{provider.DisplayName}</b></size>";
+        if (nameText != null)
+        {
+            nameText.text = config.useSkillCardLayout ? provider.DisplayName : $"<size=24><b>{provider.DisplayName}</b></size>";
+        }
 
         // Gelir Güncelleme
         if (config.showIncome && incomeText != null)
@@ -233,6 +338,7 @@ public class UpgradeCard : MonoBehaviour
 
         // Progress Bar Güncelleme
         if (config.showProgressBar && provider.HasProgressBar()) UpdateProgressBar();
+        else if (config.useSkillCardLayout && progressTimeText != null) progressTimeText.text = provider.GetProgressText();
 
         // Buton Aktiflik Kontrolü (Para yetiyor mu?)
         if (buyButton != null) buyButton.interactable = provider.CanAfford(buyAmount);
@@ -249,6 +355,7 @@ public class UpgradeCard : MonoBehaviour
         ApplyStoreVisuals();
 
         if (buyButtonText != null) buyButtonText.text = provider.GetBuyButtonText(buyAmount);
+        if (statusText != null) statusText.text = provider.GetBuyButtonText(buyAmount);
     }
 
     private string GetCostText(double cost)
@@ -313,8 +420,7 @@ public class UpgradeCard : MonoBehaviour
     private void EnsureDescriptionText()
     {
         if (descriptionText != null) return;
-        // Bu satir: 'UIHelper' uzerindeki 'FindText' metodunu cagirir ve sonucu 'descriptionText' degiskenine koyar; UI hiyerarsisinde verilen isimlerden birine sahip TextMeshPro yazisini arar.
-        descriptionText = UIHelper.FindText(transform, "DescriptionText", "DescText", "InsideText");
+        descriptionText = UIHelper.FindText(transform, "DescriptionText", "DescText", "InsideText", "Description");
         
         if (descriptionText == null && incomeText != null)
         {
@@ -335,7 +441,9 @@ public class UpgradeCard : MonoBehaviour
         levelText ??= UIHelper.FindText(transform, "SeviyeYazisi", "LevelText");
         costText ??= UIHelper.FindText(transform, "FiyatYazisi", "PriceText");
         leftActionText ??= UIHelper.FindText(transform, "LeftActionText", "ActionLabel", "FollowText");
-        progressTimeText ??= UIHelper.FindText(transform, "ProgressTimeText", "ProgressLabel");
+        statusText ??= UIHelper.FindText(transform, "Bought or Not", "BoughtOrNot", "StatusText");
+
+        progressTimeText ??= UIHelper.FindText(transform, "ProgressTimeText", "ProgressLabel", "BeklemeSuresi");
 
         if (buyButton == null) buyButton = UIHelper.FindButton(transform, "Button", "ActionButton");
         if (buyButtonText == null && buyButton != null) buyButtonText = buyButton.GetComponentInChildren<TextMeshProUGUI>(true);
@@ -354,7 +462,7 @@ public class UpgradeCard : MonoBehaviour
         incomeText.enableAutoSizing = true;
         incomeText.fontSizeMin = 12f;
         incomeText.fontSizeMax = 20f;
-        incomeText.enableWordWrapping = false;
+        incomeText.textWrappingMode = TextWrappingModes.NoWrap;
         incomeText.overflowMode = TextOverflowModes.Overflow;
     }
 

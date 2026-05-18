@@ -2,103 +2,151 @@ using UnityEngine;
 
 public class SkillCardAdapter : ICardDataProvider
 {
-    private SkillEntity skill;
-    private CardDisplayConfig config;
+    private readonly SkillEntity skill;
+    private readonly CardDisplayConfig config;
 
     public SkillCardAdapter(SkillEntity skill)
     {
         this.skill = skill;
-        this.config = new CardDisplayConfig
+        config = new CardDisplayConfig
         {
             showIcon = true,
-            showProgressBar = true, // Cooldown için kullanılacak
+            showProgressBar = false,
             showDescription = true,
             showIncome = false,
-            showLevel = true,
+            showLevel = false,
             showSecondaryButton = false,
             useSkillCardLayout = true
         };
     }
 
     public string DisplayName => skill.data.entityName;
-    public int CurrentLevel => skill.currentLevel;
-    
-    public string Description 
+    public int CurrentLevel => GetEffectiveLevel();
+
+    public string Description
     {
-        get 
+        get
         {
-            // "{0} Saniyeliğine {1}x işletme kârı" gibi bir metni formatlıyoruz
-            // Bu satir: 'effectDuration' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'duration' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
-            float duration = (float)skill.data.effectDuration.Evaluate(skill.currentLevel);
-            // Bu satir: 'effectPower' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'power' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
-            float power = (float)skill.data.effectPower.Evaluate(skill.currentLevel);
-            // Bu satir: 'string' objesi uzerindeki 'Format' metodunu cagirir; buyuk sayiyi UI'da okunabilir kisa metne cevirir.
-            return string.Format(skill.data.descriptionTemplate, duration, power);
+            int previewLevel = Mathf.Max(1, GetEffectiveLevel());
+            int valueLevel = Mathf.Max(0, previewLevel - 1);
+            float duration = (float)skill.data.effectDuration.Evaluate(valueLevel);
+            float power = (float)skill.data.effectPower.Evaluate(valueLevel);
+            string effectText = string.Format(skill.data.descriptionTemplate, duration, power);
+            return effectText;
         }
     }
 
     public Sprite Icon => skill.data.icon;
-    public Color CardColor => skill.data.cardBackgroundColor;
-    public Color ButtonColor => Color.white; // Sağ taraf olmayacağı için önemsiz
+    public Color CardColor => new Color32(235, 220, 176, 255);
+    public Color ButtonColor => Color.white;
     public Color IconTintColor => Color.white;
     public Color IncomeColor => Color.white;
 
     public CardDisplayConfig DisplayConfig => config;
 
-    // Sağdaki butonları (Satın Al vs) UI'dan sildiğimiz için bu kısımlar tetiklenmeyecek
-    // Ama kartın kendi üstüne tıklandığında OnProgressClick'i kullanabiliriz
     public double GetCost(int amount) => skill.CurrentCost();
-    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public double GetIncomePerCycle() => 0d;
-    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
     public bool CanAfford(int amount) => skill.CanAffordUpgradeAmount(amount);
-    // Bu fonksiyon oyuncu aksiyonu veya oyun akisi icin bir islemi dener/uygular.
-    public void Purchase(int amount) { } 
-    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
-    public string GetBuyButtonText(int amount) => "";
-
-    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
-    public bool HasProgressBar() => true;
-
-    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
-    public float GetProgressNormalized()
+    public void Purchase(int amount) { }
+    public string GetBuyButtonText(int amount)
     {
-        if (skill.currentLevel == 0) return 0f;
-        
-        // Bu satir: 'cooldownTime' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'maxCooldown' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
-        float maxCooldown = (float)skill.data.cooldownTime.Evaluate(skill.currentLevel);
-        if (maxCooldown <= 0) return 1f;
-
-        // Bar doluluğu: (Max - Güncel) / Max. Bekleme bitince bar tam dolu görünür.
-        return (maxCooldown - skill.currentCooldownTimer) / maxCooldown;
+        return IsUnlocked() ? "Satin Alindi" : "Satin Alinmadi";
     }
 
-    // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.
+    public bool HasProgressBar() => false;
+    public float GetProgressNormalized() => 0f;
     public string GetProgressText()
     {
-        if (skill.currentLevel == 0) 
+        if (skill.currentCooldownTimer > 0f)
         {
-            // Resimdeki gibi Lv.0 olsa bile bekleme süresini (Level 1 halini) gösteriyoruz.
-            // Bu satir: 'cooldownTime' uzerindeki 'Evaluate' metodunu cagirir ve sonucu 'previewCooldown' degiskenine koyar; ScaledValue ayarlarina gore verilen level icin sayisal deger uretir.
-            float previewCooldown = (float)skill.data.cooldownTime.Evaluate(1);
-            return $"Bekleme: {Mathf.CeilToInt(previewCooldown / 60f)}m"; 
+            return $"Bekleme Suresi: {FormatSeconds(skill.currentCooldownTimer)}";
         }
 
-        if (skill.IsActive) return $"AKTİF: {Mathf.CeilToInt(skill.currentActiveTimer)}s";
-        if (!skill.IsReady) return $"Bekleme: {Mathf.CeilToInt(skill.currentCooldownTimer / 60f)}m"; // Dakika olarak gösterelim
-        
-        return "KULLANIMA HAZIR!";
+        if (skill.data != null && skill.data.skillId == SkillId.OtomaticBas)
+        {
+            return $"Sure: {GetDurationText()}";
+        }
+
+        return $"Bekleme Suresi: {GetCooldownText()}";
     }
 
-    // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     public void OnProgressClick()
     {
-        // Satın alma / level atlama işlemleri artık Kit panelinden yapılacağı için
-        // burada SADECE eğer beceri açıksa (Level > 0) ve hazırsa kullanma işlemi yapıyoruz.
         if (skill.IsReady && skill.currentLevel > 0)
         {
-            // Bu satir: 'skill' objesi uzerindeki 'UseSkill' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
             skill.UseSkill();
         }
+    }
+
+    private string GetCooldownText()
+    {
+        int previewLevel = Mathf.Max(1, GetEffectiveLevel());
+        int valueLevel = Mathf.Max(0, previewLevel - 1);
+        float cooldownSeconds = (float)skill.data.cooldownTime.Evaluate(valueLevel);
+        return FormatSeconds(cooldownSeconds);
+    }
+
+    private string GetDurationText()
+    {
+        int previewLevel = Mathf.Max(1, GetEffectiveLevel());
+        int valueLevel = Mathf.Max(0, previewLevel - 1);
+        float durationSeconds = (float)skill.data.effectDuration.Evaluate(valueLevel);
+        return FormatSeconds(durationSeconds);
+    }
+
+    private bool IsUnlocked()
+    {
+        if (skill?.data == null)
+        {
+            return false;
+        }
+
+        switch (skill.data.skillId)
+        {
+            case SkillId.QuickCash:
+                return QuickCashButton.IsUnlocked;
+            case SkillId.BusinessSurcharge:
+                return BusinessSurchargeButton.IsUnlocked;
+            case SkillId.OtomaticBas:
+                return OtomaticBasButton.IsUnlocked;
+            case SkillId.HandOfMidas:
+                return HandOfMidasButton.IsUnlocked;
+            default:
+                return skill.currentLevel > 0;
+        }
+    }
+
+    private int GetEffectiveLevel()
+    {
+        if (skill?.data == null)
+        {
+            return 0;
+        }
+
+        switch (skill.data.skillId)
+        {
+            case SkillId.QuickCash:
+                return QuickCashButton.CurrentLevel;
+            case SkillId.BusinessSurcharge:
+                return BusinessSurchargeButton.CurrentLevel;
+            case SkillId.OtomaticBas:
+                return OtomaticBasButton.CurrentLevel;
+            case SkillId.HandOfMidas:
+                return HandOfMidasButton.CurrentLevel;
+            default:
+                return skill.currentLevel;
+        }
+    }
+
+    private string FormatSeconds(float secondsValue)
+    {
+        if (secondsValue < 60f)
+        {
+            return $"{Mathf.CeilToInt(secondsValue)}s";
+        }
+
+        int minutes = Mathf.FloorToInt(secondsValue / 60f);
+        int seconds = Mathf.CeilToInt(secondsValue % 60f);
+        return seconds > 0 ? $"{minutes}m {seconds}s" : $"{minutes}m";
     }
 }

@@ -10,32 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ef2de5c27638c647b566925b78d9ce7, type: 3}
-  m_Name: MidasSkill
+  m_Name: QuickCash
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  entityName: Hand of Midas
+  entityName: Quick Cash
   upgradeCost:
     mode: 0
-    baseValueString: 10000
-    baseValue: 10000
-    multiplierPerLevel: 2
-  maxLevel: 5
-  skillId: 4
-  effectType: 3
-  descriptionTemplate: "{0}s boyunca tap kazanci x{1}"
+    baseValueString: 500
+    baseValue: 500
+    multiplierPerLevel: 10
+  maxLevel: 10
+  skillId: 1
+  effectType: 1
+  descriptionTemplate: Hemen para al
   icon: {fileID: 0}
   effectDuration:
     mode: 1
-    baseValueString: 30
-    baseValue: 30
-    multiplierPerLevel: 5
+    baseValueString: 0
+    baseValue: 0
+    multiplierPerLevel: 0
   effectPower:
     mode: 1
-    baseValueString: 10
-    baseValue: 10
-    multiplierPerLevel: 2
+    baseValueString: 1
+    baseValue: 1
+    multiplierPerLevel: 0
   cooldownTime:
     mode: 1
-    baseValueString: 900
-    baseValue: 900
+    baseValueString: 15
+    baseValue: 15
     multiplierPerLevel: 0
   cardBackgroundColor: {r: 0.9607843, g: 0.9411765, b: 0.88235295, a: 1}

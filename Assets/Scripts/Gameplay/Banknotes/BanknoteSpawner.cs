@@ -6,6 +6,8 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class BanknoteSpawner : MonoBehaviour
 {
+    public static BanknoteSpawner Instance { get; private set; }
+
     [Header("Prefabs")]
     public GameObject banknotePrefab;
     public GameObject floatingTextPrefab;
@@ -32,6 +34,11 @@ public class BanknoteSpawner : MonoBehaviour
     // Unity bu fonksiyonu obje olusurken ilk calistirir; burada genelde singleton ve ilk referans ayarlari yapilir.
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+
         if (cam == null)
         {
             cam = Camera.main;
@@ -50,7 +57,7 @@ public class BanknoteSpawner : MonoBehaviour
 
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            SpawnAtScreen(Mouse.current.position.ReadValue());
+            PerformTapAtScreenPosition(Mouse.current.position.ReadValue());
             return;
         }
 
@@ -69,9 +76,14 @@ public class BanknoteSpawner : MonoBehaviour
                     continue;
                 }
 
-                SpawnAtScreen(touch.screenPosition);
+                PerformTapAtScreenPosition(touch.screenPosition);
             }
         }
+    }
+
+    public void PerformTapAtScreenPosition(Vector2 screenPos)
+    {
+        SpawnAtScreen(screenPos);
     }
 
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
