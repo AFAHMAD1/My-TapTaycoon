@@ -11,6 +11,7 @@ public class SaveData
     public int collectorLevel;
     public List<int> boostLevels = new List<int>();
     public List<int> playerProfitLevels = new List<int>();
+    public int playerSkillCursor;
     public List<int> skillLevels = new List<int>();
     public bool quickCashUnlocked;
     public int quickCashLevel;

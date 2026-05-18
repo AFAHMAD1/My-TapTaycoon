@@ -28,6 +28,8 @@ public class TabController : MonoBehaviour
     [Tooltip("Adds a red X close button to each tab content panel. Keep disabled when panels already include ClosingButton prefabs.")]
     public bool addCloseButtonsToTabs = false;
 
+    private bool hasStarted;
+
     private void Start()
     {
         for (int i = 0; i < tabs.Length; i++)
@@ -46,18 +48,27 @@ public class TabController : MonoBehaviour
             }
         }
 
-        CloseAllTabs();
-        if (openDefaultTabOnStart)
-        {
-            OpenTab(defaultTabIndex);
-        }
+        hasStarted = true;
+        ApplyOpeningState();
     }
 
     private void OnEnable()
     {
+        if (hasStarted)
+        {
+            ApplyOpeningState();
+        }
+    }
+
+    private void ApplyOpeningState()
+    {
         if (openDefaultTabOnStart)
         {
             OpenTab(defaultTabIndex);
+        }
+        else
+        {
+            CloseAllTabs();
         }
     }
 

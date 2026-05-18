@@ -129,7 +129,20 @@ public class PassiveIncomeManager : MonoBehaviour, IPassiveIncomeManager, ISavea
 
         foreach (var building in buildings)
         {
-            if (building.currentLevel <= 0 || building.isReadyToCollect) continue;
+            if (building.currentLevel <= 0) continue;
+
+            bool autoCollectFromSkill = UpgradeManager.Instance != null &&
+                                        UpgradeManager.Instance.IsPlayerPanelAutoCollectEnabled(building.data);
+
+            if (building.isReadyToCollect)
+            {
+                if (autoCollectFromSkill)
+                {
+                    building.TryCollectIncome();
+                }
+
+                continue;
+            }
 
             building.timer += Time.deltaTime;
             float duration = building.CurrentDuration();
@@ -138,7 +151,7 @@ public class PassiveIncomeManager : MonoBehaviour, IPassiveIncomeManager, ISavea
             {
                 building.timer = duration;
 
-                if (building.data != null && building.data.requireManualCollection)
+                if (building.data != null && building.data.requireManualCollection && !autoCollectFromSkill)
                 {
                     building.isReadyToCollect = true;
                     continue;

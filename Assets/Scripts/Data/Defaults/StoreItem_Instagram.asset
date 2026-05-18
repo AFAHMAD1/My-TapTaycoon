@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ca167004492a6e4d9a12a6facd1f521, type: 3}
-  m_Name: StoreItem_Yagdir
+  m_Name: StoreItem_Instagram
   m_EditorClassIdentifier: Assembly-CSharp::StoreItemData
-  itemName: Para Yagdir
-  description: 24 saatlik kazanci hemen al.
+  itemName: Instagram'i Takip Et
+  description: Instagram'da bizi takip et ve 25 elmas kazan!
   icon: {fileID: 0}
-  costType: 0
-  costAmount: 100
-  customButtonText: 
-  rewardType: 0
-  rewardAmount: 24
-  visualType: 1
-  showPriceRow: 1
+  costType: 2
+  costAmount: 0
+  customButtonText: Takip Et
+  rewardType: 2
+  rewardAmount: 25
+  visualType: 0
+  showPriceRow: 0
   priceTextOverride: ""
   priceIcon: {fileID: 0}
-  normalButtonSize: {x: 170, y: 80}
-  socialButtonSize: {x: 0, y: 0}
+  normalButtonSize: {x: 0, y: 0}
+  socialButtonSize: {x: 220, y: 95}
   cardBackgroundColor: {r: 0.78, g: 0.73, b: 0.58, a: 1}
   buttonColor: {r: 1, g: 0.62, b: 0.12, a: 1}
   socialButtonColor: {r: 0.22, g: 0.36, b: 0.62, a: 1}

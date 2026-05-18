@@ -15,12 +15,14 @@ MonoBehaviour:
   entityName: "Para G\xF6z"
   upgradeCost:
     mode: 0
-    baseValueString: 1
-    baseValue: 1
-    multiplierPerLevel: 1.05
+    baseValueString: 20
+    baseValue: 20
+    multiplierPerLevel: 1
   maxLevel: 0
   rewardPerLevel:
-    mode: 0
+    mode: 1
     baseValueString: 1
     baseValue: 1
-    multiplierPerLevel: 2
+    multiplierPerLevel: 1
+  useCollectorCostCurve: 1
+  collectorStartCost: 20

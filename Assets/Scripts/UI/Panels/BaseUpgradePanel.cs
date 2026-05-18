@@ -160,7 +160,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     }
 
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
-    protected void ConfigureContentLayout()
+    protected virtual void ConfigureContentLayout()
     {
         VerticalLayoutGroup layoutGroup = contentContainer.GetComponent<VerticalLayoutGroup>();
         if (layoutGroup == null) layoutGroup = contentContainer.gameObject.AddComponent<VerticalLayoutGroup>();
@@ -181,7 +181,7 @@ public abstract class BaseUpgradePanel : MonoBehaviour
     }
 
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
-    private void ConfigureCardLayout(GameObject cardObj)
+    protected virtual void ConfigureCardLayout(GameObject cardObj)
     {
         RectTransform rectTransform = cardObj.GetComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0f, 1f);

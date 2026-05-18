@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ca167004492a6e4d9a12a6facd1f521, type: 3}
-  m_Name: StoreItem_Yagdir
+  m_Name: StoreItem_Elmas14000
   m_EditorClassIdentifier: Assembly-CSharp::StoreItemData
-  itemName: Para Yagdir
-  description: 24 saatlik kazanci hemen al.
+  itemName: 14000 Elmas
+  description: 56% daha fazla elmas! 3 altin teknoloji karti garantili.
   icon: {fileID: 0}
-  costType: 0
-  costAmount: 100
+  costType: 1
+  costAmount: 199.24
   customButtonText: 
-  rewardType: 0
-  rewardAmount: 24
-  visualType: 1
+  rewardType: 3
+  rewardAmount: 14000
+  visualType: 2
   showPriceRow: 1
-  priceTextOverride: ""
+  priceTextOverride: 199.24 TL
   priceIcon: {fileID: 0}
   normalButtonSize: {x: 170, y: 80}
   socialButtonSize: {x: 0, y: 0}

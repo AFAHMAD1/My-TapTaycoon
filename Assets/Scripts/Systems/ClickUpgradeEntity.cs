@@ -14,8 +14,10 @@ public class ClickUpgradeEntity : UpgradableEntity
     /// </summary>
     public double CurrentReward()
     {
-        return data != null ? data.rewardPerLevel.Evaluate(currentLevel) : 1d;
+        return data != null ? data.rewardPerLevel.Evaluate(currentLevel) : DisplayLevel;
     }
+
+    public int DisplayLevel => Mathf.Max(1, currentLevel + 1);
 
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     protected override void OnUpgraded()

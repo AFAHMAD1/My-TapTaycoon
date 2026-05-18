@@ -46,7 +46,12 @@ public class PlayerPanel : BaseUpgradePanel
     {
         List<ICardDataProvider> providers = new List<ICardDataProvider>();
 
-        if (UpgradeManager.Instance != null && UpgradeManager.Instance.playerProfitUpgrades != null)
+        if (UpgradeManager.Instance == null)
+        {
+            return providers;
+        }
+
+        if (UpgradeManager.Instance.playerProfitUpgrades != null)
         {
             foreach (PlayerProfitUpgrade playerUpgrade in UpgradeManager.Instance.playerProfitUpgrades)
             {
@@ -54,6 +59,20 @@ public class PlayerPanel : BaseUpgradePanel
                 {
                     providers.Add(new PlayerProfitCardAdapter(playerUpgrade));
                 }
+            }
+        }
+
+        if (UpgradeManager.Instance.collectorUpgrade != null)
+        {
+            providers.Add(new CollectorCardAdapter(UpgradeManager.Instance.collectorUpgrade));
+        }
+
+        List<PlayerPanelSkillState> visibleSkills = UpgradeManager.Instance.GetVisiblePlayerPanelSkills();
+        foreach (PlayerPanelSkillState skill in visibleSkills)
+        {
+            if (skill != null)
+            {
+                providers.Add(new PlayerPanelSkillCardAdapter(skill));
             }
         }
 
