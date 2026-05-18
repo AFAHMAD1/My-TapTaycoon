@@ -114,7 +114,7 @@ public class BanknoteSpawner : MonoBehaviour
         if (banknote == null)
         {
             // Bu satir: 'Debug' objesi uzerindeki 'LogError' metodunu cagirir; Unity Console'a hata mesaji yazar; duzeltilmesi gereken ciddi durumlari belirtir.
-            Debug.LogError("BanknoteSpawner: pool'dan banknote alinmadi.");
+            Debug.LogWarning("BanknoteSpawner: pool'dan banknote alinmadi. Tap atlandi.");
             return;
         }
 
@@ -146,7 +146,7 @@ public class BanknoteSpawner : MonoBehaviour
                 GameObject poolObject = new GameObject("BanknotePool");
                 BanknotePool pool = poolObject.AddComponent<BanknotePool>();
                 // Bu satir: 'pool' objesi uzerindeki 'Configure' metodunu cagirir; ilgili sistemi/pool'u verilen prefab, sayi ve parent bilgileriyle ayarlar.
-                pool.Configure(banknoteComponent, preloadCount, poolObject.transform, false);
+                pool.Configure(banknoteComponent, preloadCount, poolObject.transform, true);
                 // Bu satir: 'pool' objesi uzerindeki 'ConfigureActiveRoot' metodunu cagirir; aktif objelerin sahnede hangi parent altinda duracagini ayarlar.
                 pool.ConfigureActiveRoot(GetOrCreateRuntimeRoot("BanknoteRuntime"));
             }

@@ -10,6 +10,7 @@ public class TechnologyPanelInvestmentPopulator : MonoBehaviour
     [SerializeField] private RectTransform content;
     [SerializeField] private GameObject investmentTabTemplate;
     [SerializeField] private GameObject inputPanel;
+    [SerializeField] private InvestmentManager investmentManager;
 
     private const float CardHeight = 130f;
     private const float CardSpacing = 20f;
@@ -20,30 +21,7 @@ public class TechnologyPanelInvestmentPopulator : MonoBehaviour
 
     private bool hasPopulated;
     private InvestmentInputPanelController inputPanelController;
-
-    private static readonly CompanyInfo[] Companies =
-    {
-        new CompanyInfo(1, "TechNova Solutions", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(2, "GreenLeaf Foods", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(3, "BluePeak Marketing", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(4, "BrightPath Education", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(5, "UrbanFix Services", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(6, "CloudCore IT", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(7, "FreshBox Delivery", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(8, "DesignHub Studio", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(9, "SafeHome Security", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(10, "QuickPrint Center", "K\u00fc\u00e7\u00fck", "kucuk firma"),
-        new CompanyInfo(11, "Microsoft", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(12, "Apple", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(13, "Google", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(14, "Amazon", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(15, "Samsung", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(16, "Toyota", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(17, "Volkswagen", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(18, "Coca-Cola", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(19, "Nestl\u00e9", "B\u00fcy\u00fck", "buyuk firma"),
-        new CompanyInfo(20, "IBM", "B\u00fcy\u00fck", "buyuk firma"),
-    };
+    private InvestmentResultMessageUI resultMessageUI;
 
     private void Start()
     {
@@ -68,12 +46,12 @@ public class TechnologyPanelInvestmentPopulator : MonoBehaviour
         ClearPreviousRuntimeCards();
 
         investmentTabTemplate.SetActive(true);
-        SetupCard(investmentTabTemplate, Companies[0]);
+        SetupCard(investmentTabTemplate, investmentManager.Companies[0]);
 
-        for (int i = 1; i < Companies.Length; i++)
+        for (int i = 1; i < investmentManager.Companies.Count; i++)
         {
             GameObject card = Instantiate(investmentTabTemplate, content);
-            SetupCard(card, Companies[i]);
+            SetupCard(card, investmentManager.Companies[i]);
         }
     }
 
@@ -115,6 +93,28 @@ public class TechnologyPanelInvestmentPopulator : MonoBehaviour
 
             inputPanelController.Configure();
         }
+
+        if (investmentManager == null)
+        {
+            investmentManager = FindInvestmentManager();
+        }
+
+        if (investmentManager == null)
+        {
+            GameObject investmentManagerHost = new GameObject("InvestmentManager");
+            investmentManager = investmentManagerHost.AddComponent<InvestmentManager>();
+        }
+
+        investmentManager.EnsureDefaultCompanies();
+
+        resultMessageUI = FindResultMessageUI();
+        if (resultMessageUI == null)
+        {
+            GameObject resultMessageHost = new GameObject("InvestmentResultMessageUI");
+            resultMessageUI = resultMessageHost.AddComponent<InvestmentResultMessageUI>();
+        }
+
+        resultMessageUI.Configure(investmentManager);
 
         if (investmentTabTemplate == null)
         {
@@ -183,9 +183,9 @@ public class TechnologyPanelInvestmentPopulator : MonoBehaviour
         }
     }
 
-    private void SetupCard(GameObject card, CompanyInfo company)
+    private void SetupCard(GameObject card, CompanyInvestmentData company)
     {
-        card.name = $"{GeneratedCardPrefix}{company.Id:00}_{company.Name}";
+        card.name = $"{GeneratedCardPrefix}{company.companyId:00}_{company.companyName}";
         ConfigureCardLayout(card);
         ConfigureCardInnerLayout(card.transform);
 
@@ -194,55 +194,73 @@ public class TechnologyPanelInvestmentPopulator : MonoBehaviour
         Button actionButton = FindButton(card.transform);
         TMP_Text buttonText = actionButton != null ? actionButton.GetComponentInChildren<TMP_Text>(true) : null;
 
-        if (priceText != null)
-        {
-            priceText.text = $"ID {company.Id} | Olcek: {company.Scale}";
-            priceText.enableAutoSizing = true;
-            priceText.fontSizeMin = 14f;
-            priceText.fontSizeMax = 18f;
-            priceText.alignment = TextAlignmentOptions.Center;
-            priceText.textWrappingMode = TextWrappingModes.NoWrap;
-            priceText.overflowMode = TextOverflowModes.Truncate;
-        }
+        ConfigureStatusText(priceText);
+        ConfigureDetailsText(incomeText);
+        ConfigureButtonText(buttonText);
 
-        if (incomeText != null)
-        {
-            incomeText.text = $"{company.Name}\n{company.Description}";
-            incomeText.enableAutoSizing = true;
-            incomeText.fontSizeMin = 16f;
-            incomeText.fontSizeMax = 22f;
-            incomeText.alignment = TextAlignmentOptions.MidlineLeft;
-            incomeText.textWrappingMode = TextWrappingModes.Normal;
-            incomeText.overflowMode = TextOverflowModes.Truncate;
-        }
-
-        if (buttonText != null)
-        {
-            buttonText.text = "Yatirim Yap";
-            buttonText.enableAutoSizing = true;
-            buttonText.fontSizeMin = 16f;
-            buttonText.fontSizeMax = 22f;
-            buttonText.alignment = TextAlignmentOptions.Center;
-        }
-
-        if (actionButton != null)
-        {
-            actionButton.onClick.RemoveAllListeners();
-            actionButton.onClick.AddListener(() => OpenInputPanel(company));
-        }
+        CompanyCardUI companyCardUI = card.GetComponent<CompanyCardUI>();
+        if (companyCardUI == null) companyCardUI = card.AddComponent<CompanyCardUI>();
+        companyCardUI.Bind(company, investmentManager, OpenInputPanel);
     }
 
-    private void OpenInputPanel(CompanyInfo company)
+    private void OpenInputPanel(int companyId)
     {
-        if (inputPanel == null)
+        CompanyInvestmentData company = investmentManager != null ? investmentManager.GetCompany(companyId) : null;
+        if (company == null)
         {
-            Debug.LogWarning($"[TeknolojiPanel] InputPanel bulunamadi. Secilen firma: {company.Name}", this);
+            Debug.LogWarning($"[TeknolojiPanel] Company id {companyId} bulunamadi.", this);
             return;
         }
 
-        inputPanel.SetActive(true);
-        inputPanel.transform.SetAsLastSibling();
-        inputPanelController?.FocusInput();
+        if (inputPanel == null)
+        {
+            Debug.LogWarning($"[TeknolojiPanel] InputPanel bulunamadi. Secilen firma: {company.companyName}", this);
+            return;
+        }
+
+        if (inputPanelController != null)
+        {
+            inputPanelController.OpenForCompany(company, investmentManager);
+        }
+        else
+        {
+            inputPanel.SetActive(true);
+            inputPanel.transform.SetAsLastSibling();
+        }
+    }
+
+    private static void ConfigureStatusText(TMP_Text statusText)
+    {
+        if (statusText == null) return;
+
+        statusText.enableAutoSizing = true;
+        statusText.fontSizeMin = 22f;
+        statusText.fontSizeMax = 28f;
+        statusText.alignment = TextAlignmentOptions.Center;
+        statusText.textWrappingMode = TextWrappingModes.Normal;
+        statusText.overflowMode = TextOverflowModes.Truncate;
+    }
+
+    private static void ConfigureDetailsText(TMP_Text detailsText)
+    {
+        if (detailsText == null) return;
+
+        detailsText.enableAutoSizing = true;
+        detailsText.fontSizeMin = 19f;
+        detailsText.fontSizeMax = 24f;
+        detailsText.alignment = TextAlignmentOptions.MidlineLeft;
+        detailsText.textWrappingMode = TextWrappingModes.Normal;
+        detailsText.overflowMode = TextOverflowModes.Truncate;
+    }
+
+    private static void ConfigureButtonText(TMP_Text buttonText)
+    {
+        if (buttonText == null) return;
+
+        buttonText.enableAutoSizing = true;
+        buttonText.fontSizeMin = 26f;
+        buttonText.fontSizeMax = 32f;
+        buttonText.alignment = TextAlignmentOptions.Center;
     }
 
     private static void ConfigureCardLayout(GameObject card)
@@ -350,6 +368,44 @@ public class TechnologyPanelInvestmentPopulator : MonoBehaviour
         return null;
     }
 
+    private static InvestmentResultMessageUI FindResultMessageUI()
+    {
+        InvestmentResultMessageUI[] candidates = Resources.FindObjectsOfTypeAll<InvestmentResultMessageUI>();
+        foreach (InvestmentResultMessageUI candidate in candidates)
+        {
+            if (candidate == null || candidate.hideFlags != HideFlags.None)
+            {
+                continue;
+            }
+
+            if (candidate.gameObject.scene.IsValid() && candidate.gameObject.activeInHierarchy)
+            {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
+    private static InvestmentManager FindInvestmentManager()
+    {
+        InvestmentManager[] candidates = Resources.FindObjectsOfTypeAll<InvestmentManager>();
+        foreach (InvestmentManager candidate in candidates)
+        {
+            if (candidate == null || candidate.hideFlags != HideFlags.None)
+            {
+                continue;
+            }
+
+            if (candidate.gameObject.scene.IsValid() && candidate.gameObject.activeInHierarchy)
+            {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
     private static Button FindButton(Transform root)
     {
         Button[] buttons = root.GetComponentsInChildren<Button>(true);
@@ -364,19 +420,4 @@ public class TechnologyPanelInvestmentPopulator : MonoBehaviour
         return buttons.Length > 0 ? buttons[0] : null;
     }
 
-    private readonly struct CompanyInfo
-    {
-        public CompanyInfo(int id, string name, string scale, string description)
-        {
-            Id = id;
-            Name = name;
-            Scale = scale;
-            Description = description;
-        }
-
-        public int Id { get; }
-        public string Name { get; }
-        public string Scale { get; }
-        public string Description { get; }
-    }
 }
