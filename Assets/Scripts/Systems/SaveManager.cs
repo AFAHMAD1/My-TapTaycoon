@@ -8,9 +8,7 @@ public class SaveData
     public int saveVersion = 1;
     public double currentMoney;
     public List<int> buildingLevels = new List<int>();
-    public int collectorLevel;
     public List<int> boostLevels = new List<int>();
-    public List<int> playerProfitLevels = new List<int>();
     public int playerSkillCursor;
     public List<int> skillLevels = new List<int>();
     public bool quickCashUnlocked;
@@ -57,16 +55,29 @@ public class SaveManager : MonoBehaviour, ISaveManager
     private void CollectSaveables()
     {
         _saveables.Clear();
-        var allBehaviours = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
-        foreach (var mb in allBehaviours)
-        {
-            if (mb is ISaveable saveable)
-            {
-                _saveables.Add(saveable);
-            }
-        }
+
+        AddSaveables<CurrencyManager>();
+        AddSaveables<UpgradeManager>();
+        AddSaveables<PassiveIncomeManager>();
+        AddSaveables<SkillManager>();
+        AddSaveables<QuickCashButton>();
+        AddSaveables<BusinessSurchargeButton>();
+        AddSaveables<OtomaticBasButton>();
+        AddSaveables<HandOfMidasButton>();
 
         Debug.Log($"[SaveManager] {_saveables.Count} ISaveable components found.");
+    }
+
+    private void AddSaveables<T>() where T : MonoBehaviour, ISaveable
+    {
+        T[] components = FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (T component in components)
+        {
+            if (component != null)
+            {
+                _saveables.Add(component);
+            }
+        }
     }
 
     private void OnApplicationQuit() => SaveGame();

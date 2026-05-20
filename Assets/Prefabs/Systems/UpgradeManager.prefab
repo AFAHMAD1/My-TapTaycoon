@@ -44,14 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df5b058e27303594bab28f02776940e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeManager
-  clickPowerLevel: 0
-  baseClickValue: 1000
-  valueMultiplierPerLevel: 1.5
-  baseUpgradeCost: 25
-  costMultiplierPerLevel: 1.8
-  collectorUpgrade:
-    currentLevel: 0
-    data: {fileID: 11400000, guid: 42a06ed92ea126a49bb338c72b6e9ff3, type: 2}
   boostUpgrades:
   - currentLevel: 0
     data: {fileID: 11400000, guid: bbb9f80ff04984c408b4a7185586dce9, type: 2}

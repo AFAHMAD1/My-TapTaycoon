@@ -51,22 +51,6 @@ public class PlayerPanel : BaseUpgradePanel
             return providers;
         }
 
-        if (UpgradeManager.Instance.playerProfitUpgrades != null)
-        {
-            foreach (PlayerProfitUpgrade playerUpgrade in UpgradeManager.Instance.playerProfitUpgrades)
-            {
-                if (playerUpgrade != null)
-                {
-                    providers.Add(new PlayerProfitCardAdapter(playerUpgrade));
-                }
-            }
-        }
-
-        if (UpgradeManager.Instance.collectorUpgrade != null)
-        {
-            providers.Add(new CollectorCardAdapter(UpgradeManager.Instance.collectorUpgrade));
-        }
-
         List<PlayerPanelSkillState> visibleSkills = UpgradeManager.Instance.GetVisiblePlayerPanelSkills();
         foreach (PlayerPanelSkillState skill in visibleSkills)
         {

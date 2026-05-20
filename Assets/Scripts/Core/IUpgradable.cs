@@ -1,6 +1,6 @@
 /// <summary>
 /// Seviye atlayabilen ve satın alınabilen her nesnenin sözleşmesini (contract) tanımlar.
-/// IncomeBuilding, ClickUpgradeEntity, BoostUpgrade ve SkillEntity bu arayüzü
+/// IncomeBuilding, BoostUpgrade ve SkillEntity bu arayüzü
 /// UpgradableEntity base sınıfı aracılığıyla dolaylı olarak karşılar.
 /// </summary>
 public interface IUpgradable

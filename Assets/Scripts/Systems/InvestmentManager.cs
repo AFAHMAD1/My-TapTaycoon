@@ -5,6 +5,9 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class InvestmentManager : MonoBehaviour
 {
+    private const float MinResultPercent = 0.001f;
+    private const float MaxResultPercent = 400f;
+
     public event Action<CompanyInvestmentData> CompanyChanged;
     public event Action<InvestmentResult> InvestmentResolved;
 
@@ -139,20 +142,29 @@ public class InvestmentManager : MonoBehaviour
     {
         bool success = UnityEngine.Random.value <= company.successChance;
         double receivedAmount = 0d;
+        double resultPercent = UnityEngine.Random.Range(MinResultPercent, MaxResultPercent);
+        double resultPortion = company.activeInvestmentAmount * (resultPercent / 100d);
 
         if (success)
         {
-            double reward = company.GetRewardFor(company.activeInvestmentAmount);
+            double payout = company.activeInvestmentAmount + resultPortion;
             if (CurrencyManager.Instance != null)
             {
-                CurrencyManager.Instance.AddMoney(reward, false);
+                CurrencyManager.Instance.AddMoney(payout, false);
             }
 
-            receivedAmount = reward;
+            receivedAmount = payout;
             SetStatus(company, "Basarili! Kar kazanildi", "Musait");
         }
         else
         {
+            double refund = System.Math.Max(0d, company.activeInvestmentAmount - resultPortion);
+            if (CurrencyManager.Instance != null)
+            {
+                CurrencyManager.Instance.AddMoney(refund, false);
+            }
+
+            receivedAmount = refund;
             SetStatus(company, "Basarisiz! Yatirim kaybedildi", "Musait");
         }
 
@@ -183,7 +195,6 @@ public class InvestmentManager : MonoBehaviour
             successChance = isLarge ? 0.70f : 0.30f,
             minInvestmentDuration = 60f,
             maxInvestmentDuration = 120f,
-            profitMultiplier = isLarge ? 1.5f : 2.5f,
             isInvestmentActive = false,
             remainingTime = 0f,
             statusText = "Hazir",

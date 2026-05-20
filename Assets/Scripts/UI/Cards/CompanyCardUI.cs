@@ -79,7 +79,6 @@ public class CompanyCardUI : MonoBehaviour
         }
 
         string chancePercent = Mathf.RoundToInt(company.successChance * 100f).ToString();
-        string possibleReward = NumberFormatter.FormatPrice(company.PossibleReward);
 
         if (detailsText != null)
         {
@@ -87,7 +86,7 @@ public class CompanyCardUI : MonoBehaviour
                 $"{company.companyName}\n" +
                 $"Olcek: {company.SizeText} | {company.RiskText}\n" +
                 $"Maliyet: ${NumberFormatter.FormatPrice(company.investmentCost)} | Sans: {chancePercent}%\n" +
-                $"Olası kar: ${possibleReward}";
+                "Kar/Zarar orani: 0.001% - 400%";
         }
 
         if (statusText != null)

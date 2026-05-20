@@ -11,7 +11,6 @@ public class CompanyInvestmentData
     [Range(0f, 1f)] public float successChance;
     public float minInvestmentDuration;
     public float maxInvestmentDuration;
-    public float profitMultiplier;
     public bool isInvestmentActive;
     public float remainingTime;
 
@@ -21,10 +20,4 @@ public class CompanyInvestmentData
 
     public string SizeText => companySize == CompanySize.Large ? "Buyuk" : "Kucuk";
     public string RiskText => companySize == CompanySize.Large ? "Dusuk Risk" : "Yuksek Risk";
-    public double PossibleReward => GetRewardFor(investmentCost);
-
-    public double GetRewardFor(double amount)
-    {
-        return Math.Max(0d, amount) * profitMultiplier;
-    }
 }

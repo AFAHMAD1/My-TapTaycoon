@@ -36,7 +36,6 @@ public class DataMigrator : EditorWindow
         CreateBuilding("Alisveris Merkezi", 2490000000000, 1.15f, 581250000, 1.34f, ScaleMode.Exponential, 20f, new Color32(243, 222, 206, 255), new Color32(207, 115, 66, 255), new Color32(48, 153, 214, 255), new Color32(83, 166, 89, 255), false);
         CreateBuilding("Mega Arena", 125000000000000, 1.15f, 4240000000, 1.32f, ScaleMode.Exponential, 28f, new Color32(236, 217, 196, 255), new Color32(133, 88, 56, 255), new Color32(24, 105, 191, 255), new Color32(99, 181, 75, 255), false);
 
-        CreateCollectorData();
         CreateBoosts();
 
         // Bu satir: 'AssetDatabase' objesi uzerindeki 'SaveAssets' metodunu cagirir; Editor'da olusturulan/degisen assetleri kaydeder.
@@ -83,21 +82,6 @@ public class DataMigrator : EditorWindow
             baseValue = baseCost,
             multiplierPerLevel = costMultiplier
         };
-
-        // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
-        AssetDatabase.CreateAsset(data, assetPath);
-    }
-
-    // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
-    private static void CreateCollectorData()
-    {
-        string assetPath = "Assets/Scripts/Data/Defaults/ClickUpgrade_Collector.asset";
-        if (AssetDatabase.LoadAssetAtPath<ClickUpgradeData>(assetPath) != null) return;
-
-        ClickUpgradeData data = ScriptableObject.CreateInstance<ClickUpgradeData>();
-        data.entityName = "Ekrana Tiklama";
-        data.rewardPerLevel = new ScaledValue { mode = ScaleMode.Exponential, baseValue = 1d, multiplierPerLevel = 1.5f };
-        data.upgradeCost = new ScaledValue { mode = ScaleMode.Exponential, baseValue = 25d, multiplierPerLevel = 1.8f };
 
         // Bu satir: 'AssetDatabase' objesi uzerindeki 'CreateAsset' metodunu cagirir; Unity Editor icinde ScriptableObject asset dosyasi olusturur.
         AssetDatabase.CreateAsset(data, assetPath);

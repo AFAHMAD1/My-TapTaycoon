@@ -113,7 +113,12 @@ public class TapLevelRiserWidget : MonoBehaviour
             SetStretch(middlePanel, 108f, 8f, 168f, 8f);
         }
 
-        RectTransform buttonPanel = UIHelper.FindChildRecursive(transform, "Button_Panel") as RectTransform;
+        RectTransform buttonPanel = UIHelper.FindChildRecursive(transform, "RightArea") as RectTransform;
+        if (buttonPanel == null)
+        {
+            buttonPanel = UIHelper.FindChildRecursive(transform, "Button_Panel") as RectTransform;
+        }
+
         if (buttonPanel != null)
         {
             buttonPanel.anchorMin = new Vector2(1f, 0f);
@@ -122,6 +127,39 @@ public class TapLevelRiserWidget : MonoBehaviour
             buttonPanel.anchoredPosition = new Vector2(-82f, 0f);
             buttonPanel.sizeDelta = new Vector2(156f, -12f);
             buttonPanel.localScale = Vector3.one;
+        }
+
+        RectTransform priceRect = priceText != null ? priceText.rectTransform : null;
+        if (priceRect != null)
+        {
+            priceRect.anchorMin = new Vector2(0f, 0.62f);
+            priceRect.anchorMax = new Vector2(1f, 1f);
+            priceRect.pivot = new Vector2(0.5f, 0.5f);
+            priceRect.offsetMin = new Vector2(4f, 0f);
+            priceRect.offsetMax = new Vector2(-4f, -2f);
+            priceRect.localScale = Vector3.one;
+        }
+
+        RectTransform upgradeButtonRect = upgradeButton != null ? upgradeButton.transform as RectTransform : null;
+        if (upgradeButtonRect != null)
+        {
+            upgradeButtonRect.anchorMin = new Vector2(0f, 0.05f);
+            upgradeButtonRect.anchorMax = new Vector2(1f, 0.62f);
+            upgradeButtonRect.pivot = new Vector2(0.5f, 0.5f);
+            upgradeButtonRect.offsetMin = new Vector2(8f, 4f);
+            upgradeButtonRect.offsetMax = new Vector2(-8f, -4f);
+            upgradeButtonRect.localScale = Vector3.one;
+        }
+
+        if (buttonLabel != null)
+        {
+            RectTransform labelRect = buttonLabel.rectTransform;
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = Vector2.zero;
+            labelRect.offsetMax = Vector2.zero;
+            labelRect.localScale = Vector3.one;
+            buttonLabel.raycastTarget = false;
         }
 
         if (titleText != null)
@@ -136,8 +174,9 @@ public class TapLevelRiserWidget : MonoBehaviour
         {
             priceText.alignment = TextAlignmentOptions.Center;
             priceText.enableAutoSizing = false;
-            priceText.fontSize = 20f;
+            priceText.fontSize = 28f;
             priceText.overflowMode = TextOverflowModes.Truncate;
+            priceText.raycastTarget = false;
         }
 
         if (levelText != null)
@@ -146,13 +185,14 @@ public class TapLevelRiserWidget : MonoBehaviour
             levelText.enableAutoSizing = false;
             levelText.fontSize = 20f;
             levelText.overflowMode = TextOverflowModes.Truncate;
+            levelText.raycastTarget = false;
         }
 
         if (buttonLabel != null)
         {
             buttonLabel.alignment = TextAlignmentOptions.Center;
             buttonLabel.enableAutoSizing = false;
-            buttonLabel.fontSize = 18f;
+            buttonLabel.fontSize = 26f;
             buttonLabel.overflowMode = TextOverflowModes.Truncate;
         }
     }
