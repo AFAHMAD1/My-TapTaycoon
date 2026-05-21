@@ -17,6 +17,9 @@ public class BanknoteSpawner : MonoBehaviour
     public float zDepth = 0f;
     public int preloadCount = 16;
 
+    private BanknotePool runtimeBanknotePool;
+    private FloatingTextPool runtimeFloatingTextPool;
+
     // Obje aktif olunca calisir; event dinleyicileri veya gecici durumlar burada hazirlanir.
     private void OnEnable()
     {
@@ -89,7 +92,8 @@ public class BanknoteSpawner : MonoBehaviour
     // Bu fonksiyon, sinifin sorumlu oldugu isin bir parcasini yapar.
     private void SpawnAtScreen(Vector2 screenPos)
     {
-        if (BanknotePool.Instance == null)
+        BanknotePool pool = GetBanknotePool();
+        if (pool == null)
         {
             // Bu satir: 'Debug' objesi uzerindeki 'LogError' metodunu cagirir; Unity Console'a hata mesaji yazar; duzeltilmesi gereken ciddi durumlari belirtir.
             Debug.LogError("BanknoteSpawner: BanknotePool bulunamadi.");
@@ -110,7 +114,7 @@ public class BanknoteSpawner : MonoBehaviour
         world.y += Random.Range(-0.05f, 0.05f);
 
         // Bu satir: 'Instance' uzerindeki 'Spawn' metodunu cagirir ve sonucu 'banknote' degiskenine koyar; pool sisteminden hazir bir obje alip sahneye yerlestirir.
-        Banknote banknote = BanknotePool.Instance.Spawn(world, Quaternion.identity);
+        Banknote banknote = pool.Spawn(world, Quaternion.identity);
         if (banknote == null)
         {
             // Bu satir: 'Debug' objesi uzerindeki 'LogError' metodunu cagirir; Unity Console'a hata mesaji yazar; duzeltilmesi gereken ciddi durumlari belirtir.
@@ -121,11 +125,12 @@ public class BanknoteSpawner : MonoBehaviour
         // Bu satir: 'BanknoteRegistry' objesi uzerindeki 'Register' metodunu cagirir; parantez icindeki degerler bu metoda bilgi olarak gonderilir.
         BanknoteRegistry.Register(banknote);
 
-        if (FloatingTextPool.Instance != null)
+        FloatingTextPool floatingTextPool = GetFloatingTextPool();
+        if (floatingTextPool != null)
         {
             Vector3 textPos = world + new Vector3(0f, 0.6f, -1f);
             // Bu satir: 'Instance' uzerindeki 'Spawn' metodunu cagirir ve sonucu 'floatingText' degiskenine koyar; pool sisteminden hazir bir obje alip sahneye yerlestirir.
-            FloatingText floatingText = FloatingTextPool.Instance.Spawn(textPos, Quaternion.identity);
+            FloatingText floatingText = floatingTextPool.Spawn(textPos, Quaternion.identity);
 
             if (floatingText != null)
             {
@@ -138,13 +143,19 @@ public class BanknoteSpawner : MonoBehaviour
     // Bu fonksiyon ilgili sistemi veya UI parcasini hazirlar/gunceller.
     private void EnsurePools()
     {
-        if (BanknotePool.Instance == null && banknotePrefab != null)
+        if (runtimeBanknotePool == null)
+        {
+            runtimeBanknotePool = BanknotePool.Instance != null ? BanknotePool.Instance : FindAnyObjectByType<BanknotePool>();
+        }
+
+        if (runtimeBanknotePool == null && banknotePrefab != null)
         {
             Banknote banknoteComponent = banknotePrefab.GetComponent<Banknote>();
             if (banknoteComponent != null)
             {
                 GameObject poolObject = new GameObject("BanknotePool");
                 BanknotePool pool = poolObject.AddComponent<BanknotePool>();
+                runtimeBanknotePool = pool;
                 // Bu satir: 'pool' objesi uzerindeki 'Configure' metodunu cagirir; ilgili sistemi/pool'u verilen prefab, sayi ve parent bilgileriyle ayarlar.
                 pool.Configure(banknoteComponent, preloadCount, poolObject.transform, true);
                 // Bu satir: 'pool' objesi uzerindeki 'ConfigureActiveRoot' metodunu cagirir; aktif objelerin sahnede hangi parent altinda duracagini ayarlar.
@@ -152,19 +163,47 @@ public class BanknoteSpawner : MonoBehaviour
             }
         }
 
-        if (FloatingTextPool.Instance == null && floatingTextPrefab != null)
+        if (runtimeFloatingTextPool == null)
+        {
+            runtimeFloatingTextPool = FloatingTextPool.Instance != null ? FloatingTextPool.Instance : FindAnyObjectByType<FloatingTextPool>();
+        }
+
+        if (runtimeFloatingTextPool == null && floatingTextPrefab != null)
         {
             FloatingText floatingTextComponent = floatingTextPrefab.GetComponent<FloatingText>();
             if (floatingTextComponent != null)
             {
                 GameObject poolObject = new GameObject("FloatingTextPool");
                 FloatingTextPool pool = poolObject.AddComponent<FloatingTextPool>();
+                runtimeFloatingTextPool = pool;
                 // Bu satir: 'pool' objesi uzerindeki 'Configure' metodunu cagirir; ilgili sistemi/pool'u verilen prefab, sayi ve parent bilgileriyle ayarlar.
                 pool.Configure(floatingTextComponent, preloadCount, poolObject.transform, false);
                 // Bu satir: 'pool' objesi uzerindeki 'ConfigureActiveRoot' metodunu cagirir; aktif objelerin sahnede hangi parent altinda duracagini ayarlar.
                 pool.ConfigureActiveRoot(GetOrCreateRuntimeRoot("FloatingTextRuntime"));
             }
         }
+    }
+
+    private BanknotePool GetBanknotePool()
+    {
+        if (runtimeBanknotePool != null)
+        {
+            return runtimeBanknotePool;
+        }
+
+        EnsurePools();
+        return runtimeBanknotePool != null ? runtimeBanknotePool : BanknotePool.Instance;
+    }
+
+    private FloatingTextPool GetFloatingTextPool()
+    {
+        if (runtimeFloatingTextPool != null)
+        {
+            return runtimeFloatingTextPool;
+        }
+
+        EnsurePools();
+        return runtimeFloatingTextPool != null ? runtimeFloatingTextPool : FloatingTextPool.Instance;
     }
 
     // Bu fonksiyon bir deger hesaplar veya kontrol eder; sonucu cagiran koda geri dondurur.

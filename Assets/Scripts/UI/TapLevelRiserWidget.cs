@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class TapLevelRiserWidget : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private Button upgradeButton;
@@ -59,7 +60,8 @@ public class TapLevelRiserWidget : MonoBehaviour
 
     private void ResolveReferences()
     {
-        titleText ??= UIHelper.FindText(transform, "IncomeText", "Middel_Text", "BuildingNameText");
+        titleText ??= UIHelper.FindText(transform, "IncomeText", "Middel_Text", "BuildingNameText", "TapButton");
+        descriptionText ??= UIHelper.FindText(transform, "TapRiserDescriptionText");
         priceText ??= UIHelper.FindText(transform, "PriceText", "Fiyat");
         levelText ??= UIHelper.FindText(transform, "LevelText");
         upgradeButton ??= UIHelper.FindButton(transform, "TapButton", "ActionButton", "Upgrade_Button");
@@ -77,10 +79,20 @@ public class TapLevelRiserWidget : MonoBehaviour
 
     private void ConfigurePrefabLayout()
     {
+        EnsureDescriptionText();
+
         RectTransform rootRect = transform as RectTransform;
         if (rootRect != null)
         {
             rootRect.localScale = Vector3.one;
+        }
+
+        RectTransform prefabRoot = UIHelper.FindChildRecursive(transform, "Tap_Level_Riser") as RectTransform;
+        if (prefabRoot != null && prefabRoot != rootRect)
+        {
+            SetStretch(prefabRoot, 0f, 0f, 0f, 0f);
+            prefabRoot.localScale = Vector3.one;
+            prefabRoot.gameObject.SetActive(true);
         }
 
         RectTransform nestedCanvas = UIHelper.FindChildRecursive(transform, "Canvas") as RectTransform;
@@ -110,7 +122,7 @@ public class TapLevelRiserWidget : MonoBehaviour
         RectTransform middlePanel = FindByPartialName(transform, "Text's_Panel") as RectTransform;
         if (middlePanel != null)
         {
-            SetStretch(middlePanel, 108f, 8f, 168f, 8f);
+            SetStretch(middlePanel, 108f, 8f, 206f, 8f);
         }
 
         RectTransform buttonPanel = UIHelper.FindChildRecursive(transform, "RightArea") as RectTransform;
@@ -121,11 +133,12 @@ public class TapLevelRiserWidget : MonoBehaviour
 
         if (buttonPanel != null)
         {
+            buttonPanel.gameObject.SetActive(true);
             buttonPanel.anchorMin = new Vector2(1f, 0f);
             buttonPanel.anchorMax = new Vector2(1f, 1f);
             buttonPanel.pivot = new Vector2(0.5f, 0.5f);
-            buttonPanel.anchoredPosition = new Vector2(-82f, 0f);
-            buttonPanel.sizeDelta = new Vector2(156f, -12f);
+            buttonPanel.anchoredPosition = new Vector2(-102f, 0f);
+            buttonPanel.sizeDelta = new Vector2(196f, -12f);
             buttonPanel.localScale = Vector3.one;
         }
 
@@ -143,6 +156,7 @@ public class TapLevelRiserWidget : MonoBehaviour
         RectTransform upgradeButtonRect = upgradeButton != null ? upgradeButton.transform as RectTransform : null;
         if (upgradeButtonRect != null)
         {
+            upgradeButton.gameObject.SetActive(true);
             upgradeButtonRect.anchorMin = new Vector2(0f, 0.05f);
             upgradeButtonRect.anchorMax = new Vector2(1f, 0.62f);
             upgradeButtonRect.pivot = new Vector2(0.5f, 0.5f);
@@ -164,10 +178,35 @@ public class TapLevelRiserWidget : MonoBehaviour
 
         if (titleText != null)
         {
-            titleText.alignment = TextAlignmentOptions.MidlineLeft;
+            RectTransform titleRect = titleText.rectTransform;
+            titleRect.anchorMin = new Vector2(0f, 0.48f);
+            titleRect.anchorMax = Vector2.one;
+            titleRect.offsetMin = new Vector2(8f, 0f);
+            titleRect.offsetMax = new Vector2(-8f, -2f);
+            titleRect.localScale = Vector3.one;
+
+            titleText.alignment = TextAlignmentOptions.Midline;
             titleText.enableAutoSizing = false;
             titleText.fontSize = 20f;
             titleText.overflowMode = TextOverflowModes.Truncate;
+            titleText.raycastTarget = false;
+        }
+
+        if (descriptionText != null)
+        {
+            RectTransform descriptionRect = descriptionText.rectTransform;
+            descriptionRect.anchorMin = Vector2.zero;
+            descriptionRect.anchorMax = new Vector2(1f, 0.48f);
+            descriptionRect.offsetMin = new Vector2(8f, 2f);
+            descriptionRect.offsetMax = new Vector2(-8f, 0f);
+            descriptionRect.localScale = Vector3.one;
+
+            descriptionText.alignment = TextAlignmentOptions.Midline;
+            descriptionText.enableAutoSizing = false;
+            descriptionText.fontSize = titleText != null ? titleText.fontSize : 20f;
+            descriptionText.fontStyle = titleText != null ? titleText.fontStyle : FontStyles.Normal;
+            descriptionText.overflowMode = TextOverflowModes.Truncate;
+            descriptionText.raycastTarget = false;
         }
 
         if (priceText != null)
@@ -206,12 +245,16 @@ public class TapLevelRiserWidget : MonoBehaviour
         }
 
         int level = UpgradeManager.Instance.TapLevelRiserLevel;
-        double multiplier = UpgradeManager.Instance.TapLevelRiserMultiplier;
         double cost = UpgradeManager.Instance.TapLevelRiserNextCost;
 
         if (titleText != null)
         {
-            titleText.text = $"Kazanc: x{NumberFormatter.Format(multiplier)} / Tap";
+            titleText.text = "Para Masteri";
+        }
+
+        if (descriptionText != null)
+        {
+            descriptionText.text = "Daha Fazla Para Kazan";
         }
 
         if (priceText != null)
@@ -241,6 +284,22 @@ public class TapLevelRiserWidget : MonoBehaviour
         {
             Refresh();
         }
+    }
+
+    private void EnsureDescriptionText()
+    {
+        if (descriptionText != null || titleText == null) return;
+
+        GameObject descriptionObject = new GameObject("TapRiserDescriptionText", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+        descriptionObject.layer = titleText.gameObject.layer;
+        descriptionObject.transform.SetParent(titleText.transform.parent, false);
+
+        descriptionText = descriptionObject.GetComponent<TextMeshProUGUI>();
+        descriptionText.font = titleText.font;
+        descriptionText.fontSharedMaterial = titleText.fontSharedMaterial;
+        descriptionText.color = titleText.color;
+        descriptionText.fontStyle = titleText.fontStyle;
+        descriptionText.fontSize = titleText.fontSize;
     }
 
     private static void SetStretch(RectTransform rect, float left, float bottom, float right, float top)
