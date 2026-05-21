@@ -13,6 +13,9 @@ public class FutbolcularPanelNavigator : MonoBehaviour
     private GameObject currentPanel;
     private Button marketButton;
     private GameObject marketPanel;
+    private GameObject playersInfoPanel;
+    private GameObject playersInfoScrollView;
+    private readonly List<Button> marketCategoryButtons = new List<Button>();
 
     private void Awake()
     {
@@ -42,6 +45,14 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         if (marketButton != null)
         {
             marketButton.onClick.RemoveListener(OpenMarketPanel);
+        }
+
+        foreach (Button button in marketCategoryButtons)
+        {
+            if (button != null)
+            {
+                button.onClick.RemoveListener(OpenPlayersInfoPanel);
+            }
         }
     }
 
@@ -82,6 +93,13 @@ public class FutbolcularPanelNavigator : MonoBehaviour
 
     public void GoBack()
     {
+        if (playersInfoPanel != null && playersInfoPanel.activeSelf)
+        {
+            ClosePlayersInfoPanel();
+            RefreshBackButton();
+            return;
+        }
+
         if (panelHistory.Count == 0)
         {
             RefreshBackButton();
@@ -130,6 +148,18 @@ public class FutbolcularPanelNavigator : MonoBehaviour
             marketButton = marketButtonTransform.GetComponent<Button>();
         }
 
+        Transform playersInfoPanelTransform = UIHelper.FindChildRecursive(transform, "Players_info_panel");
+        if (playersInfoPanelTransform != null)
+        {
+            playersInfoPanel = playersInfoPanelTransform.gameObject;
+
+            Transform scrollViewTransform = UIHelper.FindChildRecursive(playersInfoPanelTransform, "Scroll View");
+            if (scrollViewTransform != null)
+            {
+                playersInfoScrollView = scrollViewTransform.gameObject;
+            }
+        }
+
         EnsureManagedPanel(firstPanel);
         EnsureManagedPanel(marketPanel);
     }
@@ -147,6 +177,11 @@ public class FutbolcularPanelNavigator : MonoBehaviour
             marketButton.onClick.RemoveListener(OpenMarketPanel);
             marketButton.onClick.AddListener(OpenMarketPanel);
         }
+
+        WireMarketCategoryButton("ForwardBtn");
+        WireMarketCategoryButton("MidfieldBtn");
+        WireMarketCategoryButton("DefenceBtn");
+        WireMarketCategoryButton("Managers and Goal keepers Btn");
     }
 
     private void OpenMarketPanel()
@@ -154,8 +189,45 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         OpenPanel(marketPanel);
     }
 
+    public void OpenPlayersInfoPanel()
+    {
+        if (playersInfoPanel == null)
+        {
+            return;
+        }
+
+        playersInfoPanel.SetActive(true);
+
+        if (playersInfoScrollView != null)
+        {
+            playersInfoScrollView.SetActive(true);
+        }
+
+        if (playersInfoPanel.transform.parent != null)
+        {
+            playersInfoPanel.transform.SetAsLastSibling();
+        }
+
+        RefreshBackButton();
+    }
+
+    public void ClosePlayersInfoPanel()
+    {
+        if (playersInfoScrollView != null)
+        {
+            playersInfoScrollView.SetActive(false);
+        }
+
+        if (playersInfoPanel != null)
+        {
+            playersInfoPanel.SetActive(false);
+        }
+    }
+
     private void ShowOnly(GameObject targetPanel)
     {
+        ClosePlayersInfoPanel();
+
         foreach (GameObject panel in childPanels)
         {
             if (panel != null)
@@ -190,7 +262,31 @@ public class FutbolcularPanelNavigator : MonoBehaviour
     {
         if (backButton != null)
         {
-            backButton.interactable = panelHistory.Count > 0;
+            bool hasOpenSharedPanel = playersInfoPanel != null && playersInfoPanel.activeSelf;
+            backButton.interactable = hasOpenSharedPanel || panelHistory.Count > 0;
+        }
+    }
+
+    private void WireMarketCategoryButton(string buttonName)
+    {
+        Transform buttonTransform = UIHelper.FindChildRecursive(transform, buttonName);
+        if (buttonTransform == null)
+        {
+            return;
+        }
+
+        Button button = buttonTransform.GetComponent<Button>();
+        if (button == null)
+        {
+            return;
+        }
+
+        button.onClick.RemoveListener(OpenPlayersInfoPanel);
+        button.onClick.AddListener(OpenPlayersInfoPanel);
+
+        if (!marketCategoryButtons.Contains(button))
+        {
+            marketCategoryButtons.Add(button);
         }
     }
 }

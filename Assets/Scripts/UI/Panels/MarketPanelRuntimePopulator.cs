@@ -21,17 +21,10 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
 
     public void Populate()
     {
-        if (hasPopulated)
-        {
-            return;
-        }
-
+        if (hasPopulated) return;
         hasPopulated = true;
 
-        if (!ResolveReferences())
-        {
-            return;
-        }
+        if (!ResolveReferences()) return;
 
         ClearGeneratedItems();
 
@@ -50,25 +43,19 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
     private bool ResolveReferences()
     {
         if (scrollView == null)
-        {
             scrollView = GetComponentInChildren<ScrollRect>(true);
-        }
 
         if (content == null && scrollView != null)
-        {
             content = scrollView.content;
-        }
 
         if (content == null)
         {
-            Debug.LogWarning("[MarketPanel] Scroll View Content bulunamadi; market kartlari olusturulamadi.", this);
+            Debug.LogWarning("[MarketPanel] Scroll View Content bulunamadi.", this);
             return false;
         }
 
         if (itemTemplate == null)
-        {
             itemTemplate = FindTemplate();
-        }
 
         if (itemTemplate == null)
         {
@@ -79,7 +66,7 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         if (scrollView != null)
         {
             scrollView.horizontal = false;
-            scrollView.vertical = true;
+            scrollView.vertical   = true;
         }
 
         return true;
@@ -91,11 +78,8 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         {
             Transform child = content.GetChild(i);
             if (!child.name.StartsWith(GeneratedItemPrefix, StringComparison.Ordinal))
-            {
                 return child.gameObject;
-            }
         }
-
         return null;
     }
 
@@ -105,9 +89,7 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         {
             GameObject child = content.GetChild(i).gameObject;
             if (child != itemTemplate && child.name.StartsWith(GeneratedItemPrefix, StringComparison.Ordinal))
-            {
                 Destroy(child);
-            }
         }
     }
 }
