@@ -12,9 +12,16 @@ public class FutbolcularPanelNavigator : MonoBehaviour
     private readonly Stack<GameObject> panelHistory = new Stack<GameObject>();
     private GameObject currentPanel;
     private Button marketButton;
+    private Button clubButton;
+    private Button myPlayersButton;
+    private Button myManagersButton;
     private GameObject marketPanel;
+    private GameObject clubPanel;
+    private GameObject myPlayersPanel;
+    private GameObject myManagersPanel;
     private GameObject playersInfoPanel;
     private GameObject playersInfoScrollView;
+    private MarketPanelRuntimePopulator marketPopulator;
     private readonly List<Button> marketCategoryButtons = new List<Button>();
 
     private void Awake()
@@ -45,6 +52,21 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         if (marketButton != null)
         {
             marketButton.onClick.RemoveListener(OpenMarketPanel);
+        }
+
+        if (clubButton != null)
+        {
+            clubButton.onClick.RemoveListener(OpenClubPanel);
+        }
+
+        if (myPlayersButton != null)
+        {
+            myPlayersButton.onClick.RemoveListener(OpenMyPlayersPanel);
+        }
+
+        if (myManagersButton != null)
+        {
+            myManagersButton.onClick.RemoveListener(OpenMyManagersPanel);
         }
 
         foreach (Button button in marketCategoryButtons)
@@ -93,6 +115,13 @@ public class FutbolcularPanelNavigator : MonoBehaviour
 
     public void GoBack()
     {
+        if (HasOpenClubSubpanel())
+        {
+            CloseClubSubpanels();
+            RefreshBackButton();
+            return;
+        }
+
         if (playersInfoPanel != null && playersInfoPanel.activeSelf)
         {
             ClosePlayersInfoPanel();
@@ -140,12 +169,59 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         if (marketPanelTransform != null)
         {
             marketPanel = marketPanelTransform.gameObject;
+            marketPopulator = marketPanel.GetComponent<MarketPanelRuntimePopulator>();
+        }
+
+        Transform clubPanelTransform = UIHelper.FindChildRecursive(transform, "KlupPanel");
+        if (clubPanelTransform != null)
+        {
+            clubPanel = clubPanelTransform.gameObject;
+
+            Transform myPlayersPanelTransform = UIHelper.FindChildRecursive(clubPanelTransform, "MyPlayers");
+            if (myPlayersPanelTransform != null)
+            {
+                myPlayersPanel = myPlayersPanelTransform.gameObject;
+            }
+
+            Transform myManagersPanelTransform = UIHelper.FindChildRecursive(clubPanelTransform, "Managers");
+            if (myManagersPanelTransform == null)
+            {
+                myManagersPanelTransform = UIHelper.FindChildRecursive(clubPanelTransform, "MyManagers");
+            }
+
+            if (myManagersPanelTransform == null)
+            {
+                myManagersPanelTransform = UIHelper.FindChildRecursive(clubPanelTransform, "MyManagersPanel");
+            }
+
+            if (myManagersPanelTransform != null)
+            {
+                myManagersPanel = myManagersPanelTransform.gameObject;
+            }
         }
 
         Transform marketButtonTransform = UIHelper.FindChildRecursive(transform, "Marketbtn");
         if (marketButtonTransform != null)
         {
             marketButton = marketButtonTransform.GetComponent<Button>();
+        }
+
+        Transform clubButtonTransform = UIHelper.FindChildRecursive(transform, "klup");
+        if (clubButtonTransform != null)
+        {
+            clubButton = clubButtonTransform.GetComponent<Button>();
+        }
+
+        Transform myPlayersButtonTransform = UIHelper.FindChildRecursive(transform, "MyPlayersButton");
+        if (myPlayersButtonTransform != null)
+        {
+            myPlayersButton = myPlayersButtonTransform.GetComponent<Button>();
+        }
+
+        Transform myManagersButtonTransform = UIHelper.FindChildRecursive(transform, "MyManagersButton");
+        if (myManagersButtonTransform != null)
+        {
+            myManagersButton = myManagersButtonTransform.GetComponent<Button>();
         }
 
         Transform playersInfoPanelTransform = UIHelper.FindChildRecursive(transform, "Players_info_panel");
@@ -162,6 +238,7 @@ public class FutbolcularPanelNavigator : MonoBehaviour
 
         EnsureManagedPanel(firstPanel);
         EnsureManagedPanel(marketPanel);
+        EnsureManagedPanel(clubPanel);
     }
 
     private void WireButtons()
@@ -178,10 +255,28 @@ public class FutbolcularPanelNavigator : MonoBehaviour
             marketButton.onClick.AddListener(OpenMarketPanel);
         }
 
-        WireMarketCategoryButton("ForwardBtn");
-        WireMarketCategoryButton("MidfieldBtn");
-        WireMarketCategoryButton("DefenceBtn");
-        WireMarketCategoryButton("Managers and Goal keepers Btn");
+        if (clubButton != null)
+        {
+            clubButton.onClick.RemoveListener(OpenClubPanel);
+            clubButton.onClick.AddListener(OpenClubPanel);
+        }
+
+        if (myPlayersButton != null)
+        {
+            myPlayersButton.onClick.RemoveListener(OpenMyPlayersPanel);
+            myPlayersButton.onClick.AddListener(OpenMyPlayersPanel);
+        }
+
+        if (myManagersButton != null)
+        {
+            myManagersButton.onClick.RemoveListener(OpenMyManagersPanel);
+            myManagersButton.onClick.AddListener(OpenMyManagersPanel);
+        }
+
+        WireMarketCategoryButton("ForwardBtn", MarketPanelRuntimePopulator.MarketCategory.Forwards);
+        WireMarketCategoryButton("MidfieldBtn", MarketPanelRuntimePopulator.MarketCategory.Midfielders);
+        WireMarketCategoryButton("DefenceBtn", MarketPanelRuntimePopulator.MarketCategory.Defenders);
+        WireMarketCategoryButton("Managers and Goal keepers Btn", MarketPanelRuntimePopulator.MarketCategory.ManagersAndGoalkeepers);
     }
 
     private void OpenMarketPanel()
@@ -189,11 +284,64 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         OpenPanel(marketPanel);
     }
 
+    private void OpenClubPanel()
+    {
+        OpenPanel(clubPanel);
+        CloseClubSubpanels();
+        RefreshBackButton();
+    }
+
+    private void OpenMyPlayersPanel()
+    {
+        ShowClubSubpanel(myPlayersPanel);
+    }
+
+    private void OpenMyManagersPanel()
+    {
+        ShowClubSubpanel(myManagersPanel);
+    }
+
+    private void ShowClubSubpanel(GameObject targetPanel)
+    {
+        if (targetPanel == null)
+        {
+            return;
+        }
+
+        if (clubPanel != null && !clubPanel.activeSelf)
+        {
+            OpenPanel(clubPanel);
+        }
+
+        if (myPlayersPanel != null)
+        {
+            myPlayersPanel.SetActive(myPlayersPanel == targetPanel);
+        }
+
+        if (myManagersPanel != null)
+        {
+            myManagersPanel.SetActive(myManagersPanel == targetPanel);
+        }
+
+        targetPanel.transform.SetAsLastSibling();
+        RefreshBackButton();
+    }
+
     public void OpenPlayersInfoPanel()
+    {
+        OpenPlayersInfoPanel(null);
+    }
+
+    private void OpenPlayersInfoPanel(MarketPanelRuntimePopulator.MarketCategory? category)
     {
         if (playersInfoPanel == null)
         {
             return;
+        }
+
+        if (category.HasValue && marketPopulator != null)
+        {
+            marketPopulator.Populate(category.Value);
         }
 
         playersInfoPanel.SetActive(true);
@@ -213,6 +361,11 @@ public class FutbolcularPanelNavigator : MonoBehaviour
 
     public void ClosePlayersInfoPanel()
     {
+        if (marketPopulator != null)
+        {
+            marketPopulator.ClearMarketCards();
+        }
+
         if (playersInfoScrollView != null)
         {
             playersInfoScrollView.SetActive(false);
@@ -227,6 +380,11 @@ public class FutbolcularPanelNavigator : MonoBehaviour
     private void ShowOnly(GameObject targetPanel)
     {
         ClosePlayersInfoPanel();
+
+        if (targetPanel != clubPanel)
+        {
+            CloseClubSubpanels();
+        }
 
         foreach (GameObject panel in childPanels)
         {
@@ -263,11 +421,39 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         if (backButton != null)
         {
             bool hasOpenSharedPanel = playersInfoPanel != null && playersInfoPanel.activeSelf;
-            backButton.interactable = hasOpenSharedPanel || panelHistory.Count > 0;
+            backButton.interactable = hasOpenSharedPanel || HasOpenClubSubpanel() || panelHistory.Count > 0;
         }
     }
 
-    private void WireMarketCategoryButton(string buttonName)
+    private bool HasOpenClubSubpanel()
+    {
+        if (clubPanel != null && !clubPanel.activeInHierarchy)
+        {
+            return false;
+        }
+
+        return IsOpenClubSubpanel(myPlayersPanel) || IsOpenClubSubpanel(myManagersPanel);
+    }
+
+    private bool IsOpenClubSubpanel(GameObject panel)
+    {
+        return panel != null && panel.activeSelf;
+    }
+
+    private void CloseClubSubpanels()
+    {
+        if (myPlayersPanel != null)
+        {
+            myPlayersPanel.SetActive(false);
+        }
+
+        if (myManagersPanel != null)
+        {
+            myManagersPanel.SetActive(false);
+        }
+    }
+
+    private void WireMarketCategoryButton(string buttonName, MarketPanelRuntimePopulator.MarketCategory category)
     {
         Transform buttonTransform = UIHelper.FindChildRecursive(transform, buttonName);
         if (buttonTransform == null)
@@ -282,7 +468,7 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         }
 
         button.onClick.RemoveListener(OpenPlayersInfoPanel);
-        button.onClick.AddListener(OpenPlayersInfoPanel);
+        button.onClick.AddListener(() => OpenPlayersInfoPanel(category));
 
         if (!marketCategoryButtons.Contains(button))
         {
