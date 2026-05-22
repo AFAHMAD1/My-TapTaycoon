@@ -27,6 +27,8 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
     private const string OwnedManagerItemPrefix = "OwnedManager_";
     private const int MaxOwnedPlayers = 26;
     private const int MaxOwnedManagers = 5;
+    private const int MaxUpgradedPlayerStat = 99;
+    private static readonly Color ManagerStatTextColor = new Color(0.08f, 0.11f, 0.14f, 1f);
 
     private readonly Dictionary<MarketCategory, List<PlayerMarketData>> playersByCategory = new Dictionary<MarketCategory, List<PlayerMarketData>>();
     private readonly List<ManagerMarketData> managers = new List<ManagerMarketData>();
@@ -249,13 +251,7 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         SetButtonText(card.transform, "Sat\u0131n Al");
         WireBuyButton(card.transform, () => TryBuyPlayer(player, card));
 
-        SetRandomStat(card.transform, "Speed");
-        SetRandomStat(card.transform, "Pass_Accuracy");
-        SetRandomStat(card.transform, "Defensive_Ability", "Defensive_A");
-        SetRandomStat(card.transform, "Strength");
-        SetRandomStat(card.transform, "Shoot_Power");
-        SetRandomStat(card.transform, "Football_IQ");
-        SetRandomStat(card.transform, "BallControl", "Ball_Control");
+        SetPlayerStats(card.transform, player.Stats);
     }
 
     private void CreateManagerCard(ManagerMarketData manager, int cardIndex)
@@ -270,26 +266,79 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         SetButtonText(card.transform, "Sat\u0131n Al");
         WireBuyButton(card.transform, () => TryBuyManager(manager, card));
 
-        SetRandomStat(card.transform, "ManagerLevel", "Manager Level");
-        SetRandomStat(card.transform, "Defensive_Ability", "Tactic Boost");
-        SetText(card.transform, "Shoot_Power", $"Age - {manager.Age}");
-        SetRandomStat(card.transform, "Strength", "Experience");
-        SetRandomStat(card.transform, "Pass_Accuracy", "Training Boost");
-        SetRandomStat(card.transform, "Football_IQ");
+        SetManagerStats(card.transform, manager.Stats);
     }
 
-    private void SetRandomStat(Transform root, string objectName, string label = null)
+    private static void SetPlayerStats(Transform root, FootballPlayerStats stats)
     {
-        int value = UnityEngine.Random.Range(50, 61);
-        SetText(root, objectName, $"{(string.IsNullOrEmpty(label) ? objectName : label)} - {value}");
+        SetText(root, "Speed", $"Speed - {stats.speed}");
+        SetText(root, "Pass_Accuracy", $"Pass_Accuracy - {stats.passAccuracy}");
+        SetText(root, "Defensive_Ability", $"Defensive_A - {stats.defensiveAbility}");
+        SetText(root, "Strength", $"Strength - {stats.strength}");
+        SetText(root, "Shoot_Power", $"Shoot_Power - {stats.shootPower}");
+    }
+
+    private static void SetManagerStats(Transform root, ManagerStats stats)
+    {
+        SetManagerStatText(root, "ManagerLevel", "Manager Level", $"Manager Level - {stats.managerLevel}");
+        SetManagerStatText(root, "Pass_Accuracy", "Training Boost", $"Training Boost - {stats.trainingBoost}");
+        SetManagerStatText(root, "Defensive_Ability", "Tactic Boost", $"Tactic Boost - {stats.tacticBoost}");
+        SetManagerStatText(root, "Strength", "Experience", $"Experience - {stats.experience}");
+        SetManagerStatText(root, "Shoot_Power", "Age", $"Age - {stats.age}");
+        SetManagerStatText(root, "Football_IQ", "Football", $"Football IQ - {stats.footballIQ}");
+    }
+
+    private static void SetManagerStatText(Transform root, string objectName, string labelPrefix, string value)
+    {
+        TMP_Text text = FindManagerStatText(root, objectName, labelPrefix);
+        if (text == null)
+        {
+            return;
+        }
+
+        text.text = value;
+        text.color = ManagerStatTextColor;
+    }
+
+    private static TMP_Text FindManagerStatText(Transform root, string objectName, string labelPrefix)
+    {
+        TMP_Text namedText = FindText(root, objectName);
+        if (namedText != null)
+        {
+            return namedText;
+        }
+
+        TMP_Text[] texts = root.GetComponentsInChildren<TMP_Text>(true);
+        for (int i = 0; i < texts.Length; i++)
+        {
+            TMP_Text candidate = texts[i];
+            if (candidate.text.StartsWith(labelPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return candidate;
+            }
+        }
+
+        return null;
     }
 
     private static bool SetText(Transform root, string objectName, string value)
     {
+        TMP_Text text = FindText(root, objectName);
+        if (text == null)
+        {
+            return false;
+        }
+
+        text.text = value;
+        return true;
+    }
+
+    private static TMP_Text FindText(Transform root, string objectName)
+    {
         Transform target = FindChildRecursive(root, objectName);
         if (target == null)
         {
-            return false;
+            return null;
         }
 
         TMP_Text text = target.GetComponent<TMP_Text>();
@@ -298,18 +347,12 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
             text = target.GetComponentInChildren<TMP_Text>(true);
         }
 
-        if (text != null)
-        {
-            text.text = value;
-            return true;
-        }
-
-        return false;
+        return text;
     }
 
-    private static void SetPriceText(Transform root, int price)
+    private static void SetPriceText(Transform root, double price)
     {
-        string value = $"Price:\n${price}";
+        string value = $"Price:\n${NumberFormatter.FormatPrice(price)}";
 
         if (SetText(root, "PriceTag", value))
         {
@@ -369,7 +412,13 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         }
 
         GetCategoryForPlayer(player.Type).Remove(player);
-        MoveCardToClub(card, myPlayersContent, ownedPlayerCards, OwnedPlayerItemPrefix, player.Name);
+        MoveCardToClub(
+            card,
+            myPlayersContent,
+            ownedPlayerCards,
+            OwnedPlayerItemPrefix,
+            player.Name,
+            () => TryUpgradePlayer(player, card.transform));
     }
 
     private void TryBuyManager(ManagerMarketData manager, GameObject card)
@@ -385,7 +434,13 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         }
 
         managers.Remove(manager);
-        MoveCardToClub(card, myManagersContent, ownedManagerCards, OwnedManagerItemPrefix, manager.Name);
+        MoveCardToClub(
+            card,
+            myManagersContent,
+            ownedManagerCards,
+            OwnedManagerItemPrefix,
+            manager.Name,
+            () => TryUpgradeManager(manager, card.transform));
     }
 
     private bool CanBuyOwnedCard(RectTransform destination, List<GameObject> ownedCards, int maxCount, string itemName)
@@ -406,7 +461,7 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         return true;
     }
 
-    private bool TrySpendMarketPrice(int price)
+    private bool TrySpendMarketPrice(double price)
     {
         if (CurrencyManager.Instance == null)
         {
@@ -423,12 +478,83 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         return true;
     }
 
+    private void TryUpgradePlayer(PlayerMarketData player, Transform cardRoot)
+    {
+        if (!player.CanUpgradeStats)
+        {
+            SetCardButtonInteractable(cardRoot, false);
+            Debug.Log($"[MarketPanel] {player.Name} tum futbolcu kriterlerinde maksimum seviyeye ulasti.", this);
+            return;
+        }
+
+        double upgradePrice = CalculateUpgradePrice(player.Price);
+        if (!TrySpendUpgradePrice(upgradePrice, player.Name))
+        {
+            return;
+        }
+
+        player.UpgradeStats();
+        player.Price += upgradePrice;
+        RefreshPlayerCard(cardRoot, player);
+    }
+
+    private void TryUpgradeManager(ManagerMarketData manager, Transform cardRoot)
+    {
+        double upgradePrice = CalculateUpgradePrice(manager.Price);
+        if (!TrySpendUpgradePrice(upgradePrice, manager.Name))
+        {
+            return;
+        }
+
+        manager.UpgradeStats();
+        manager.Price += upgradePrice;
+        RefreshManagerCard(cardRoot, manager);
+    }
+
+    private bool TrySpendUpgradePrice(double upgradePrice, string itemName)
+    {
+        if (CurrencyManager.Instance == null)
+        {
+            Debug.LogWarning("[MarketPanel] CurrencyManager bulunamadi; gelistirme yapilamadi.", this);
+            return false;
+        }
+
+        if (!CurrencyManager.Instance.SpendMoney(upgradePrice))
+        {
+            Debug.Log($"[MarketPanel] {itemName} gelistirmesi icin para yetersiz.", this);
+            return false;
+        }
+
+        return true;
+    }
+
+    private static double CalculateUpgradePrice(double currentPrice)
+    {
+        return currentPrice / 4d;
+    }
+
+    private static void RefreshPlayerCard(Transform root, PlayerMarketData player)
+    {
+        SetText(root, "Class", $"Class: {player.Class}");
+        SetPriceText(root, player.Price);
+        SetPlayerStats(root, player.Stats);
+        SetCardButtonInteractable(root, player.CanUpgradeStats);
+    }
+
+    private static void RefreshManagerCard(Transform root, ManagerMarketData manager)
+    {
+        SetText(root, "Class", $"Class: {manager.Class}");
+        SetPriceText(root, manager.Price);
+        SetManagerStats(root, manager.Stats);
+    }
+
     private void MoveCardToClub(
         GameObject card,
         RectTransform destination,
         List<GameObject> ownedCards,
         string itemPrefix,
-        string itemName)
+        string itemName,
+        UnityEngine.Events.UnityAction upgradeAction)
     {
         if (card == null || destination == null)
         {
@@ -437,7 +563,7 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
 
         card.name = $"{itemPrefix}{ownedCards.Count + 1:00}_{itemName}";
         card.transform.SetParent(destination, false);
-        ConfigureOwnedCard(card.transform);
+        ConfigureOwnedCard(card.transform, upgradeAction);
         ownedCards.Add(card);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(destination);
@@ -447,7 +573,7 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         }
     }
 
-    private static void ConfigureOwnedCard(Transform root)
+    private static void ConfigureOwnedCard(Transform root, UnityEngine.Events.UnityAction upgradeAction)
     {
         SetButtonText(root, "Upgrade");
 
@@ -456,6 +582,16 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         {
             button.interactable = true;
             button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(upgradeAction);
+        }
+    }
+
+    private static void SetCardButtonInteractable(Transform root, bool interactable)
+    {
+        Button button = FindCardButton(root);
+        if (button != null)
+        {
+            button.interactable = interactable;
         }
     }
 
@@ -749,6 +885,8 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         AddPlayer("Rafael Costa", "Goalkeeper", "C", 4500, 25, 194);
         AddPlayer("Nikolai Ivanov", "Goalkeeper", "C", 3100, 21, 190);
 
+        ApplyMarketPlayerClassPlan();
+
         AddManager("Jose Alvarez", "C", 4700, 45);
         AddManager("Mehmet Kaya", "C", 3900, 42);
         AddManager("Antonio Ricci", "C", 5000, 49);
@@ -764,12 +902,31 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         AddManager("Kenji Nakamura", "C", 4300, 46);
         AddManager("Arif Celik", "C", 3000, 37);
         AddManager("Nicolas Moreau", "C", 4800, 50);
+
+        ApplyMarketManagerClassPlan();
     }
 
     private void AddPlayer(string name, string type, string playerClass, int price, int age, int height)
     {
         PlayerMarketData player = new PlayerMarketData(name, type, playerClass, price, age, height);
         GetCategoryForPlayer(type).Add(player);
+    }
+
+    private void ApplyMarketPlayerClassPlan()
+    {
+        foreach (KeyValuePair<MarketCategory, List<PlayerMarketData>> categoryPlayers in playersByCategory)
+        {
+            List<PlayerMarketData> players = categoryPlayers.Value;
+            List<FootballPlayerClass> classPlan =
+                categoryPlayers.Key == MarketCategory.ManagersAndGoalkeepers
+                    ? FootballMarketClassGenerator.CreateGoalkeeperClassPlan(players.Count)
+                    : FootballMarketClassGenerator.CreateClassPlan(players.Count);
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                players[i] = players[i].WithGeneratedClass(classPlan[i]);
+            }
+        }
     }
 
     private List<PlayerMarketData> GetCategoryForPlayer(string type)
@@ -794,39 +951,126 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         managers.Add(new ManagerMarketData(name, managerClass, price, age));
     }
 
-    private readonly struct PlayerMarketData
+    private void ApplyMarketManagerClassPlan()
     {
-        public readonly string Name;
-        public readonly string Type;
-        public readonly string Class;
-        public readonly int Price;
-        public readonly int Age;
-        public readonly int Height;
-
-        public PlayerMarketData(string name, string type, string playerClass, int price, int age, int height)
+        List<ManagerClass> classPlan = ManagerMarketClassGenerator.CreateClassPlan(managers.Count);
+        for (int i = 0; i < managers.Count; i++)
         {
-            Name = name;
-            Type = type;
-            Class = playerClass;
-            Price = price;
-            Age = age;
-            Height = height;
+            managers[i] = managers[i].WithGeneratedClass(classPlan[i]);
         }
     }
 
-    private readonly struct ManagerMarketData
+    private sealed class PlayerMarketData
     {
         public readonly string Name;
-        public readonly string Class;
-        public readonly int Price;
+        public readonly string Type;
+        public readonly FootballPlayerType PlayerType;
+        public FootballPlayerClass PlayerClass;
+        public FootballPlayerStats Stats;
+        public double Price;
         public readonly int Age;
+        public readonly int Height;
+        public string Class => PlayerClass.ToString();
+        public bool CanUpgradeStats => Stats.HasStatBelow(MaxUpgradedPlayerStat);
 
-        public ManagerMarketData(string name, string managerClass, int price, int age)
+        public PlayerMarketData(string name, string type, string playerClass, int price, int age, int height)
+            : this(name, type, ParsePlayerType(type), ParsePlayerClass(playerClass), price, age, height)
+        {
+        }
+
+        private PlayerMarketData(
+            string name,
+            string type,
+            FootballPlayerType footballPlayerType,
+            FootballPlayerClass footballPlayerClass,
+            double price,
+            int age,
+            int height)
         {
             Name = name;
-            Class = managerClass;
-            Price = price;
+            Type = type;
+            PlayerType = footballPlayerType;
+            PlayerClass = footballPlayerClass;
+            Stats = FootballPlayerStatGenerator.GenerateStats(footballPlayerType, footballPlayerClass);
+            Price = FootballPlayerPriceGenerator.GeneratePrice(footballPlayerClass);
             Age = age;
+            Height = height;
+        }
+
+        public PlayerMarketData WithGeneratedClass(FootballPlayerClass footballPlayerClass)
+        {
+            return new PlayerMarketData(Name, Type, PlayerType, footballPlayerClass, Price, Age, Height);
+        }
+
+        public void UpgradeStats()
+        {
+            Stats = Stats.IncreaseAllBelow(MaxUpgradedPlayerStat);
+            PlayerClass = FootballPlayerStatGenerator.CalculateClass(PlayerType, Stats);
+        }
+
+        private static FootballPlayerType ParsePlayerType(string type)
+        {
+            if (Enum.TryParse(type, true, out FootballPlayerType footballPlayerType))
+            {
+                return footballPlayerType;
+            }
+
+            Debug.LogWarning($"[MarketPanel] Bilinmeyen futbolcu tipi '{type}'. Forward kullanildi.");
+            return FootballPlayerType.Forward;
+        }
+
+        private static FootballPlayerClass ParsePlayerClass(string playerClass)
+        {
+            if (Enum.TryParse(playerClass, true, out FootballPlayerClass footballPlayerClass))
+            {
+                return footballPlayerClass;
+            }
+
+            Debug.LogWarning($"[MarketPanel] Bilinmeyen futbolcu sinifi '{playerClass}'. G kullanildi.");
+            return FootballPlayerClass.G;
+        }
+    }
+
+    private sealed class ManagerMarketData
+    {
+        public readonly string Name;
+        public double Price;
+        public readonly int Age;
+        public readonly ManagerStats Stats;
+        public string Class => Stats.managerClass.ToString();
+
+        public ManagerMarketData(string name, string managerClass, int price, int age)
+            : this(name, ParseManagerClass(managerClass), age)
+        {
+        }
+
+        private ManagerMarketData(string name, ManagerClass managerClass, int age)
+        {
+            Name = name;
+            Stats = ManagerStatGenerator.GenerateStats(managerClass, age);
+            Price = ManagerPriceGenerator.GeneratePrice(Stats.managerClass);
+            Age = Stats.age;
+        }
+
+        public ManagerMarketData WithGeneratedClass(ManagerClass managerClass)
+        {
+            return new ManagerMarketData(Name, managerClass, Age);
+        }
+
+        public void UpgradeStats()
+        {
+            Stats.UpgradeOneLevel();
+        }
+
+        private static ManagerClass ParseManagerClass(string managerClass)
+        {
+            if (ManagerStatGenerator.TryParseClass(managerClass, out ManagerClass parsedClass))
+            {
+                return parsedClass;
+            }
+
+            Debug.LogWarning($"[MarketPanel] Bilinmeyen menajer sinifi '{managerClass}'. D kullanildi.");
+            return ManagerClass.D;
         }
     }
 }
