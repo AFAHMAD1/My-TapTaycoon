@@ -27,7 +27,8 @@ public enum FootballStat
     ShootPower,
     Strength,
     PassAccuracy,
-    DefensiveAbility
+    DefensiveAbility,
+    BallControl
 }
 
 public enum FootballStatImportance
@@ -45,6 +46,7 @@ public struct FootballPlayerStats
     [Range(1, 100)] public int strength;
     [Range(1, 100)] public int passAccuracy;
     [Range(1, 100)] public int defensiveAbility;
+    [Range(1, 100)] public int ballControl;
 
     public FootballPlayerStats(
         int speed,
@@ -52,12 +54,24 @@ public struct FootballPlayerStats
         int strength,
         int passAccuracy,
         int defensiveAbility)
+        : this(speed, shootPower, strength, passAccuracy, defensiveAbility, Mathf.RoundToInt((speed + passAccuracy) / 2f))
+    {
+    }
+
+    public FootballPlayerStats(
+        int speed,
+        int shootPower,
+        int strength,
+        int passAccuracy,
+        int defensiveAbility,
+        int ballControl)
     {
         this.speed = ClampStat(speed);
         this.shootPower = ClampStat(shootPower);
         this.strength = ClampStat(strength);
         this.passAccuracy = ClampStat(passAccuracy);
         this.defensiveAbility = ClampStat(defensiveAbility);
+        this.ballControl = ClampStat(ballControl);
     }
 
     public int GetValue(FootballStat stat)
@@ -74,6 +88,8 @@ public struct FootballPlayerStats
                 return passAccuracy;
             case FootballStat.DefensiveAbility:
                 return defensiveAbility;
+            case FootballStat.BallControl:
+                return ballControl;
             default:
                 return 1;
         }
@@ -86,7 +102,42 @@ public struct FootballPlayerStats
                shootPower < safeMaximum ||
                strength < safeMaximum ||
                passAccuracy < safeMaximum ||
-               defensiveAbility < safeMaximum;
+               defensiveAbility < safeMaximum ||
+               ballControl < safeMaximum;
+    }
+
+    public bool IsStatBelow(FootballStat stat, int maximumValue)
+    {
+        int safeMaximum = ClampStat(maximumValue);
+        switch (stat)
+        {
+            case FootballStat.Speed:
+                return speed < safeMaximum;
+            case FootballStat.ShootPower:
+                return shootPower < safeMaximum;
+            case FootballStat.Strength:
+                return strength < safeMaximum;
+            case FootballStat.PassAccuracy:
+                return passAccuracy < safeMaximum;
+            case FootballStat.DefensiveAbility:
+                return defensiveAbility < safeMaximum;
+            case FootballStat.BallControl:
+                return ballControl < safeMaximum;
+            default:
+                return false;
+        }
+    }
+
+    public FootballPlayerStats IncreaseStat(FootballStat stat, int maximumValue)
+    {
+        int safeMaximum = ClampStat(maximumValue);
+        return new FootballPlayerStats(
+            stat == FootballStat.Speed ? IncreaseStat(speed, safeMaximum) : speed,
+            stat == FootballStat.ShootPower ? IncreaseStat(shootPower, safeMaximum) : shootPower,
+            stat == FootballStat.Strength ? IncreaseStat(strength, safeMaximum) : strength,
+            stat == FootballStat.PassAccuracy ? IncreaseStat(passAccuracy, safeMaximum) : passAccuracy,
+            stat == FootballStat.DefensiveAbility ? IncreaseStat(defensiveAbility, safeMaximum) : defensiveAbility,
+            stat == FootballStat.BallControl ? IncreaseStat(ballControl, safeMaximum) : ballControl);
     }
 
     public FootballPlayerStats IncreaseAllBelow(int maximumValue)
@@ -97,7 +148,8 @@ public struct FootballPlayerStats
             IncreaseStat(shootPower, safeMaximum),
             IncreaseStat(strength, safeMaximum),
             IncreaseStat(passAccuracy, safeMaximum),
-            IncreaseStat(defensiveAbility, safeMaximum));
+            IncreaseStat(defensiveAbility, safeMaximum),
+            IncreaseStat(ballControl, safeMaximum));
     }
 
     private static int IncreaseStat(int currentValue, int maximumValue)
@@ -142,7 +194,8 @@ public static class FootballPlayerStatGenerator
                     FootballStatImportance.Main,
                     FootballStatImportance.Main,
                     FootballStatImportance.Secondary,
-                    FootballStatImportance.Weak)
+                    FootballStatImportance.Weak,
+                    FootballStatImportance.Secondary)
             },
             {
                 FootballPlayerType.Midfielder,
@@ -151,7 +204,8 @@ public static class FootballPlayerStatGenerator
                     FootballStatImportance.Secondary,
                     FootballStatImportance.Main,
                     FootballStatImportance.Main,
-                    FootballStatImportance.Weak)
+                    FootballStatImportance.Weak,
+                    FootballStatImportance.Main)
             },
             {
                 FootballPlayerType.Defender,
@@ -160,7 +214,8 @@ public static class FootballPlayerStatGenerator
                     FootballStatImportance.Weak,
                     FootballStatImportance.Main,
                     FootballStatImportance.Secondary,
-                    FootballStatImportance.Main)
+                    FootballStatImportance.Main,
+                    FootballStatImportance.Secondary)
             },
             {
                 FootballPlayerType.Goalkeeper,
@@ -169,7 +224,8 @@ public static class FootballPlayerStatGenerator
                     FootballStatImportance.Weak,
                     FootballStatImportance.Main,
                     FootballStatImportance.Secondary,
-                    FootballStatImportance.Main)
+                    FootballStatImportance.Main,
+                    FootballStatImportance.Weak)
             }
         };
 
@@ -180,7 +236,8 @@ public static class FootballPlayerStatGenerator
             GenerateStat(playerType, playerClass, FootballStat.ShootPower),
             GenerateStat(playerType, playerClass, FootballStat.Strength),
             GenerateStat(playerType, playerClass, FootballStat.PassAccuracy),
-            GenerateStat(playerType, playerClass, FootballStat.DefensiveAbility));
+            GenerateStat(playerType, playerClass, FootballStat.DefensiveAbility),
+            GenerateStat(playerType, playerClass, FootballStat.BallControl));
     }
 
     public static Vector2Int GetClassRange(FootballPlayerClass playerClass)
@@ -201,6 +258,30 @@ public static class FootballPlayerStatGenerator
     public static FootballStatImportance GetStatImportance(FootballPlayerType playerType, FootballStat stat)
     {
         return StatImportanceByType[playerType][stat];
+    }
+
+    public static bool IsImportantStat(FootballPlayerType playerType, FootballStat stat)
+    {
+        switch (playerType)
+        {
+            case FootballPlayerType.Forward:
+                return stat == FootballStat.Speed ||
+                       stat == FootballStat.ShootPower ||
+                       stat == FootballStat.Strength;
+            case FootballPlayerType.Midfielder:
+                return stat == FootballStat.PassAccuracy ||
+                       stat == FootballStat.Strength ||
+                       stat == FootballStat.Speed;
+            case FootballPlayerType.Defender:
+                return stat == FootballStat.DefensiveAbility ||
+                       stat == FootballStat.Strength ||
+                       stat == FootballStat.Speed;
+            case FootballPlayerType.Goalkeeper:
+                return stat == FootballStat.DefensiveAbility ||
+                       stat == FootballStat.Strength;
+            default:
+                return false;
+        }
     }
 
     public static float CalculateOverallScore(FootballPlayerType playerType, FootballPlayerStats stats)
@@ -286,7 +367,8 @@ public static class FootballPlayerStatGenerator
         FootballStatImportance shootPower,
         FootballStatImportance strength,
         FootballStatImportance passAccuracy,
-        FootballStatImportance defensiveAbility)
+        FootballStatImportance defensiveAbility,
+        FootballStatImportance ballControl)
     {
         return new Dictionary<FootballStat, FootballStatImportance>
         {
@@ -294,7 +376,8 @@ public static class FootballPlayerStatGenerator
             { FootballStat.ShootPower, shootPower },
             { FootballStat.Strength, strength },
             { FootballStat.PassAccuracy, passAccuracy },
-            { FootballStat.DefensiveAbility, defensiveAbility }
+            { FootballStat.DefensiveAbility, defensiveAbility },
+            { FootballStat.BallControl, ballControl }
         };
     }
 
@@ -394,6 +477,17 @@ public static class FootballPlayerPriceGenerator
         PriceRange priceRange = PriceRanges[playerClass];
         double randomPrice = priceRange.Min + ((priceRange.Max - priceRange.Min) * UnityEngine.Random.value);
         return Math.Floor(randomPrice);
+    }
+
+    public static double GetMinimumPrice(FootballPlayerClass playerClass)
+    {
+        return PriceRanges[playerClass].Min;
+    }
+
+    public static double GetMiddlePrice(FootballPlayerClass playerClass)
+    {
+        PriceRange priceRange = PriceRanges[playerClass];
+        return (priceRange.Min + priceRange.Max) / 2d;
     }
 
     private readonly struct PriceRange

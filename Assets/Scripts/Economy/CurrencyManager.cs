@@ -12,7 +12,7 @@ public class CurrencyManager : MonoBehaviour, ICurrencyManager, ISaveable
     public static CurrencyManager Instance { get; private set; }
 
     [Header("Para Verileri")]
-    public double currentMoney = 0; // Mevcut para miktarı (double kullanarak çok yüksek sayılara destek veriyoruz)
+    public double currentMoney = 1000000d; // Mevcut para miktarı (double kullanarak çok yüksek sayılara destek veriyoruz)
     public TextMeshProUGUI moneyText; // Ekranda parayı gösteren yazı bileşeni
 
     /// <summary>

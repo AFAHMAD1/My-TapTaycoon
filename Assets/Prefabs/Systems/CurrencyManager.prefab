@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad35980af0827bb429d7cdb2e9bd67c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CurrencyManager
-  currentMoney: 0
+  currentMoney: 1000000
   moneyText: {fileID: 0}

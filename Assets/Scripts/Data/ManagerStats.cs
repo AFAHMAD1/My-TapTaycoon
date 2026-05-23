@@ -10,6 +10,15 @@ public enum ManagerClass
     A
 }
 
+public enum ManagerStat
+{
+    ManagerLevel,
+    TrainingBoost,
+    TacticBoost,
+    Experience,
+    FootballIQ
+}
+
 [Serializable]
 public class ManagerStats
 {
@@ -40,6 +49,7 @@ public class ManagerStats
 
 public static class ManagerStatGenerator
 {
+    public const int MaxManagerLevel = 100;
     public const int MaxTrainingBoost = 35;
     public const int MaxTacticBoost = 35;
     public const int MaxExperience = 100;
@@ -132,6 +142,13 @@ public static class ManagerStatGenerator
     public static bool TryParseClass(string classText, out ManagerClass managerClass)
     {
         return Enum.TryParse(classText, true, out managerClass);
+    }
+
+    public static bool IsImportantStat(ManagerStat stat)
+    {
+        return stat == ManagerStat.ManagerLevel ||
+               stat == ManagerStat.TacticBoost ||
+               stat == ManagerStat.Experience;
     }
 
     private static int RandomInRange(Vector2Int range)
@@ -227,6 +244,17 @@ public static class ManagerPriceGenerator
         PriceRange priceRange = PriceRanges[managerClass];
         double randomPrice = priceRange.Min + ((priceRange.Max - priceRange.Min) * UnityEngine.Random.value);
         return Math.Floor(randomPrice);
+    }
+
+    public static double GetMinimumPrice(ManagerClass managerClass)
+    {
+        return PriceRanges[managerClass].Min;
+    }
+
+    public static double GetMiddlePrice(ManagerClass managerClass)
+    {
+        PriceRange priceRange = PriceRanges[managerClass];
+        return (priceRange.Min + priceRange.Max) / 2d;
     }
 
     private readonly struct PriceRange

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7458954025812642323}
   - component: {fileID: 5750556586358958543}
   m_Layer: 5
-  m_Name: Defensive_Ability
+  m_Name: Tactic Boost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 6782321134009143683}
   - component: {fileID: 3780717771488161567}
   m_Layer: 5
-  m_Name: Shoot_Power
+  m_Name: Age
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -712,7 +712,7 @@ GameObject:
   - component: {fileID: 8676959336383063252}
   - component: {fileID: 7181025274426657890}
   m_Layer: 5
-  m_Name: Strength
+  m_Name: Experience
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1273,7 +1273,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000015258789, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0.000061035156}
   m_SizeDelta: {x: -0, y: 0.00012207}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4875646637395759309
@@ -1485,8 +1485,8 @@ RectTransform:
   - {fileID: 5822932235281450748}
   - {fileID: 1959238602502088343}
   - {fileID: 642484501370665980}
-  - {fileID: 8609549429114204038}
   - {fileID: 8057515691389417254}
+  - {fileID: 8609549429114204038}
   m_Father: {fileID: 6363446526709822200}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1620,7 +1620,7 @@ GameObject:
   - component: {fileID: 1041563405914577674}
   - component: {fileID: 2108797924834699640}
   m_Layer: 5
-  m_Name: Pass_Accuracy
+  m_Name: Training Boost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
