@@ -8,19 +8,28 @@ public class FutbolcularPanelNavigator : MonoBehaviour
     [SerializeField] private GameObject firstPanel;
     [SerializeField] private Button backButton;
     [SerializeField] private List<GameObject> childPanels = new List<GameObject>();
+    [SerializeField] private float matchDurationSeconds = 300f;
+
+    private const int RequiredLeaguePlayers = 15;
+    private const int RequiredLeagueManagers = 1;
 
     private readonly Stack<GameObject> panelHistory = new Stack<GameObject>();
     private GameObject currentPanel;
     private Button marketButton;
     private Button clubButton;
+    private Button leagueButton;
+    private Button matchButton;
     private Button myPlayersButton;
     private Button myManagersButton;
     private GameObject marketPanel;
     private GameObject clubPanel;
+    private GameObject leaguePanel;
+    private GameObject matchPanel;
     private GameObject myPlayersPanel;
     private GameObject myManagersPanel;
     private GameObject playersInfoPanel;
     private GameObject playersInfoScrollView;
+    private GameObject notCompleteTeamErrorPanel;
     private MarketPanelRuntimePopulator marketPopulator;
     private readonly List<Button> marketCategoryButtons = new List<Button>();
 
@@ -57,6 +66,16 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         if (clubButton != null)
         {
             clubButton.onClick.RemoveListener(OpenClubPanel);
+        }
+
+        if (leagueButton != null)
+        {
+            leagueButton.onClick.RemoveListener(OpenLeaguePanel);
+        }
+
+        if (matchButton != null)
+        {
+            matchButton.onClick.RemoveListener(OpenMatchPanel);
         }
 
         if (myPlayersButton != null)
@@ -135,7 +154,13 @@ public class FutbolcularPanelNavigator : MonoBehaviour
             return;
         }
 
+        bool leavingLeaguePanel = currentPanel == leaguePanel;
         GameObject previousPanel = panelHistory.Pop();
+        if (leavingLeaguePanel)
+        {
+            ClearLeagueTeamCards();
+        }
+
         ShowOnly(previousPanel);
         currentPanel = previousPanel;
         RefreshBackButton();
@@ -200,6 +225,24 @@ public class FutbolcularPanelNavigator : MonoBehaviour
             }
         }
 
+        Transform leaguePanelTransform = UIHelper.FindChildRecursive(transform, "LeaguePanel");
+        if (leaguePanelTransform != null)
+        {
+            leaguePanel = leaguePanelTransform.gameObject;
+
+            Transform notCompleteTeamErrorTransform = UIHelper.FindChildRecursive(leaguePanelTransform, "Not_Complete_Team_Error");
+            if (notCompleteTeamErrorTransform != null)
+            {
+                notCompleteTeamErrorPanel = notCompleteTeamErrorTransform.gameObject;
+            }
+        }
+
+        Transform matchPanelTransform = UIHelper.FindChildRecursive(transform, "MatchPanel");
+        if (matchPanelTransform != null)
+        {
+            matchPanel = matchPanelTransform.gameObject;
+        }
+
         Transform marketButtonTransform = UIHelper.FindChildRecursive(transform, "Marketbtn");
         if (marketButtonTransform != null)
         {
@@ -210,6 +253,38 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         if (clubButtonTransform != null)
         {
             clubButton = clubButtonTransform.GetComponent<Button>();
+        }
+
+        Transform leagueButtonTransform = UIHelper.FindChildRecursive(transform, "league");
+        if (leagueButtonTransform == null)
+        {
+            leagueButtonTransform = UIHelper.FindChildRecursive(transform, "LeagueBtn");
+        }
+
+        if (leagueButtonTransform == null)
+        {
+            leagueButtonTransform = UIHelper.FindChildRecursive(transform, "LeagueButton");
+        }
+
+        if (leagueButtonTransform != null)
+        {
+            leagueButton = leagueButtonTransform.GetComponent<Button>();
+        }
+
+        Transform matchButtonTransform = UIHelper.FindChildRecursive(transform, "MatchBtn");
+        if (matchButtonTransform == null)
+        {
+            matchButtonTransform = UIHelper.FindChildRecursive(transform, "MatchButton");
+        }
+
+        if (matchButtonTransform == null)
+        {
+            matchButtonTransform = UIHelper.FindChildRecursive(transform, "Match");
+        }
+
+        if (matchButtonTransform != null)
+        {
+            matchButton = matchButtonTransform.GetComponent<Button>();
         }
 
         Transform myPlayersButtonTransform = UIHelper.FindChildRecursive(transform, "MyPlayersButton");
@@ -239,6 +314,8 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         EnsureManagedPanel(firstPanel);
         EnsureManagedPanel(marketPanel);
         EnsureManagedPanel(clubPanel);
+        EnsureManagedPanel(leaguePanel);
+        EnsureManagedPanel(matchPanel);
     }
 
     private void WireButtons()
@@ -259,6 +336,18 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         {
             clubButton.onClick.RemoveListener(OpenClubPanel);
             clubButton.onClick.AddListener(OpenClubPanel);
+        }
+
+        if (leagueButton != null)
+        {
+            leagueButton.onClick.RemoveListener(OpenLeaguePanel);
+            leagueButton.onClick.AddListener(OpenLeaguePanel);
+        }
+
+        if (matchButton != null)
+        {
+            matchButton.onClick.RemoveListener(OpenMatchPanel);
+            matchButton.onClick.AddListener(OpenMatchPanel);
         }
 
         if (myPlayersButton != null)
@@ -289,6 +378,141 @@ public class FutbolcularPanelNavigator : MonoBehaviour
         OpenPanel(clubPanel);
         CloseClubSubpanels();
         RefreshBackButton();
+    }
+
+    private void OpenLeaguePanel()
+    {
+        if (!CanEnterLeague())
+        {
+            OpenPanel(leaguePanel);
+            ClearLeagueTeamCards();
+            ShowNotCompleteTeamErrorPanel();
+            return;
+        }
+
+        EnsureLeagueManager();
+        if (LeagueManager.Instance != null)
+        {
+            LeagueManager.Instance.EnterLeague();
+        }
+
+        OpenPanel(leaguePanel);
+        HideNotCompleteTeamErrorPanel();
+
+        if (leaguePanel != null)
+        {
+            LeagueTeamsPanelPopulator populator = leaguePanel.GetComponent<LeagueTeamsPanelPopulator>();
+            if (populator == null)
+            {
+                populator = leaguePanel.AddComponent<LeagueTeamsPanelPopulator>();
+            }
+
+            LeaguePanelUI leaguePanelUI = leaguePanel.GetComponent<LeaguePanelUI>();
+            if (leaguePanelUI == null)
+            {
+                leaguePanelUI = leaguePanel.AddComponent<LeaguePanelUI>();
+            }
+
+            populator.Populate();
+            leaguePanelUI.Refresh();
+        }
+    }
+
+    private void OpenMatchPanel()
+    {
+        OpenPanel(matchPanel);
+
+        if (matchPanel == null)
+        {
+            return;
+        }
+
+        MatchPanelUI matchPanelUI = matchPanel.GetComponent<MatchPanelUI>();
+        if (matchPanelUI == null)
+        {
+            matchPanelUI = matchPanel.AddComponent<MatchPanelUI>();
+        }
+
+        matchPanelUI.SetMatchDuration(matchDurationSeconds);
+        matchPanelUI.Refresh();
+    }
+
+    private bool CanEnterLeague()
+    {
+        if (LeagueManager.Instance != null && LeagueManager.Instance.IsInLeague)
+        {
+            return true;
+        }
+
+        if (marketPopulator == null)
+        {
+            ResolveReferences();
+        }
+
+        int playerCount = marketPopulator != null ? marketPopulator.OwnedPlayerCount : 0;
+        int managerCount = marketPopulator != null ? marketPopulator.OwnedManagerCount : 0;
+
+        if (playerCount >= RequiredLeaguePlayers && managerCount >= RequiredLeagueManagers)
+        {
+            return true;
+        }
+
+        string message = $"League'e girmek icin en az {RequiredLeaguePlayers} oyuncu ve {RequiredLeagueManagers} menajer gerekir. Su an: {playerCount} oyuncu, {managerCount} menajer.";
+        Debug.LogError($"[League] {message}", this);
+        return false;
+    }
+
+    private static void EnsureLeagueManager()
+    {
+        if (LeagueManager.Instance != null)
+        {
+            return;
+        }
+
+        LeagueManager existing = FindFirstObjectByType<LeagueManager>(FindObjectsInactive.Include);
+        if (existing != null)
+        {
+            return;
+        }
+
+        GameObject managerObject = new GameObject("LeagueManager");
+        managerObject.AddComponent<LeagueManager>();
+    }
+
+    private void ShowNotCompleteTeamErrorPanel()
+    {
+        if (notCompleteTeamErrorPanel == null)
+        {
+            Debug.LogWarning("[League] Not_Complete_Team_Error panel bulunamadi.", this);
+            return;
+        }
+
+        notCompleteTeamErrorPanel.SetActive(true);
+        notCompleteTeamErrorPanel.transform.SetAsLastSibling();
+    }
+
+    private void HideNotCompleteTeamErrorPanel()
+    {
+        if (notCompleteTeamErrorPanel != null)
+        {
+            notCompleteTeamErrorPanel.SetActive(false);
+        }
+    }
+
+    private void ClearLeagueTeamCards()
+    {
+        if (leaguePanel == null)
+        {
+            return;
+        }
+
+        LeagueTeamsPanelPopulator populator = leaguePanel.GetComponent<LeagueTeamsPanelPopulator>();
+        if (populator != null)
+        {
+            populator.ClearCards();
+        }
+
+        HideNotCompleteTeamErrorPanel();
     }
 
     private void OpenMyPlayersPanel()

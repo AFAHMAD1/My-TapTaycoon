@@ -31,10 +31,53 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
 
     private readonly Dictionary<MarketCategory, List<FootballPlayerMarketData>> playersByCategory = new Dictionary<MarketCategory, List<FootballPlayerMarketData>>();
     private readonly List<FootballManagerMarketData> managers = new List<FootballManagerMarketData>();
+    private readonly List<FootballPlayerMarketData> ownedPlayers = new List<FootballPlayerMarketData>();
+    private readonly List<FootballManagerMarketData> ownedManagers = new List<FootballManagerMarketData>();
     private readonly List<GameObject> ownedPlayerCards = new List<GameObject>();
     private readonly List<GameObject> ownedManagerCards = new List<GameObject>();
     private bool initialized;
     private MarketCategory currentMarketCategory = MarketCategory.Forwards;
+
+    public int OwnedPlayerCount
+    {
+        get
+        {
+            PruneMissingOwnedPlayers();
+            return ownedPlayerCards.Count;
+        }
+    }
+
+    public int OwnedManagerCount
+    {
+        get
+        {
+            PruneMissingOwnedManagers();
+            return ownedManagerCards.Count;
+        }
+    }
+
+    public IReadOnlyList<FootballPlayerMarketData> OwnedPlayers
+    {
+        get
+        {
+            PruneMissingOwnedPlayers();
+            return ownedPlayers;
+        }
+    }
+
+    public IReadOnlyList<FootballManagerMarketData> OwnedManagers
+    {
+        get
+        {
+            PruneMissingOwnedManagers();
+            return ownedManagers;
+        }
+    }
+
+    public bool HasLeagueEntrySquad(int requiredPlayers, int requiredManagers)
+    {
+        return OwnedPlayerCount >= requiredPlayers && OwnedManagerCount >= requiredManagers;
+    }
 
     private void Awake()
     {
@@ -295,6 +338,11 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         }
 
         GetCategoryForPlayer(player.Type).Remove(player);
+        if (!ownedPlayers.Contains(player))
+        {
+            ownedPlayers.Add(player);
+        }
+
         MoveCardToClub(
             card,
             myPlayersContent,
@@ -319,6 +367,11 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         }
 
         managers.Remove(manager);
+        if (!ownedManagers.Contains(manager))
+        {
+            ownedManagers.Add(manager);
+        }
+
         MoveCardToClub(
             card,
             myManagersContent,
@@ -355,6 +408,7 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         }
 
         ownedPlayerCards.Remove(card);
+        ownedPlayers.Remove(player);
         Destroy(card);
 
         RebuildOwnedLayout(myPlayersContent);
@@ -385,6 +439,7 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
         }
 
         ownedManagerCards.Remove(card);
+        ownedManagers.Remove(manager);
         Destroy(card);
 
         RebuildOwnedLayout(myManagersContent);
@@ -640,6 +695,33 @@ public class MarketPanelRuntimePopulator : MonoBehaviour
             if (cards[i] == null)
             {
                 cards.RemoveAt(i);
+            }
+        }
+    }
+
+    private void PruneMissingOwnedPlayers()
+    {
+        PruneMissingOwnedItems(ownedPlayerCards, ownedPlayers);
+    }
+
+    private void PruneMissingOwnedManagers()
+    {
+        PruneMissingOwnedItems(ownedManagerCards, ownedManagers);
+    }
+
+    private static void PruneMissingOwnedItems<T>(List<GameObject> cards, List<T> data)
+    {
+        for (int i = cards.Count - 1; i >= 0; i--)
+        {
+            if (cards[i] != null)
+            {
+                continue;
+            }
+
+            cards.RemoveAt(i);
+            if (i < data.Count)
+            {
+                data.RemoveAt(i);
             }
         }
     }
